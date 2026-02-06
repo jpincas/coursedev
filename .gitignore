@@ -1,0 +1,13 @@
+# Built binary
+coursedev
+
+# SQLite database
+*.db
+
+# JS build
+node_modules/
+.parcel-cache/
+static/js/main.js.map
+
+# OS
+.DS_Store

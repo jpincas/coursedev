@@ -1,0 +1,19 @@
+{
+  "name": "coursedev",
+  "scripts": {
+    "start": "parcel",
+    "build": "npm run build:js && npm run build:css",
+    "build:js": "npm run clean:js && parcel build js/main.js --no-cache --dist-dir static/js",
+    "build:css": "npx @tailwindcss/cli -i css/main.css -o static/css/main.css --minify",
+    "clean:js": "rm -rf static/js/*.map"
+  },
+  "devDependencies": {
+    "parcel": "^2.16.1",
+    "@tailwindcss/cli": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.0"
+  },
+  "dependencies": {
+    "gotea": "file:../../jpincas/go-tea/js",
+    "tailwindcss": "^4.0.0"
+  }
+}

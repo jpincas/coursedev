@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@source "../**/*.go";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --color-accent: #00d9c0;
+  --color-accent-hover: #00f0d4;
+  --color-accent-dim: rgba(0, 217, 192, 0.12);
+}
+
+/* Font size preferences (cascade from body) */
+@utility font-small {
+  font-size: 14px;
+}
+@utility font-medium {
+  font-size: 16px;
+}
+@utility font-large {
+  font-size: 18px;
+}
+
+/* Pulse animation for live indicators */
+@utility animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Prose overrides for Goldmark-rendered narrative HTML */
+@layer components {
+  .content-prose code:not(pre code) {
+    color: #00d9c0;
+    background: rgb(39 39 42 / 0.5);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    border: 1px solid rgb(39 39 42);
+    font-size: 0.875em;
+    font-weight: 400;
+  }
+  .content-prose code::before,
+  .content-prose code::after {
+    content: none !important;
+  }
+  .content-prose a {
+    color: #00d9c0;
+    text-decoration-color: rgba(0, 217, 192, 0.3);
+    text-underline-offset: 2px;
+  }
+  .content-prose a:hover {
+    text-decoration-color: #00d9c0;
+  }
+  .content-prose pre {
+    background: rgb(24 24 27);
+    border: 1px solid rgb(39 39 42);
+    border-radius: 0.75rem;
+  }
+  .content-prose pre code {
+    color: rgb(228 228 231);
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+}

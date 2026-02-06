@@ -1,0 +1,11 @@
+title: "AI Training: From Novice to Expert in One Day"
+description: "A comprehensive full-day training on working effectively with AI, from understanding LLMs to building AI-powered workflows."
+modules:
+  - module-opening
+  - module-llms
+  - module-context
+  - module-prompting
+  - module-files
+  - module-delegation
+  - module-advanced
+  - module-synthesis

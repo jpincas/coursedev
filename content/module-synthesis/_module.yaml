@@ -1,0 +1,10 @@
+title: "Putting It Together"
+description: "Your AI-first workflow. The five themes, what to do next, and resources."
+prerequisites:
+  - module-advanced
+difficulty: intermediate
+estimated_duration: "45m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.7
