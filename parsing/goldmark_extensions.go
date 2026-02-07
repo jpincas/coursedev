@@ -78,14 +78,10 @@ func parseBlock(blockType string, content []byte) (Block, error) {
 		return parseQuizBlock(content)
 	case "mermaid":
 		return parseMermaidBlock(content)
-	case "math":
-		return parseMathBlock(content)
 	case "callout":
 		return parseCalloutBlock(content)
 	case "annotated-image":
 		return parseAnnotatedImageBlock(content)
-	case "terminal-replay":
-		return parseTerminalReplayBlock(content)
 	case "exercise":
 		return parseExerciseBlock(content)
 	default:
@@ -128,20 +124,6 @@ func (b *MermaidBlock) BlockID() string   { return "" }
 
 func parseMermaidBlock(content []byte) (*MermaidBlock, error) {
 	return &MermaidBlock{
-		Source: string(bytes.TrimSpace(content)),
-	}, nil
-}
-
-// Math block parsing
-type MathBlock struct {
-	Source string
-}
-
-func (b *MathBlock) BlockType() string { return "math" }
-func (b *MathBlock) BlockID() string   { return "" }
-
-func parseMathBlock(content []byte) (*MathBlock, error) {
-	return &MathBlock{
 		Source: string(bytes.TrimSpace(content)),
 	}, nil
 }
@@ -189,28 +171,6 @@ func parseAnnotatedImageBlock(content []byte) (*AnnotatedImageBlock, error) {
 	var block AnnotatedImageBlock
 	if err := yaml.Unmarshal(content, &block); err != nil {
 		return nil, fmt.Errorf("failed to parse annotated-image block: %w", err)
-	}
-	return &block, nil
-}
-
-// Terminal replay block parsing
-type TerminalReplayBlock struct {
-	Src      string  `yaml:"src"`
-	Title    string  `yaml:"title"`
-	Autoplay bool    `yaml:"autoplay"`
-	Speed    float64 `yaml:"speed"`
-}
-
-func (b *TerminalReplayBlock) BlockType() string { return "terminal-replay" }
-func (b *TerminalReplayBlock) BlockID() string   { return "" }
-
-func parseTerminalReplayBlock(content []byte) (*TerminalReplayBlock, error) {
-	var block TerminalReplayBlock
-	if err := yaml.Unmarshal(content, &block); err != nil {
-		return nil, fmt.Errorf("failed to parse terminal-replay block: %w", err)
-	}
-	if block.Speed == 0 {
-		block.Speed = 1.0
 	}
 	return &block, nil
 }

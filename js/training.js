@@ -1,17 +1,10 @@
 // Training App Client-Side Initialization
-// Handles Mermaid, KaTeX, asciinema player, and annotation canvas after morphdom patches
+// Handles Mermaid diagram rendering and annotation canvas
 
 (function() {
   'use strict';
 
-  // Cache for rendered Mermaid SVGs and KaTeX HTML, keyed by source text.
-  // Morphdom patches replace rendered output with original source text;
-  // the cache lets us restore instantly without re-calling the library.
-  var renderCache = {};
-
   // Disable mermaid auto-rendering so we control all rendering ourselves.
-  // This prevents the race where mermaid auto-renders but we can't cache
-  // the result (because data-source isn't set yet), then morphdom wipes it.
   if (typeof mermaid !== 'undefined') {
     mermaid.initialize({ startOnLoad: false, theme: 'dark' });
   }
@@ -20,112 +13,37 @@
   var mermaidRendering = {};
   var mermaidIdCounter = 0;
 
-  // Initialize Mermaid diagrams
+  // Initialize Mermaid diagrams.
+  // After rendering, we set data-morph-skip so morphdom never clobbers the SVG.
   function initMermaid() {
     if (typeof mermaid === 'undefined') return;
 
     document.querySelectorAll('.mermaid').forEach(function(el) {
-      // Already rendered — cache and skip
-      if (el.querySelector('svg')) {
-        var src = el.getAttribute('data-source');
-        if (src && !renderCache[src]) {
-          renderCache[src] = el.innerHTML;
-        }
-        return;
-      }
+      // Already rendered — skip
+      if (el.hasAttribute('data-morph-skip')) return;
 
       var src = el.textContent.trim();
       if (!src) return;
 
-      // Restore from cache (instant, survives morphdom patches)
-      if (renderCache[src]) {
-        el.innerHTML = renderCache[src];
-        el.setAttribute('data-source', src);
-        return;
-      }
-
       // Already rendering this source — skip, the callback will handle it
       if (mermaidRendering[src]) return;
 
-      // Render asynchronously using mermaid.render() which returns SVG as string.
-      // This decouples rendering from the DOM element, so morphdom patches
-      // can't interrupt the render. The SVG is cached and applied when ready.
-      el.setAttribute('data-source', src);
       mermaidRendering[src] = true;
       var renderID = 'mermaid-render-' + (++mermaidIdCounter);
       mermaid.render(renderID, src).then(function(result) {
         delete mermaidRendering[src];
-        renderCache[src] = result.svg;
         // Apply to all matching elements currently in DOM
         document.querySelectorAll('.mermaid').forEach(function(target) {
-          if (target.getAttribute('data-source') === src || target.textContent.trim() === src) {
+          if (target.textContent.trim() === src || target.getAttribute('data-source') === src) {
             target.innerHTML = result.svg;
             target.setAttribute('data-source', src);
+            target.setAttribute('data-morph-skip', '');
           }
         });
       }).catch(function(err) {
         delete mermaidRendering[src];
         console.error('Mermaid render error:', err);
       });
-    });
-  }
-
-  // Initialize KaTeX math blocks
-  function initKaTeX() {
-    if (typeof katex === 'undefined') return;
-
-    document.querySelectorAll('.katex-block').forEach(function(el) {
-      // Already rendered — cache and skip
-      if (el.querySelector('.katex')) {
-        var src = el.getAttribute('data-source');
-        if (src && !renderCache[src]) {
-          renderCache[src] = el.innerHTML;
-        }
-        return;
-      }
-
-      var src = el.textContent.trim();
-      if (!src) return;
-
-      // Restore from cache
-      if (renderCache[src]) {
-        el.innerHTML = renderCache[src];
-        el.setAttribute('data-source', src);
-        el.setAttribute('data-processed', 'true');
-        return;
-      }
-
-      // First render
-      el.setAttribute('data-source', src);
-      try {
-        katex.render(src, el, {
-          throwOnError: false,
-          displayMode: true
-        });
-        el.setAttribute('data-processed', 'true');
-        renderCache[src] = el.innerHTML;
-      } catch (e) {
-        console.error('KaTeX render error:', e);
-      }
-    });
-  }
-
-  // Initialize asciinema players
-  function initAsciinema() {
-    if (typeof AsciinemaPlayer === 'undefined') return;
-
-    document.querySelectorAll('.asciinema-player:not([data-processed])').forEach(el => {
-      const src = el.dataset.src;
-      const autoplay = el.dataset.autoplay === 'true';
-      const speed = parseFloat(el.dataset.speed) || 1.0;
-
-      if (src) {
-        AsciinemaPlayer.create(src, el, {
-          autoPlay: autoplay,
-          speed: speed
-        });
-        el.setAttribute('data-processed', 'true');
-      }
     });
   }
 
@@ -238,9 +156,6 @@
     }
   }
 
-  // Strokes use absolute pixel coordinates — no scaling needed.
-  // This works because #view has a fixed width (660px) so content
-  // renders identically on all screens.
   function drawSingleStroke(ctx, stroke) {
     if (!stroke.points || stroke.points.length < 2) return;
 
@@ -251,7 +166,6 @@
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
     } else {
-      // pen
       ctx.strokeStyle = '#ef4444';
       ctx.lineWidth = 3;
       ctx.lineCap = 'round';
@@ -326,7 +240,6 @@
       isDrawing = false;
 
       if (currentStroke.points.length >= 2) {
-        // Send completed stroke to server
         if (typeof gotea !== 'undefined') {
           gotea.sendMessage({
             message: 'ADD_ANNOTATION',
@@ -353,10 +266,6 @@
     });
   }
 
-  // Convert pointer event to absolute pixel coordinates on the canvas.
-  // offsetX/offsetY are relative to the canvas's own top-left corner.
-  // We use absolute pixels (not percentages) because #view has a fixed width,
-  // so content renders at the same pixel positions on all screens.
   function eventToPixel(e) {
     return {
       x: Math.round(e.offsetX),
@@ -368,7 +277,6 @@
     const layer = document.getElementById('annotation-layer');
     if (!layer) return;
 
-    // Toggle: clicking same tool deselects
     const view = document.getElementById('view');
     if (activeTool === tool) {
       activeTool = null;
@@ -401,43 +309,36 @@
   }
 
   // ============================================================================
-  // Init All
+  // Init & afterRender hook
   // ============================================================================
 
-  function initAll() {
+  function afterRender() {
     checkScrollToTop();
     initMermaid();
-    initKaTeX();
-    initAsciinema();
     initAnnotations();
   }
 
   // Run initialization after DOM is ready
+  function initAll() {
+    initMermaid();
+    afterRender();
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAll);
   } else {
     initAll();
   }
 
-  // Re-initialize after morphdom patches
-  const observer = new MutationObserver(function(mutations) {
-    // Debounce to avoid multiple rapid calls
-    clearTimeout(observer.timeout);
-    observer.timeout = setTimeout(initAll, 50);
-  });
+  // Register afterRender hook with gotea — called after every morphdom patch.
+  // Mermaid doesn't need this because data-morph-skip prevents clobbering.
+  window.gotea = window.gotea || {};
+  window.gotea._afterRender = afterRender;
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-
-  // Expose for manual calls if needed
+  // Expose for manual calls
   window.TrainingApp = {
     initMermaid: initMermaid,
-    initKaTeX: initKaTeX,
-    initAsciinema: initAsciinema,
     initAnnotations: initAnnotations,
-    selectAnnotationTool: selectAnnotationTool,
-    initAll: initAll
+    selectAnnotationTool: selectAnnotationTool
   };
 })();

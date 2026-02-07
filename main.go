@@ -112,8 +112,6 @@ func convertBlocks(parsingBlocks []parsing.Block) []Block {
 			}
 		case *parsing.MermaidBlock:
 			blocks[i] = &MermaidBlock{Source: b.Source}
-		case *parsing.MathBlock:
-			blocks[i] = &MathBlock{Source: b.Source}
 		case *parsing.CalloutBlock:
 			blocks[i] = &CalloutBlock{
 				Type:    b.Type,
@@ -135,13 +133,6 @@ func convertBlocks(parsingBlocks []parsing.Block) []Block {
 				Src:      b.Src,
 				Alt:      b.Alt,
 				Hotspots: hotspots,
-			}
-		case *parsing.TerminalReplayBlock:
-			blocks[i] = &TerminalReplayBlock{
-				Src:      b.Src,
-				Title:    b.Title,
-				Autoplay: b.Autoplay,
-				Speed:    b.Speed,
 			}
 		case *parsing.ExerciseBlock:
 			blocks[i] = &ExerciseBlock{

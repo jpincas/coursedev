@@ -331,15 +331,6 @@ func renderMermaid(b *MermaidBlock) h.Element {
 	)
 }
 
-// renderMath renders a KaTeX math block
-func renderMath(b *MathBlock) h.Element {
-	return h.Div(a.Attrs(a.Class("my-8 p-6 bg-zinc-900 rounded-xl border border-zinc-800 text-center not-prose")),
-		h.Div(a.Attrs(a.Class("katex-block")),
-			h.Text(b.Source),
-		),
-	)
-}
-
 // renderCallout renders a callout/admonition block
 func renderCallout(b *CalloutBlock) h.Element {
 	icon := getCalloutIcon(b.Type)
@@ -415,26 +406,6 @@ func renderAnnotatedImage(b *AnnotatedImageBlock, activeHotspot string) h.Elemen
 			h.Div(a.Attrs(a.Class("absolute inset-0")),
 				hotspots...,
 			),
-		),
-	)
-}
-
-// renderTerminalReplay renders an asciinema terminal replay block
-func renderTerminalReplay(b *TerminalReplayBlock) h.Element {
-	autoplayAttr := "false"
-	if b.Autoplay {
-		autoplayAttr = "true"
-	}
-
-	return h.Div(a.Attrs(a.Class("my-8 not-prose")),
-		h.Div(a.Attrs(a.Class("font-semibold mb-3 text-zinc-100")),
-			h.Text(b.Title),
-		).RenderIf(b.Title != ""),
-		h.Div(a.Attrs(
-			a.Class("asciinema-player"),
-			a.Custom("data-src", b.Src),
-			a.Custom("data-autoplay", autoplayAttr),
-			a.Custom("data-speed", fmt.Sprintf("%.1f", b.Speed))),
 		),
 	)
 }

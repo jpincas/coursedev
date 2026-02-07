@@ -76,12 +76,8 @@ func renderLayout(m *Model) h.Element {
 			h.Link(a.Attrs(
 				a.Rel("stylesheet"),
 				a.Href("static/css/main.css"))),
-			h.Link(a.Attrs(
-				a.Rel("stylesheet"),
-				a.Href("static/vendor/katex.min.css"))),
 			// Vendor scripts (loaded in head for availability)
 			h.Script(a.Attrs(a.Src("static/vendor/mermaid.min.js"))),
-			h.Script(a.Attrs(a.Src("static/vendor/katex.min.js"))),
 		),
 		h.Body(a.Attrs(
 			a.Class(fmt.Sprintf("bg-zinc-950 text-zinc-50 font-sans antialiased min-h-screen %s", fontClass))),
@@ -732,14 +728,10 @@ func renderBlock(block Block, index int, quizStates map[int]*QuizState, activeHo
 		return renderQuiz(b, index, quizStates, pollInfo, isFollowing)
 	case *MermaidBlock:
 		return renderMermaid(b)
-	case *MathBlock:
-		return renderMath(b)
 	case *CalloutBlock:
 		return renderCallout(b)
 	case *AnnotatedImageBlock:
 		return renderAnnotatedImage(b, activeHotspot)
-	case *TerminalReplayBlock:
-		return renderTerminalReplay(b)
 	case *ExerciseBlock:
 		return renderExercise(b)
 	default:

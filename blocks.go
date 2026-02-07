@@ -28,14 +28,6 @@ type MermaidBlock struct {
 func (b *MermaidBlock) BlockType() string { return "mermaid" }
 func (b *MermaidBlock) BlockID() string   { return "" }
 
-// MathBlock represents a KaTeX math block
-type MathBlock struct {
-	Source string // The raw LaTeX source
-}
-
-func (b *MathBlock) BlockType() string { return "math" }
-func (b *MathBlock) BlockID() string   { return "" }
-
 // CalloutBlock represents an admonition/callout
 type CalloutBlock struct {
 	Type    string `yaml:"type"`    // info, warning, tip, danger, note
@@ -63,17 +55,6 @@ type Hotspot struct {
 
 func (b *AnnotatedImageBlock) BlockType() string { return "annotated-image" }
 func (b *AnnotatedImageBlock) BlockID() string   { return b.ID }
-
-// TerminalReplayBlock represents an asciinema terminal recording
-type TerminalReplayBlock struct {
-	Src      string  `yaml:"src"`
-	Title    string  `yaml:"title"`
-	Autoplay bool    `yaml:"autoplay"`
-	Speed    float64 `yaml:"speed"`
-}
-
-func (b *TerminalReplayBlock) BlockType() string { return "terminal-replay" }
-func (b *TerminalReplayBlock) BlockID() string   { return "" }
 
 // ExerciseBlock represents a code exercise
 type ExerciseBlock struct {
