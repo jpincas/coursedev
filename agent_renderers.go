@@ -48,9 +48,9 @@ func renderAgentSidebar(state *AgentState, isFollowing bool) h.Element {
 	// Token count (if visible)
 	children = append(children, renderAgentStatusBar(state))
 
-	// Chat input area (or follow-mode banner)
+	// Chat input area (or read-only follow-mode version)
 	if isFollowing {
-		children = append(children, renderFollowModeBanner())
+		children = append(children, renderFollowModeChatArea(state))
 	} else {
 		children = append(children, renderChatInputArea(state))
 	}
@@ -191,6 +191,7 @@ func renderChatAvatar(emoji, bgClass string) h.Element {
 func renderToolCallBubble(m ChatMessage) h.Element {
 	animStyle := chatAnimStyle(m.GroupIdx)
 	toolName := displayToolName(m.ToolName)
+	icon := toolCallIcon(m.ToolName)
 
 	// Build args as raw HTML to avoid pretty-printer issues in mono block
 	var argsHTML strings.Builder
@@ -214,7 +215,7 @@ func renderToolCallBubble(m ChatMessage) h.Element {
 		h.Div(a.Attrs(a.Class("rounded-lg overflow-hidden border border-stone-300")),
 			// Header bar — bold dark
 			h.Div(a.Attrs(a.Class("flex items-center gap-1.5 px-3 py-1.5 bg-stone-800")),
-				h.UnsafeRaw(`<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M14.25 6.14L13.07 5l.41-1.66a.38.38 0 00-.11-.36.37.37 0 00-.36-.1L11.35 3.3 10.2 2.11a.37.37 0 00-.53 0L8.54 3.24 7.47 2.87a.38.38 0 00-.42.09L1.17 8.84a.38.38 0 000 .53l2.12 2.12-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 2.12 2.12a.38.38 0 00.53 0l5.88-5.88a.38.38 0 00.09-.42l-.37-1.07 1.13-1.13a.37.37 0 000-.53z" fill="#fbbf24"/></svg>`),
+				h.UnsafeRaw(icon),
 				h.Span(a.Attrs(a.Class("text-xs font-semibold text-white")), h.Text(toolName)),
 			),
 			// Args body
@@ -228,6 +229,7 @@ func renderToolCallBubble(m ChatMessage) h.Element {
 func renderToolResultBubble(m ChatMessage) h.Element {
 	animStyle := chatAnimStyle(m.GroupIdx)
 	toolName := displayToolName(m.ToolName)
+	icon := toolResultIcon(m.ToolName)
 
 	content := m.Content
 	if len(content) > 300 {
@@ -244,7 +246,7 @@ func renderToolResultBubble(m ChatMessage) h.Element {
 		h.Div(a.Attrs(a.Class("rounded-lg overflow-hidden border border-stone-200/80")),
 			// Header bar — subtle grey
 			h.Div(a.Attrs(a.Class("flex items-center gap-1.5 px-3 py-1 bg-stone-100/80 border-b border-stone-200/60")),
-				h.UnsafeRaw(`<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M14 4.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1h6.5L14 4.5z" fill="#d6d3d1" fill-opacity="0.3" stroke="#d6d3d1" stroke-width="1"/><path d="M9.5 1v4H14" stroke="#d6d3d1" stroke-width="1" fill="none"/></svg>`),
+				h.UnsafeRaw(icon),
 				h.Span(a.Attrs(a.Class("text-[11px] text-stone-400")), h.Text(toolName)),
 			),
 			// Result body
@@ -262,8 +264,42 @@ func displayToolName(name string) string {
 		return "read_file"
 	case "scratchpad_write":
 		return "write_file"
+	case "web_search":
+		return "web_search"
+	case "fetch_url":
+		return "fetch_url"
 	default:
 		return name
+	}
+}
+
+// toolCallIcon returns an SVG icon string for the tool call header
+func toolCallIcon(toolName string) string {
+	switch toolName {
+	case "web_search":
+		// Magnifying glass
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#fbbf24" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round"/></svg>`
+	case "fetch_url":
+		// Globe
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fbbf24" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" stroke="#fbbf24" stroke-width="1.2"/><path d="M2 8h12M3 4.5h10M3 11.5h10" stroke="#fbbf24" stroke-width="1"/></svg>`
+	default:
+		// Wrench (existing)
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M14.25 6.14L13.07 5l.41-1.66a.38.38 0 00-.11-.36.37.37 0 00-.36-.1L11.35 3.3 10.2 2.11a.37.37 0 00-.53 0L8.54 3.24 7.47 2.87a.38.38 0 00-.42.09L1.17 8.84a.38.38 0 000 .53l2.12 2.12-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 2.12 2.12a.38.38 0 00.53 0l5.88-5.88a.38.38 0 00.09-.42l-.37-1.07 1.13-1.13a.37.37 0 000-.53z" fill="#fbbf24"/></svg>`
+	}
+}
+
+// toolResultIcon returns an SVG icon string for the tool result header
+func toolResultIcon(toolName string) string {
+	switch toolName {
+	case "web_search":
+		// Magnifying glass (muted)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#d6d3d1" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#d6d3d1" stroke-width="1.5" stroke-linecap="round"/></svg>`
+	case "fetch_url":
+		// Globe (muted)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d6d3d1" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" stroke="#d6d3d1" stroke-width="1.2"/><path d="M2 8h12M3 4.5h10M3 11.5h10" stroke="#d6d3d1" stroke-width="1"/></svg>`
+	default:
+		// File (existing)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M14 4.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1h6.5L14 4.5z" fill="#d6d3d1" fill-opacity="0.3" stroke="#d6d3d1" stroke-width="1"/><path d="M9.5 1v4H14" stroke="#d6d3d1" stroke-width="1" fill="none"/></svg>`
 	}
 }
 
@@ -566,9 +602,52 @@ func renderSendButton() h.Element {
 	)
 }
 
-func renderFollowModeBanner() h.Element {
-	return h.Div(a.Attrs(a.Class("px-4 py-3 border-t border-stone-200 flex items-center justify-center shrink-0")),
-		h.Span(a.Attrs(a.Class("text-sm text-blue-600 font-medium")), h.Text("Your instructor is leading this demo")),
+// renderFollowModeChatArea renders a read-only version of the chat input area for followers.
+// Shows narration, the upcoming user message preview, and demo complete state — but no click handlers.
+func renderFollowModeChatArea(state *AgentState) h.Element {
+	var children []h.Element
+
+	atEnd := state.ScriptIndex >= len(state.Config.Script)
+
+	// Narration
+	if state.CurrentNote != "" {
+		children = append(children,
+			h.Div(a.Attrs(a.Class("flex items-start gap-2.5 px-3 py-2.5 mb-2 rounded-xl bg-amber-50/80 border border-amber-200/50")),
+				h.Span(a.Attrs(a.Class("text-base leading-5 shrink-0 mt-0.5")), h.Text("\U0001F9D1\u200D\U0001F3EB")),
+				h.Span(a.Attrs(a.Class("text-sm text-amber-900/70 leading-relaxed")), h.Text(state.CurrentNote)),
+			),
+		)
+	}
+
+	if atEnd {
+		children = append(children,
+			h.Div(a.Attrs(a.Class("flex items-center justify-center px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200")),
+				h.Span(a.Attrs(a.Class("text-sm text-accent font-medium")), h.Text("\u2713 Demo complete")),
+			),
+		)
+	} else {
+		next := state.Config.Script[state.ScriptIndex]
+		if next.Type == "user" {
+			// Show the upcoming user message as a read-only preview
+			children = append(children,
+				h.Div(a.Attrs(a.Class("flex items-end gap-2 rounded-2xl border border-stone-200 bg-stone-50/50 px-4 py-3")),
+					h.Div(a.Attrs(a.Class("flex-1 text-sm text-stone-400 leading-relaxed min-h-[20px]")),
+						h.Text(next.Content),
+					),
+				),
+			)
+		}
+	}
+
+	// Follow mode banner
+	children = append(children,
+		h.Div(a.Attrs(a.Class("flex items-center justify-center py-2")),
+			h.Span(a.Attrs(a.Class("text-xs text-blue-500 font-medium")), h.Text("Your instructor is leading this demo")),
+		),
+	)
+
+	return h.Div(a.Attrs(a.Class("px-3 py-3 border-t border-stone-200 shrink-0")),
+		children...,
 	)
 }
 

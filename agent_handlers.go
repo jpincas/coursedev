@@ -4,6 +4,17 @@ import (
 	gt "github.com/jpincas/go-tea"
 )
 
+// broadcastAgentIfPresenting pushes the current agent state to the live session
+// and broadcasts to all followers. Call after any agent state mutation when presenting.
+func broadcastAgentIfPresenting(mdl *Model) {
+	if mdl.IsPresenting {
+		if session := mdl.getPresentingSession(); session != nil {
+			session.SetAgent(mdl.Agent)
+			app.Broadcast()
+		}
+	}
+}
+
 func (m *Model) handleAgentAdvance(msg gt.Message, s gt.State) gt.Response {
 	mdl := model(s)
 	agent := mdl.Agent
@@ -38,14 +49,7 @@ func (m *Model) handleAgentAdvance(msg gt.Message, s gt.State) gt.Response {
 		agent.ScriptIndex++
 	}
 
-	// If presenting, broadcast agent state to followers
-	if mdl.IsPresenting {
-		if session := mdl.getPresentingSession(); session != nil {
-			session.SetAgent(mdl.Agent)
-			app.Broadcast()
-		}
-	}
-
+	broadcastAgentIfPresenting(mdl)
 	return gt.Respond()
 }
 
@@ -55,14 +59,7 @@ func (m *Model) handleAgentReset(msg gt.Message, s gt.State) gt.Response {
 		return gt.Respond()
 	}
 	mdl.Agent = initAgentState(mdl.Agent.Config)
-
-	if mdl.IsPresenting {
-		if session := mdl.getPresentingSession(); session != nil {
-			session.SetAgent(mdl.Agent)
-			app.Broadcast()
-		}
-	}
-
+	broadcastAgentIfPresenting(mdl)
 	return gt.Respond()
 }
 
@@ -70,6 +67,7 @@ func (m *Model) handleAgentToggleSystem(msg gt.Message, s gt.State) gt.Response 
 	mdl := model(s)
 	if mdl.Agent != nil {
 		mdl.Agent.ShowSystem = !mdl.Agent.ShowSystem
+		broadcastAgentIfPresenting(mdl)
 	}
 	return gt.Respond()
 }
@@ -78,6 +76,7 @@ func (m *Model) handleAgentToggleTools(msg gt.Message, s gt.State) gt.Response {
 	mdl := model(s)
 	if mdl.Agent != nil {
 		mdl.Agent.ShowToolCalls = !mdl.Agent.ShowToolCalls
+		broadcastAgentIfPresenting(mdl)
 	}
 	return gt.Respond()
 }
@@ -86,6 +85,7 @@ func (m *Model) handleAgentToggleContext(msg gt.Message, s gt.State) gt.Response
 	mdl := model(s)
 	if mdl.Agent != nil {
 		mdl.Agent.ShowFullContext = !mdl.Agent.ShowFullContext
+		broadcastAgentIfPresenting(mdl)
 	}
 	return gt.Respond()
 }
@@ -94,6 +94,7 @@ func (m *Model) handleAgentToggleSidebar(msg gt.Message, s gt.State) gt.Response
 	mdl := model(s)
 	if mdl.Agent != nil {
 		mdl.Agent.SidebarOpen = !mdl.Agent.SidebarOpen
+		broadcastAgentIfPresenting(mdl)
 	}
 	return gt.Respond()
 }
@@ -102,6 +103,7 @@ func (m *Model) handleAgentToggleScratchpad(msg gt.Message, s gt.State) gt.Respo
 	mdl := model(s)
 	if mdl.Agent != nil {
 		mdl.Agent.ScratchpadOpen = !mdl.Agent.ScratchpadOpen
+		broadcastAgentIfPresenting(mdl)
 	}
 	return gt.Respond()
 }
@@ -117,6 +119,7 @@ func (m *Model) handleAgentViewFile(msg gt.Message, s gt.State) gt.Response {
 	} else {
 		mdl.Agent.ViewingFile = filename
 	}
+	broadcastAgentIfPresenting(mdl)
 	return gt.Respond()
 }
 
@@ -124,6 +127,7 @@ func (m *Model) handleAgentOpenWorkspace(msg gt.Message, s gt.State) gt.Response
 	mdl := model(s)
 	if mdl.Agent != nil {
 		mdl.Agent.WorkspaceOpen = true
+		broadcastAgentIfPresenting(mdl)
 	}
 	return gt.Respond()
 }
@@ -132,6 +136,7 @@ func (m *Model) handleAgentCloseWorkspace(msg gt.Message, s gt.State) gt.Respons
 	mdl := model(s)
 	if mdl.Agent != nil {
 		mdl.Agent.WorkspaceOpen = false
+		broadcastAgentIfPresenting(mdl)
 	}
 	return gt.Respond()
 }

@@ -95,7 +95,8 @@ func estimateTokens(text string) int {
 	return len(text) / 4
 }
 
-// initAgentIfNeeded checks the current page for an agent block and initialises state if found
+// initAgentIfNeeded checks the current page for an agent block and initialises state if found.
+// When presenting, also pushes the initial agent state to the live session so followers can see it.
 func (m *Model) initAgentIfNeeded() {
 	page := m.currentPage()
 	if page == nil {
@@ -103,6 +104,11 @@ func (m *Model) initAgentIfNeeded() {
 	}
 	if ab := findAgentBlock(page.Blocks); ab != nil {
 		m.Agent = initAgentState(ab)
+		if m.IsPresenting {
+			if session := m.getPresentingSession(); session != nil {
+				session.SetAgent(m.Agent)
+			}
+		}
 	}
 }
 
