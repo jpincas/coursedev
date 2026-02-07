@@ -33,15 +33,7 @@ AI that spawns helper agents for parallel work. Complex tasks broken down and ta
 **Connectors (MCP)**
 Connections that let AI interact directly with your tools and systems.
 
-```mermaid
-flowchart TB
-    A["Your Knowledge"] --> B["Skills"]
-    C["Complex Tasks"] --> D["Subagents"]
-    E["Your Systems"] --> F["MCP Connectors"]
-    B --> G["Consistent, Repeatable Results"]
-    D --> G
-    F --> G
-```
+![Three Pillars: Skills, Subagents, and MCP Connectors leading to Consistent Results](/content/module-advanced/images/three-pillars.svg)
 
 ## The Compounding Effect
 

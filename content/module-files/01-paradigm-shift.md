@@ -45,11 +45,7 @@ Edit the actual document, not restart the chat.
 **You produce professional output**
 Files look professional. Chat exports don't.
 
-```mermaid
-flowchart LR
-    A[Input Files<br/>Data, Documents] --> B[AI Processing]
-    B --> C[Output Files<br/>Deliverables]
-```
+![File Workflow: Input Files to AI Processing to Output Files](/content/module-files/images/file-workflow.svg)
 
 ## The Practical Implication
 

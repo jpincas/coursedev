@@ -8,22 +8,7 @@ tags: [context-window, tokens, capacity]
 
 The context window is the model's "working memory." It's everything the model can see when generating a response.
 
-```mermaid
-flowchart TB
-    subgraph Context["Context Window"]
-        direction TB
-        A["System Prompt<br/><small>Defines behavior, persona, constraints</small>"]
-        B["Conversation History<br/><small>Everything said before in this session</small>"]
-        C["Uploaded Files<br/><small>Documents, images, data you provide</small>"]
-        D["Current Message<br/><small>What you just typed</small>"]
-    end
-
-    A --> E["Model Processing"]
-    B --> E
-    C --> E
-    D --> E
-    E --> F["Response"]
-```
+![Context Window: System Prompt, Conversation History, Files, and Current Message flow into Model Processing](/content/module-context/images/context-window.svg)
 
 ## Context Window Sizes
 

@@ -12,10 +12,7 @@ This isn't about magic words. It's about clear communication with a very capable
 
 ## The Rapid Evolution
 
-```mermaid
-flowchart LR
-    A["2022<br/>Prompt Engineering"] --> B["2024<br/>Context Engineering"] --> C["2025<br/>Delegation"]
-```
+![Evolution of Prompting: from Prompt Engineering to Delegation](/content/module-prompting/images/prompting-evolution.svg)
 
 **2022: Prompt Engineering**
 The early days. People obsessed over exact wording, magic phrases, specific formats. "Tricks" to get the model to behave.

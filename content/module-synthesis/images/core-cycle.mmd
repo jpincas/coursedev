@@ -1,0 +1,5 @@
+flowchart LR
+    A["Prepare"] --> B["Delegate"]
+    B --> C["Verify"]
+    C -->|Iterate| B
+    C -->|Done| D["Deliver"]

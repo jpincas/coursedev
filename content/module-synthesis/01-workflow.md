@@ -10,13 +10,7 @@ Let's synthesise everything into a practical workflow you can use starting tomor
 
 ## The Core Cycle
 
-```mermaid
-flowchart LR
-    A["Prepare"] --> B["Delegate"]
-    B --> C["Verify"]
-    C -->|Iterate| B
-    C -->|Done| D["Deliver"]
-```
+![Core Workflow Cycle: Prepare, Delegate, Verify, Deliver](/content/module-synthesis/images/core-cycle.svg)
 
 This cycle — prepare, delegate, verify — is your new standard operating procedure.
 

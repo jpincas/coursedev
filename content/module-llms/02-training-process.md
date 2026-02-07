@@ -8,13 +8,7 @@ tags: [training, pre-training, fine-tuning, rlhf]
 
 How do these models get trained? Three main phases.
 
-```mermaid
-flowchart LR
-    A[Pre-training] --> B[Fine-tuning] --> C[RLHF]
-    A1["Trillions of words"] --> A
-    B1["Specific tasks"] --> B
-    C1["Human feedback"] --> C
-```
+![LLM Training Process: Pre-training, Fine-tuning, RLHF](/content/module-llms/images/training-process.svg)
 
 ## Phase 1: Pre-training
 

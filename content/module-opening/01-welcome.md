@@ -46,19 +46,7 @@ content: "We're at the beginning of AI that doesn't just answer questions — it
 
 Here's how we got here:
 
-```mermaid
-timeline
-    title AI Evolution: 2022-2026
-    section Chatbot Era
-        Nov 2022 : ChatGPT launches
-        2023 : GPT-4, Claude
-    section Transition
-        2024 : Longer context
-             : Better reasoning
-    section Agentic Era
-        Jan 2025 : Operator, Computer Use
-        Feb 2026 : Cowork, Codex
-```
+![AI Evolution Timeline: 2022-2026](/content/module-opening/images/ai-timeline.svg)
 
 - **November 2022** — ChatGPT. The chatbot era begins.
 - **2023–2024** — Getting better, but still fundamentally chat-based. You ask, it answers.

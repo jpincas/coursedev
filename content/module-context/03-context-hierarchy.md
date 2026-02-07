@@ -8,12 +8,7 @@ tags: [hierarchy, system-prompts, priority]
 
 Not all context is weighted equally. There's a hierarchy of influence:
 
-```mermaid
-flowchart TB
-    A["1. System Prompt<br/><small>Highest priority - sets the rules</small>"] --> B["2. User Instructions<br/><small>Your direct requests and guidance</small>"]
-    B --> C["3. Provided Context<br/><small>Files, examples, reference materials</small>"]
-    C --> D["4. Conversation History<br/><small>What's been said before</small>"]
-```
+![Context Hierarchy: System Prompt, User Instructions, Provided Context, Conversation History](/content/module-context/images/context-hierarchy.svg)
 
 ## 1. System Prompts: The Hidden Rules
 

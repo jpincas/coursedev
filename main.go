@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
@@ -35,6 +36,9 @@ func main() {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
 	defer CloseDB()
+
+	// Serve content directory for static assets (SVG diagrams, images)
+	http.Handle("/content/", http.StripPrefix("/content/", http.FileServer(http.Dir("content"))))
 
 	// Start the Gotea app
 	app = gt.NewApp(&Model{})
@@ -110,8 +114,6 @@ func convertBlocks(parsingBlocks []parsing.Block) []Block {
 				Answers:     b.Answers,
 				Explanation: b.Explanation,
 			}
-		case *parsing.MermaidBlock:
-			blocks[i] = &MermaidBlock{Source: b.Source}
 		case *parsing.CalloutBlock:
 			blocks[i] = &CalloutBlock{
 				Type:    b.Type,

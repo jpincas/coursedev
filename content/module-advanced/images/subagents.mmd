@@ -1,0 +1,7 @@
+flowchart TD
+    A["Main Agent<br/>Receives your task"] --> B["Subagent 1<br/>Research competitors"]
+    A --> C["Subagent 2<br/>Analyse financials"]
+    A --> D["Subagent 3<br/>Draft executive summary"]
+    B --> E["Combined Output"]
+    C --> E
+    D --> E

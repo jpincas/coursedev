@@ -21,15 +21,7 @@ Manual. Tedious. Error-prone.
 
 MCP provides a standard way for AI to connect to your tools and systems directly.
 
-```mermaid
-flowchart LR
-    A["AI"] <--> B["MCP"]
-    B <--> C["Files"]
-    B <--> D["Databases"]
-    B <--> E["Web APIs"]
-    B <--> F["Email"]
-    B <--> G["Calendar"]
-```
+![MCP Connections: AI connects via MCP to Files, Databases, Web APIs, Email, Calendar](/content/module-advanced/images/mcp-connections.svg)
 
 AI reads from your systems. AI writes back directly. No manual copying.
 

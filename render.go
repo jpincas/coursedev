@@ -76,9 +76,7 @@ func renderLayout(m *Model) h.Element {
 			h.Link(a.Attrs(
 				a.Rel("stylesheet"),
 				a.Href("static/css/main.css"))),
-			// Vendor scripts (loaded in head for availability)
-			h.Script(a.Attrs(a.Src("static/vendor/mermaid.min.js"))),
-		),
+			),
 		h.Body(a.Attrs(
 			a.Class(fmt.Sprintf("bg-zinc-950 text-zinc-50 font-sans antialiased min-h-screen %s", fontClass))),
 			h.Div(a.Attrs(a.Class("flex flex-col min-h-screen md:flex-row")),
@@ -726,8 +724,6 @@ func renderBlock(block Block, index int, quizStates map[int]*QuizState, activeHo
 		// Build poll info for this quiz
 		pollInfo := getPollInfoForQuiz(b.ID, index, isPresenting, mdl)
 		return renderQuiz(b, index, quizStates, pollInfo, isFollowing)
-	case *MermaidBlock:
-		return renderMermaid(b)
 	case *CalloutBlock:
 		return renderCallout(b)
 	case *AnnotatedImageBlock:

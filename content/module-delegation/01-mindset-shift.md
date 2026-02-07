@@ -27,20 +27,7 @@ The question isn't whether to use AI. It's how to use it effectively.
 
 ## Two Mental Models
 
-```mermaid
-flowchart TB
-    subgraph Old["AI as Search Engine"]
-        A1["Ask questions"] --> A2["Get answers"]
-        A2 --> A3["Copy-paste results"]
-        A3 --> A4["Repeat endlessly"]
-    end
-
-    subgraph New["AI as Worker"]
-        B1["Delegate outcomes"] --> B2["Step away"]
-        B2 --> B3["Return to finished work"]
-        B3 --> B4["Review and approve"]
-    end
-```
+![Two Mental Models: AI as Search Engine vs AI as Worker](/content/module-delegation/images/mindset-shift.svg)
 
 **AI as Search Engine**
 Ask questions, get answers, copy-paste, repeat. You're doing all the assembly work.

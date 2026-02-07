@@ -13,7 +13,7 @@ import (
 )
 
 // Regex to match fenced code blocks with our custom languages
-var fencedBlockRegex = regexp.MustCompile("(?s)```(quiz|mermaid|math|callout|annotated-image|terminal-replay|exercise)\n(.*?)```")
+var fencedBlockRegex = regexp.MustCompile("(?s)```(quiz|math|callout|annotated-image|terminal-replay|exercise)\n(.*?)```")
 
 // ParseMarkdown parses markdown content with custom extensions
 func ParseMarkdown(content []byte) (*ParseResult, error) {
@@ -76,8 +76,6 @@ func parseBlock(blockType string, content []byte) (Block, error) {
 	switch blockType {
 	case "quiz":
 		return parseQuizBlock(content)
-	case "mermaid":
-		return parseMermaidBlock(content)
 	case "callout":
 		return parseCalloutBlock(content)
 	case "annotated-image":
@@ -112,20 +110,6 @@ func parseQuizBlock(content []byte) (*QuizBlock, error) {
 		block.Type = "multiple-choice"
 	}
 	return &block, nil
-}
-
-// Mermaid block parsing
-type MermaidBlock struct {
-	Source string
-}
-
-func (b *MermaidBlock) BlockType() string { return "mermaid" }
-func (b *MermaidBlock) BlockID() string   { return "" }
-
-func parseMermaidBlock(content []byte) (*MermaidBlock, error) {
-	return &MermaidBlock{
-		Source: string(bytes.TrimSpace(content)),
-	}, nil
 }
 
 // Callout block parsing

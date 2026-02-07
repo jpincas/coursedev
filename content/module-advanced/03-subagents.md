@@ -10,15 +10,7 @@ When one AI agent isn't enough, it can spawn more to work in parallel.
 
 ## How Subagents Work
 
-```mermaid
-flowchart TD
-    A["Main Agent<br/>Receives your task"] --> B["Subagent 1<br/>Research competitors"]
-    A --> C["Subagent 2<br/>Analyse financials"]
-    A --> D["Subagent 3<br/>Draft executive summary"]
-    B --> E["Combined Output"]
-    C --> E
-    D --> E
-```
+![Subagent Architecture: Main Agent delegates to parallel Subagents](/content/module-advanced/images/subagents.svg)
 
 1. You give one complex task
 2. The main agent breaks it into pieces

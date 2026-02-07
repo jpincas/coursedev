@@ -1,51 +1,8 @@
 // Training App Client-Side Initialization
-// Handles Mermaid diagram rendering and annotation canvas
+// Handles annotation canvas
 
 (function() {
   'use strict';
-
-  // Disable mermaid auto-rendering so we control all rendering ourselves.
-  if (typeof mermaid !== 'undefined') {
-    mermaid.initialize({ startOnLoad: false, theme: 'dark' });
-  }
-
-  // Track in-flight mermaid renders to avoid duplicates
-  var mermaidRendering = {};
-  var mermaidIdCounter = 0;
-
-  // Initialize Mermaid diagrams.
-  // After rendering, we set data-morph-skip so morphdom never clobbers the SVG.
-  function initMermaid() {
-    if (typeof mermaid === 'undefined') return;
-
-    document.querySelectorAll('.mermaid').forEach(function(el) {
-      // Already rendered — skip
-      if (el.hasAttribute('data-morph-skip')) return;
-
-      var src = el.textContent.trim();
-      if (!src) return;
-
-      // Already rendering this source — skip, the callback will handle it
-      if (mermaidRendering[src]) return;
-
-      mermaidRendering[src] = true;
-      var renderID = 'mermaid-render-' + (++mermaidIdCounter);
-      mermaid.render(renderID, src).then(function(result) {
-        delete mermaidRendering[src];
-        // Apply to all matching elements currently in DOM
-        document.querySelectorAll('.mermaid').forEach(function(target) {
-          if (target.textContent.trim() === src || target.getAttribute('data-source') === src) {
-            target.innerHTML = result.svg;
-            target.setAttribute('data-source', src);
-            target.setAttribute('data-morph-skip', '');
-          }
-        });
-      }).catch(function(err) {
-        delete mermaidRendering[src];
-        console.error('Mermaid render error:', err);
-      });
-    });
-  }
 
   // Scroll to top when page changes (but not on quiz answers or hotspot toggles)
   let lastPageID = null;
@@ -314,30 +271,22 @@
 
   function afterRender() {
     checkScrollToTop();
-    initMermaid();
     initAnnotations();
   }
 
   // Run initialization after DOM is ready
-  function initAll() {
-    initMermaid();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', afterRender);
+  } else {
     afterRender();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-
   // Register afterRender hook with gotea — called after every morphdom patch.
-  // Mermaid doesn't need this because data-morph-skip prevents clobbering.
   window.gotea = window.gotea || {};
   window.gotea._afterRender = afterRender;
 
   // Expose for manual calls
   window.TrainingApp = {
-    initMermaid: initMermaid,
     initAnnotations: initAnnotations,
     selectAnnotationTool: selectAnnotationTool
   };

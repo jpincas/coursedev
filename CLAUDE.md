@@ -14,7 +14,7 @@ This is a server-side rendered training/learning application built in Go using t
 - **Chroma** — syntax highlighting for code blocks
 - **Tailwind CSS v4** — utility-first CSS via `@tailwindcss/cli`, compiled from `css/main.css` source
 - **@tailwindcss/typography** — `prose` classes for Goldmark-rendered narrative HTML
-- **Mermaid.js / KaTeX.js / asciinema-player** — client-side rendering for diagrams, math, terminal replays (the only JS in the app)
+- **KaTeX.js / asciinema-player** — client-side rendering for math, terminal replays (the only JS in the app)
 - **SQLite (modernc.org/sqlite)** — optional persistence for learner analytics
 
 ## Architecture Essentials
@@ -73,10 +73,10 @@ css/main.css               — Tailwind v4 source CSS (theme, plugins, minimal o
 static/                    — Built output and vendored assets (do NOT edit files here directly)
   css/main.css             — Built Tailwind output
   js/main.js               — Built JS bundle (gotea client + training init)
-  vendor/                  — Vendored third-party JS/CSS (Mermaid, KaTeX)
+  vendor/                  — Vendored third-party JS/CSS (KaTeX)
 js/                        — JS source files (built by Parcel into static/js/main.js)
   main.js                  — Entry point: imports gotea client and training.js
-  training.js              — Client-side init for Mermaid, KaTeX, asciinema after morphdom patches
+  training.js              — Client-side init for KaTeX, asciinema after morphdom patches
 package.json               — Build config: `npm run build` builds both JS and CSS
 ```
 
@@ -109,7 +109,6 @@ All styling uses **Tailwind utility classes applied directly in Go render code**
 - **`content-prose` class:** Minimal CSS overrides in `css/main.css` for Goldmark-specific elements (inline code accent color, link colors, pre block borders). This is the only custom CSS.
 - **Preserved class names:** Some classes are required by client-side JS and must not be removed:
   - `external` — used by gotea client to identify links that should not be intercepted for client-side routing
-  - `mermaid` — used by Mermaid.js for diagram rendering
   - `katex-block` — used by KaTeX for math rendering
   - `asciinema-player` — used by asciinema-player for terminal replays
 - **Custom utilities:** `font-small`, `font-medium`, `font-large` and `animate-pulse-soft` are defined as `@utility` in the CSS source.
@@ -130,7 +129,7 @@ All styling uses **Tailwind utility classes applied directly in Go render code**
 2. Add a parser case in `parsing/goldmark_extensions.go` that recognises the new fenced language tag and extracts the YAML into the struct.
 3. Add a render function in `block_renderers.go` that produces the `h.Element` tree.
 4. Add the case to the `renderBlock()` switch in `render.go`.
-5. If the block needs client-side JS (like Mermaid), add initialisation in `js/training.js`.
+5. If the block needs client-side JS (like KaTeX), add initialisation in `js/training.js`.
 6. Add tests: parsing test (markdown in → struct out) and render test (struct in → HTML contains expected elements).
 
 ### Adding a New Message
@@ -190,7 +189,7 @@ Use `tester.NewSession(t, &Model{})` for integration tests that exercise the ful
 
 ## Things To Watch Out For
 
-- **morphdom and client-side JS:** After morphdom patches the DOM, client-side libraries (Mermaid, KaTeX) need to re-initialise for new elements. The `js/training.js` source file handles this (bundled into `static/js/main.js` by Parcel). If you add a new client-side rendered block, add its init logic there.
+- **morphdom and client-side JS:** After morphdom patches the DOM, client-side libraries (KaTeX) need to re-initialise for new elements. The `js/training.js` source file handles this (bundled into `static/js/main.js` by Parcel). If you add a new client-side rendered block, add its init logic there.
 - **Block index stability:** The `data-block-index` placeholder system assumes blocks appear in order in the markdown. Don't reorder blocks between parse and render.
 - **Shared vs per-session state:** Never modify `globalCourse` or `globalModules` in a message handler. They're shared across all sessions. Only modify fields on the `Model` instance.
 - **Quiz answer payloads:** Quiz answers include both `blockIndex` (position on the page) and `answer` (chosen option index). Both are needed because multiple quizzes can appear on one page.
@@ -202,5 +201,4 @@ Use `tester.NewSession(t, &Model{})` for integration tests that exercise the ful
 - **Course materials reference:** I've placed the materials for the course I wish to implement in the folder `ai-course`
 - **Plan:** See `plan.md` for the full architecture plan, phasing, and design decisions.
 - **Goldmark:** https://github.com/yuin/goldmark
-- **Mermaid:** https://mermaid.js.org/
 - **KaTeX:** https://katex.org/

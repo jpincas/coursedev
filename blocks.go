@@ -20,14 +20,6 @@ type QuizBlock struct {
 func (b *QuizBlock) BlockType() string { return "quiz" }
 func (b *QuizBlock) BlockID() string   { return b.ID }
 
-// MermaidBlock represents a Mermaid diagram
-type MermaidBlock struct {
-	Source string // The raw Mermaid source code
-}
-
-func (b *MermaidBlock) BlockType() string { return "mermaid" }
-func (b *MermaidBlock) BlockID() string   { return "" }
-
 // CalloutBlock represents an admonition/callout
 type CalloutBlock struct {
 	Type    string `yaml:"type"`    // info, warning, tip, danger, note

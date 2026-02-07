@@ -322,15 +322,6 @@ func renderQuizPollLearner(q *QuizBlock, blockIndex int, state *QuizState, pollI
 	)
 }
 
-// renderMermaid renders a Mermaid diagram block
-func renderMermaid(b *MermaidBlock) h.Element {
-	return h.Div(a.Attrs(a.Class("my-8 p-6 bg-zinc-900 rounded-xl border border-zinc-800 overflow-x-auto not-prose")),
-		h.Div(a.Attrs(a.Class("mermaid")),
-			h.Text(b.Source),
-		),
-	)
-}
-
 // renderCallout renders a callout/admonition block
 func renderCallout(b *CalloutBlock) h.Element {
 	icon := getCalloutIcon(b.Type)
