@@ -18,6 +18,21 @@ type LiveSession struct {
 
 	// Poll state for this session
 	Poll *LivePollState
+
+	// Annotations keyed by "module:page"
+	Annotations map[string][]AnnotationStroke
+}
+
+// AnnotationStroke represents a single drawn stroke on the canvas
+type AnnotationStroke struct {
+	Tool   string            `json:"tool"`   // "pen" or "highlighter"
+	Points []AnnotationPoint `json:"points"`
+}
+
+// AnnotationPoint is a single coordinate in a stroke (0-1 percentage-based)
+type AnnotationPoint struct {
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
 }
 
 // LivePollState tracks an active poll within a live session
@@ -59,6 +74,7 @@ func CreateLiveSessionForCohort(cohortID uuid.UUID, presenterSID uuid.UUID, modu
 		PresenterSID:  presenterSID,
 		CurrentModule: module,
 		CurrentPage:   page,
+		Annotations:   make(map[string][]AnnotationStroke),
 	}
 	liveSessionRegistry.byCohort[cohortID] = session
 	return session, nil
@@ -140,4 +156,31 @@ func (s *LiveSession) TogglePollResults() {
 	if s.Poll != nil {
 		s.Poll.ShowResults = !s.Poll.ShowResults
 	}
+}
+
+// annotationKey builds the map key for annotations
+func annotationKey(module string, page int) string {
+	return fmt.Sprintf("%s:%d", module, page)
+}
+
+// AddAnnotation appends a stroke to the annotations for a given page
+func (s *LiveSession) AddAnnotation(module string, page int, stroke AnnotationStroke) {
+	s.Lock()
+	defer s.Unlock()
+	key := annotationKey(module, page)
+	s.Annotations[key] = append(s.Annotations[key], stroke)
+}
+
+// ClearAnnotations removes all annotations for a given page
+func (s *LiveSession) ClearAnnotations(module string, page int) {
+	s.Lock()
+	defer s.Unlock()
+	delete(s.Annotations, annotationKey(module, page))
+}
+
+// GetAnnotations returns the strokes for a given page
+func (s *LiveSession) GetAnnotations(module string, page int) []AnnotationStroke {
+	s.RLock()
+	defer s.RUnlock()
+	return s.Annotations[annotationKey(module, page)]
 }

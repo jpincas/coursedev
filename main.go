@@ -328,6 +328,10 @@ func (m *Model) Update() gt.MessageMap {
 		"CLOSE_POLL":          m.handleClosePoll,
 		"TOGGLE_POLL_RESULTS": m.handleTogglePollResults,
 
+		// Annotations
+		"ADD_ANNOTATION":    m.handleAddAnnotation,
+		"CLEAR_ANNOTATIONS": m.handleClearAnnotations,
+
 		// Admin - Cohort management
 		"CREATE_COHORT": m.handleCreateCohort,
 		"UPDATE_COHORT": m.handleUpdateCohort,

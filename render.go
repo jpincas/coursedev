@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	stdhtml "html"
 	"log"
 	"regexp"
 
@@ -85,12 +87,13 @@ func renderLayout(m *Model) h.Element {
 			a.Class(fmt.Sprintf("bg-zinc-950 text-zinc-50 font-sans antialiased min-h-screen %s", fontClass))),
 			h.Div(a.Attrs(a.Class("flex flex-col min-h-screen md:flex-row")),
 				renderSidebar(m),
-				h.Main(a.Attrs(a.Class("flex-1 p-6 md:py-10 md:px-12 max-w-[900px] overflow-y-auto")),
-					h.Div(a.Attrs(a.Id("view")),
-						h.UnsafeRaw(string(m.RenderRoute(m))))),
+				h.Main(a.Attrs(a.Class("flex-1 py-6 md:py-10 overflow-y-auto")),
+					h.Div(a.Attrs(a.Id("view"), a.Class("relative w-[660px] shrink-0 box-content px-6 md:px-12")),
+						h.UnsafeRaw(string(m.RenderRoute(m))),
+						renderAnnotationLayer(m)),
+				),
 			),
 			h.Script(a.Attrs(a.Src("static/js/main.js"))),
-			h.Script(a.Attrs(a.Src("static/js/training.js"))),
 		))
 }
 
@@ -251,6 +254,9 @@ func renderSidebar(m *Model) h.Element {
 	// Determine if navigation is disabled (when following a live session)
 	navDisabled := m.FollowingLive
 
+	// Module index for sub-numbering (e.g. 6.1, 6.2)
+	modIdx := globalCourse.ModuleIndex(mod.ID)
+
 	pages := make([]h.Element, len(mod.Pages))
 	for i, page := range mod.Pages {
 		classes := "flex items-center gap-3 py-2.5 px-3 rounded-lg text-zinc-400 no-underline text-sm transition-all duration-150 border border-transparent external"
@@ -274,14 +280,14 @@ func renderSidebar(m *Model) h.Element {
 		}
 
 		// Build page item with number and completion indicator
-		pageNum := fmt.Sprintf("%d", i+1)
+		pageNum := fmt.Sprintf("%d.%d", modIdx, i+1)
 
 		// Page number styling
-		pageNumClass := "flex items-center justify-center w-6 h-6 bg-zinc-800 rounded-full text-xs font-semibold shrink-0"
+		pageNumClass := "flex items-center justify-center min-w-[1.75rem] h-6 px-1 bg-zinc-800 rounded-full text-xs font-semibold shrink-0"
 		if i == currentPageIdx {
-			pageNumClass = "flex items-center justify-center w-6 h-6 bg-accent text-zinc-950 rounded-full text-xs font-semibold shrink-0"
+			pageNumClass = "flex items-center justify-center min-w-[1.75rem] h-6 px-1 bg-accent text-zinc-950 rounded-full text-xs font-semibold shrink-0"
 		} else if viewed {
-			pageNumClass = "flex items-center justify-center w-6 h-6 bg-zinc-700 rounded-full text-xs font-semibold shrink-0"
+			pageNumClass = "flex items-center justify-center min-w-[1.75rem] h-6 px-1 bg-zinc-700 rounded-full text-xs font-semibold shrink-0"
 		}
 
 		var statusIcon h.Element
@@ -544,13 +550,14 @@ func renderPageContentWithNav(page *Page, mod *Module, currentIdx int, quizState
 		}
 		if i < len(page.Blocks) {
 			children = append(children,
-				renderBlock(page.Blocks[i], i, quizStates, activeHotspot, isPresenting, mdl))
+				renderBlock(page.Blocks[i], i, quizStates, activeHotspot, isPresenting, isFollowing, mdl))
 		}
 	}
 
 	// Build navigation controls
 	hasPrev := currentIdx > 0
 	hasNext := mod != nil && currentIdx < len(mod.Pages)-1
+	quizzesBlocking := !mdl.IsOwner && mdl.currentPageHasUnansweredRequiredQuizzes()
 
 	// Navigation messages are always the same - the handlers check if presenting
 	prevMsg := "PREV_PAGE"
@@ -581,7 +588,19 @@ func renderPageContentWithNav(page *Page, mod *Module, currentIdx int, quizState
 			prevBtn = h.Div(a.Attrs(a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-zinc-800 rounded-xl flex-1 max-w-full md:max-w-[280px] text-left opacity-30 cursor-default")))
 		}
 
-		if hasNext {
+		if hasNext && quizzesBlocking {
+			// Quizzes must be completed before advancing
+			nextTitle := mod.Pages[currentIdx+1].Meta.Title
+			if nextTitle == "" {
+				nextTitle = fmt.Sprintf("Page %d", currentIdx+2)
+			}
+			nextBtn = h.Div(a.Attrs(a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-amber-400 rounded-xl flex-1 max-w-full md:max-w-[280px] text-right md:ml-auto cursor-not-allowed")),
+				h.Span(a.Attrs(a.Class("flex flex-col gap-1 min-w-0")),
+					h.Span(a.Attrs(a.Class("text-xs text-amber-400 uppercase tracking-widest")), h.Text("Complete quizzes to continue")),
+					h.Span(a.Attrs(a.Class("text-sm font-medium text-zinc-400 truncate")), h.Text(nextTitle)),
+				),
+			)
+		} else if hasNext {
 			nextTitle := mod.Pages[currentIdx+1].Meta.Title
 			if nextTitle == "" {
 				nextTitle = fmt.Sprintf("Page %d", currentIdx+2)
@@ -595,6 +614,53 @@ func renderPageContentWithNav(page *Page, mod *Module, currentIdx int, quizState
 				),
 				h.Span(a.Attrs(a.Class("text-xl text-accent shrink-0")), h.Text("\u2192")),
 			)
+		} else if quizzesBlocking {
+			// Last page with unanswered required quizzes
+			nextBtn = h.Div(a.Attrs(a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-amber-400 rounded-xl flex-1 max-w-full md:max-w-[280px] text-right md:ml-auto cursor-not-allowed")),
+				h.Span(a.Attrs(a.Class("flex flex-col gap-1 min-w-0")),
+					h.Span(a.Attrs(a.Class("text-xs text-amber-400 uppercase tracking-widest")), h.Text("Complete quizzes to continue")),
+				),
+			)
+		} else if mod != nil {
+			// Last page of module — check for next module
+			nextModID := globalCourse.NextModule(mod.ID)
+			if nextModID != "" {
+				nextMod := globalModules[nextModID]
+				if nextMod != nil {
+					nextModTitle := nextMod.Meta.Title
+					if mdl.IsOwner || globalCourse.PrerequisitesMet(nextModID, mdl.Progress) {
+						// Clickable next-module button
+						nextBtn = h.Button(a.Attrs(
+							a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-accent rounded-xl cursor-pointer transition-all duration-200 flex-1 max-w-full md:max-w-[320px] text-right md:ml-auto hover:bg-accent-dim"),
+							a.OnClick(gt.SendBasicMessage("NAV_MODULE", nextModID))),
+							h.Span(a.Attrs(a.Class("flex flex-col gap-1 min-w-0")),
+								h.Span(a.Attrs(a.Class("text-xs text-accent uppercase tracking-widest")), h.Text("Next Module")),
+								h.Span(a.Attrs(a.Class("text-sm font-medium text-zinc-100 truncate")), h.Text(nextModTitle)),
+							),
+							h.Span(a.Attrs(a.Class("text-xl text-accent shrink-0")), h.Text("\u2192")),
+						)
+					} else {
+						// Locked next-module button
+						nextBtn = h.Div(a.Attrs(a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-zinc-700 rounded-xl flex-1 max-w-full md:max-w-[320px] text-right md:ml-auto opacity-50 cursor-not-allowed")),
+							h.Span(a.Attrs(a.Class("flex flex-col gap-1 min-w-0")),
+								h.Span(a.Attrs(a.Class("text-xs text-zinc-500 uppercase tracking-widest")), h.Text("Next Module (Locked)")),
+								h.Span(a.Attrs(a.Class("text-sm font-medium text-zinc-400 truncate")), h.Text(nextModTitle)),
+							),
+							h.Span(a.Attrs(a.Class("text-xl text-zinc-600 shrink-0")), h.Text("\U0001F512")),
+						)
+					}
+				} else {
+					nextBtn = h.Div(a.Attrs(a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-zinc-800 rounded-xl flex-1 max-w-full md:max-w-[280px] text-right md:ml-auto opacity-30 cursor-default")))
+				}
+			} else {
+				// Last module — course complete
+				nextBtn = h.Div(a.Attrs(a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-accent rounded-xl flex-1 max-w-full md:max-w-[280px] text-right md:ml-auto")),
+					h.Span(a.Attrs(a.Class("flex flex-col gap-1 min-w-0")),
+						h.Span(a.Attrs(a.Class("text-xs text-accent uppercase tracking-widest")), h.Text("Course Complete")),
+						h.Span(a.Attrs(a.Class("text-sm font-medium text-accent")), h.Text("\u2713 Well done!")),
+					),
+				)
+			}
 		} else {
 			nextBtn = h.Div(a.Attrs(a.Class("flex items-center gap-4 py-4 px-5 bg-zinc-900 border border-zinc-800 rounded-xl flex-1 max-w-full md:max-w-[280px] text-right md:ml-auto opacity-30 cursor-default")))
 		}
@@ -603,7 +669,8 @@ func renderPageContentWithNav(page *Page, mod *Module, currentIdx int, quizState
 	// Page indicator
 	pageIndicator := ""
 	if mod != nil {
-		pageIndicator = fmt.Sprintf("Page %d of %d", currentIdx+1, len(mod.Pages))
+		modIdx := globalCourse.ModuleIndex(mod.ID)
+		pageIndicator = fmt.Sprintf("Section %d.%d of %d", modIdx, currentIdx+1, len(mod.Pages))
 	}
 
 	// Add presenter badge if presenting
@@ -616,7 +683,12 @@ func renderPageContentWithNav(page *Page, mod *Module, currentIdx int, quizState
 		modeIndicator = h.Span(a.Attrs())
 	}
 
-	return h.Article(a.Attrs(a.Class("max-w-full")),
+	pageID := ""
+	if mod != nil {
+		pageID = fmt.Sprintf("%s:%d", mod.ID, currentIdx)
+	}
+
+	return h.Article(a.Attrs(a.Class("max-w-full"), a.Custom("data-page-id", pageID)),
 		h.Div(a.Attrs(a.Class("mb-10 pb-6 border-b border-zinc-800")),
 			h.Div(a.Attrs(a.Class("flex justify-between items-center mb-2")),
 				h.Span(a.Attrs(a.Class("block text-xs text-accent font-medium tracking-widest uppercase")), h.Text(pageIndicator)),
@@ -652,12 +724,12 @@ func splitHTMLAtBlockMarkers(html []byte) [][]byte {
 }
 
 // renderBlock dispatches to the appropriate block renderer
-func renderBlock(block Block, index int, quizStates map[int]*QuizState, activeHotspot string, isPresenting bool, mdl *Model) h.Element {
+func renderBlock(block Block, index int, quizStates map[int]*QuizState, activeHotspot string, isPresenting bool, isFollowing bool, mdl *Model) h.Element {
 	switch b := block.(type) {
 	case *QuizBlock:
 		// Build poll info for this quiz
 		pollInfo := getPollInfoForQuiz(b.ID, index, isPresenting, mdl)
-		return renderQuiz(b, index, quizStates, pollInfo)
+		return renderQuiz(b, index, quizStates, pollInfo, isFollowing)
 	case *MermaidBlock:
 		return renderMermaid(b)
 	case *MathBlock:
@@ -754,6 +826,80 @@ func renderError(err error) h.Element {
 	)
 }
 
+
+// ============================================================================
+// Annotation Layer
+// ============================================================================
+
+// renderAnnotationLayer renders the canvas overlay and toolbar for presenter annotations
+func renderAnnotationLayer(m *Model) h.Element {
+	// Only show in live sessions (presenting or following)
+	session := m.getPresentingSession()
+	if session == nil {
+		session = m.getFollowingSession()
+	}
+	if session == nil {
+		return h.Span(a.Attrs())
+	}
+
+	// Get strokes for current page
+	strokes := session.GetAnnotations(m.CurrentModule, m.CurrentPage)
+	strokesJSON := "[]"
+	if len(strokes) > 0 {
+		if data, err := json.Marshal(strokes); err == nil {
+			strokesJSON = string(data)
+		}
+	}
+
+	isPresenter := "false"
+	if m.IsPresenting {
+		isPresenter = "true"
+	}
+
+	// Annotation overlay div — JS creates canvas inside this
+	overlay := h.Div(a.Attrs(
+		a.Id("annotation-layer"),
+		a.Custom("data-strokes", stdhtml.EscapeString(strokesJSON)),
+		a.Custom("data-is-presenter", isPresenter),
+		a.Class("absolute top-0 left-0 w-full h-full pointer-events-none z-40"),
+	))
+
+	if !m.IsPresenting {
+		// Followers only get the overlay (no toolbar)
+		return overlay
+	}
+
+	// Presenter toolbar — fixed at bottom center of viewport
+	toolbar := h.Div(a.Attrs(
+		a.Id("annotation-toolbar"),
+		a.Class("fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 justify-center"),
+	),
+		h.Div(a.Attrs(a.Class("flex items-center gap-2 bg-zinc-900/95 backdrop-blur-sm border border-zinc-700 rounded-full py-2 px-4 shadow-xl")),
+			h.Button(a.Attrs(
+				a.Id("annotation-tool-pen"),
+				a.Class("py-2 px-4 text-sm rounded-full font-medium cursor-pointer transition-all duration-150 border-none bg-zinc-800 text-zinc-300 hover:bg-zinc-700"),
+				a.OnClick(`TrainingApp.selectAnnotationTool("pen")`)),
+				h.Text("\u270F Pen"),
+			),
+			h.Button(a.Attrs(
+				a.Id("annotation-tool-highlighter"),
+				a.Class("py-2 px-4 text-sm rounded-full font-medium cursor-pointer transition-all duration-150 border-none bg-zinc-800 text-zinc-300 hover:bg-zinc-700"),
+				a.OnClick(`TrainingApp.selectAnnotationTool("highlighter")`)),
+				h.Text("\u2588 Highlight"),
+			),
+			h.Button(a.Attrs(
+				a.Class("py-2 px-4 text-sm rounded-full font-medium cursor-pointer transition-all duration-150 border-none bg-zinc-800 text-red-400 hover:bg-red-500/20"),
+				a.OnClick(gt.SendBasicMessageNoArgs("CLEAR_ANNOTATIONS"))),
+				h.Text("\u2715 Clear"),
+			),
+		),
+	)
+
+	return h.Div(a.Attrs(),
+		overlay,
+		toolbar,
+	)
+}
 
 // ============================================================================
 // Auth Flow Rendering

@@ -4,6 +4,8 @@
 
 set -e
 
+export COURSEDEV_ADMIN_KEY="${COURSEDEV_ADMIN_KEY:-admin-test-key}"
+
 # Kill any existing server on port 8080
 lsof -ti:8080 | xargs kill -9 2>/dev/null || true
 

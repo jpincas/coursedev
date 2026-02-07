@@ -358,6 +358,32 @@ func (m *Model) moduleNeedsQuizzes(moduleID string) bool {
 	return scoreRatio < mod.Meta.Completion.MinQuizScore
 }
 
+// currentPageHasUnansweredRequiredQuizzes checks if the current page has quizzes
+// that must be answered correctly before advancing (when module has RequireQuizzes)
+func (m *Model) currentPageHasUnansweredRequiredQuizzes() bool {
+	mod := m.currentModule()
+	if mod == nil || !mod.Meta.Completion.RequireQuizzes {
+		return false
+	}
+	page := m.currentPage()
+	if page == nil {
+		return false
+	}
+	progress := m.Progress[m.CurrentModule]
+	for _, block := range page.Blocks {
+		if quiz, ok := block.(*QuizBlock); ok {
+			if progress == nil {
+				return true
+			}
+			score, exists := progress.QuizScores[quiz.ID]
+			if !exists || !score.Correct {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 // checkAndMarkCompletion checks if current module is complete and marks it
 func (m *Model) checkAndMarkCompletion() {
 	if m.CurrentModule == "" {

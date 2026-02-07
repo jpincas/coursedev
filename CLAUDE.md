@@ -70,12 +70,13 @@ parsing/                   — Goldmark extensions and content parsing
   goldmark_extensions.go   — Custom fenced block extensions
 content/                   — Markdown training content (THE source of truth)
 css/main.css               — Tailwind v4 source CSS (theme, plugins, minimal overrides) — NOT the output
-static/                    — Built output and vendored assets
-  css/main.css             — Built Tailwind output — do not edit directly
-  js/main.js               — Built gotea client JS (morphdom + WebSocket) — do not edit directly
-  js/training.js           — Client-side init for Mermaid, KaTeX, asciinema after morphdom patches
+static/                    — Built output and vendored assets (do NOT edit files here directly)
+  css/main.css             — Built Tailwind output
+  js/main.js               — Built JS bundle (gotea client + training init)
   vendor/                  — Vendored third-party JS/CSS (Mermaid, KaTeX)
-js/                        — Source JS for the gotea client (built by Parcel)
+js/                        — JS source files (built by Parcel into static/js/main.js)
+  main.js                  — Entry point: imports gotea client and training.js
+  training.js              — Client-side init for Mermaid, KaTeX, asciinema after morphdom patches
 package.json               — Build config: `npm run build` builds both JS and CSS
 ```
 
@@ -129,7 +130,7 @@ All styling uses **Tailwind utility classes applied directly in Go render code**
 2. Add a parser case in `parsing/goldmark_extensions.go` that recognises the new fenced language tag and extracts the YAML into the struct.
 3. Add a render function in `block_renderers.go` that produces the `h.Element` tree.
 4. Add the case to the `renderBlock()` switch in `render.go`.
-5. If the block needs client-side JS (like Mermaid), add initialisation in `static/js/training.js`.
+5. If the block needs client-side JS (like Mermaid), add initialisation in `js/training.js`.
 6. Add tests: parsing test (markdown in → struct out) and render test (struct in → HTML contains expected elements).
 
 ### Adding a New Message
@@ -157,10 +158,11 @@ npm run build:css
 ```
 This compiles `css/main.css` → `static/css/main.css`. You must do this whenever you add new Tailwind utility classes to Go render code, since Tailwind needs to scan the files and generate the corresponding CSS.
 
-**After changing `js/main.js`, rebuild the client JS:**
+**After changing any JS source file in `js/`, rebuild the client JS:**
 ```bash
 npm run build:js
 ```
+Parcel bundles `js/main.js` (the entry point) and all its imports (including `js/training.js`) into a single `static/js/main.js`. **Never put JS files directly into `static/js/`** — all JS source goes in the `js/` directory and gets bundled by the build.
 
 **Build everything (JS + CSS):**
 ```bash
@@ -188,7 +190,7 @@ Use `tester.NewSession(t, &Model{})` for integration tests that exercise the ful
 
 ## Things To Watch Out For
 
-- **morphdom and client-side JS:** After morphdom patches the DOM, client-side libraries (Mermaid, KaTeX) need to re-initialise for new elements. The `static/js/training.js` script handles this. If you add a new client-side rendered block, add its init logic there.
+- **morphdom and client-side JS:** After morphdom patches the DOM, client-side libraries (Mermaid, KaTeX) need to re-initialise for new elements. The `js/training.js` source file handles this (bundled into `static/js/main.js` by Parcel). If you add a new client-side rendered block, add its init logic there.
 - **Block index stability:** The `data-block-index` placeholder system assumes blocks appear in order in the markdown. Don't reorder blocks between parse and render.
 - **Shared vs per-session state:** Never modify `globalCourse` or `globalModules` in a message handler. They're shared across all sessions. Only modify fields on the `Model` instance.
 - **Quiz answer payloads:** Quiz answers include both `blockIndex` (position on the page) and `answer` (chosen option index). Both are needed because multiple quizzes can appear on one page.

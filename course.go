@@ -6,6 +6,26 @@ type CourseGraph struct {
 	Prerequisites map[string][]string // module ID -> required module IDs
 }
 
+// ModuleIndex returns the 1-based index of a module in ModuleOrder, or 0 if not found
+func (cg *CourseGraph) ModuleIndex(moduleID string) int {
+	for i, id := range cg.ModuleOrder {
+		if id == moduleID {
+			return i + 1
+		}
+	}
+	return 0
+}
+
+// NextModule returns the ID of the next module after the given one, or "" if it's the last
+func (cg *CourseGraph) NextModule(moduleID string) string {
+	for i, id := range cg.ModuleOrder {
+		if id == moduleID && i+1 < len(cg.ModuleOrder) {
+			return cg.ModuleOrder[i+1]
+		}
+	}
+	return ""
+}
+
 // PrerequisitesMet checks if all prerequisites for a module are satisfied
 func (cg *CourseGraph) PrerequisitesMet(moduleID string, progress map[string]*ModuleProgress) bool {
 	prereqs, ok := cg.Prerequisites[moduleID]

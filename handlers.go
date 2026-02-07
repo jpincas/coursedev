@@ -209,6 +209,11 @@ func (m *Model) handleNextPage(msg gt.Message, s gt.State) gt.Response {
 		return gt.Respond()
 	}
 
+	// Block advancement if required quizzes are unanswered (students only)
+	if !mdl.IsOwner && mdl.currentPageHasUnansweredRequiredQuizzes() {
+		return gt.Respond()
+	}
+
 	if mdl.CurrentPage < len(mod.Pages)-1 {
 		mdl.CurrentPage++
 		mdl.ActiveQuizzes = make(map[int]*QuizState)
@@ -639,6 +644,45 @@ func (m *Model) handleTogglePollResults(msg gt.Message, s gt.State) gt.Response 
 	}
 
 	session.TogglePollResults()
+	app.Broadcast()
+
+	return gt.Respond()
+}
+
+// ============================================================================
+// Annotation handlers
+// ============================================================================
+
+func (m *Model) handleAddAnnotation(msg gt.Message, s gt.State) gt.Response {
+	mdl := model(s)
+
+	session := mdl.getPresentingSession()
+	if session == nil {
+		return gt.Respond()
+	}
+
+	var stroke AnnotationStroke
+	msg.MustDecodeArgs(&stroke)
+
+	if len(stroke.Points) == 0 {
+		return gt.Respond()
+	}
+
+	session.AddAnnotation(mdl.CurrentModule, mdl.CurrentPage, stroke)
+	app.Broadcast()
+
+	return gt.Respond()
+}
+
+func (m *Model) handleClearAnnotations(msg gt.Message, s gt.State) gt.Response {
+	mdl := model(s)
+
+	session := mdl.getPresentingSession()
+	if session == nil {
+		return gt.Respond()
+	}
+
+	session.ClearAnnotations(mdl.CurrentModule, mdl.CurrentPage)
 	app.Broadcast()
 
 	return gt.Respond()

@@ -21,7 +21,7 @@ type PollInfo struct {
 }
 
 // renderQuiz renders a quiz block with interactive options
-func renderQuiz(q *QuizBlock, blockIndex int, quizStates map[int]*QuizState, pollInfo *PollInfo) h.Element {
+func renderQuiz(q *QuizBlock, blockIndex int, quizStates map[int]*QuizState, pollInfo *PollInfo, isFollowing bool) h.Element {
 	// Look up state for this specific quiz
 	state := quizStates[blockIndex]
 	answered := state != nil && state.Answered
@@ -37,6 +37,27 @@ func renderQuiz(q *QuizBlock, blockIndex int, quizStates map[int]*QuizState, pol
 	// Render poll mode for learners
 	if isPollActive && !pollInfo.IsInstructor {
 		return renderQuizPollLearner(q, blockIndex, state, pollInfo)
+	}
+
+	// When following a live session and quiz is not answered and no active poll,
+	// show a locked "waiting" state so follower can't click before poll is opened
+	if isFollowing && !answered {
+		options := make([]h.Element, len(q.Options))
+		for i, opt := range q.Options {
+			options[i] = h.Div(a.Attrs(
+				a.Class("py-4 px-5 border-2 border-zinc-700 rounded-xl bg-zinc-800/30 text-zinc-500 text-[0.95rem]")),
+				h.Text(opt),
+			)
+		}
+		return h.Div(a.Attrs(a.Class("bg-zinc-900 border border-zinc-800 rounded-2xl p-8 my-8 not-prose"), a.Custom("data-quiz-id", q.ID)),
+			h.P(a.Attrs(a.Class("text-lg font-medium mb-6 text-zinc-100")), h.Text(q.Question)),
+			h.Div(a.Attrs(a.Class("flex flex-col gap-3")),
+				options...,
+			),
+			h.Div(a.Attrs(a.Class("mt-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500 text-blue-400 text-sm text-center")),
+				h.Text("Waiting for instructor to open this quiz as a live poll..."),
+			),
+		)
 	}
 
 	// Regular quiz mode - also show poll start button for instructor
@@ -212,16 +233,33 @@ func renderQuizPollLearner(q *QuizBlock, blockIndex int, state *QuizState, pollI
 				pct = (count * 100) / pollInfo.TotalVotes
 			}
 
+			isCorrect := i == q.Answer
+			isUserChoice := state != nil && state.ChosenIdx == i
+
 			rowClass := "grid grid-cols-[1fr_2fr_auto] gap-4 items-center p-2 rounded-lg bg-zinc-950"
-			if i == q.Answer {
+			if isCorrect {
 				rowClass = "grid grid-cols-[1fr_2fr_auto] gap-4 items-center p-2 rounded-lg bg-green-500/15 border border-green-500"
+			} else if isUserChoice {
+				rowClass = "grid grid-cols-[1fr_2fr_auto] gap-4 items-center p-2 rounded-lg bg-amber-400/15 border border-amber-400"
 			}
-			if state != nil && state.ChosenIdx == i {
-				rowClass += " ring-2 ring-accent ring-inset"
+
+			// Build label for this option
+			var label h.Element
+			if isCorrect && isUserChoice {
+				label = h.Span(a.Attrs(a.Class("text-xs font-semibold text-green-400 mt-1")), h.Text("\u2713 Your answer \u2014 Correct!"))
+			} else if isCorrect {
+				label = h.Span(a.Attrs(a.Class("text-xs font-semibold text-green-400 mt-1")), h.Text("\u2713 Correct answer"))
+			} else if isUserChoice {
+				label = h.Span(a.Attrs(a.Class("text-xs font-semibold text-amber-400 mt-1")), h.Text("Your answer"))
+			} else {
+				label = h.Span(a.Attrs())
 			}
 
 			results[i] = h.Div(a.Attrs(a.Class(rowClass)),
-				h.Div(a.Attrs(a.Class("text-sm text-zinc-200")), h.Text(opt)),
+				h.Div(a.Attrs(a.Class("text-sm text-zinc-200")),
+					h.Div(a.Attrs(), h.Text(opt)),
+					label,
+				),
 				h.Div(a.Attrs(a.Class("h-6 bg-zinc-800 rounded-md overflow-hidden")),
 					h.Div(a.Attrs(
 						a.Class("h-full bg-accent rounded-md transition-all duration-300"),
