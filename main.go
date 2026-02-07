@@ -90,6 +90,7 @@ func LoadContent(contentDir string) (*CourseGraph, map[string]*Module, error) {
 				},
 				NarrativeHTML: pp.NarrativeHTML,
 				Blocks:        convertBlocks(pp.Blocks),
+				Sections:      convertSections(pp.Sections),
 			}
 		}
 
@@ -97,6 +98,22 @@ func LoadContent(contentDir string) (*CourseGraph, map[string]*Module, error) {
 	}
 
 	return course, modules, nil
+}
+
+// convertSections converts parsing.PageSection to main.PageSection
+func convertSections(parsingSections []parsing.PageSection) []PageSection {
+	if parsingSections == nil {
+		return nil
+	}
+	sections := make([]PageSection, len(parsingSections))
+	for i, ps := range parsingSections {
+		sections[i] = PageSection{
+			Title:         ps.Title,
+			NarrativeHTML: ps.NarrativeHTML,
+			Blocks:        convertBlocks(ps.Blocks),
+		}
+	}
+	return sections
 }
 
 // convertBlocks converts parsing.Block to main.Block
@@ -148,9 +165,57 @@ func convertBlocks(parsingBlocks []parsing.Block) []Block {
 					Keywords: b.Validation.Keywords,
 				},
 			}
+		case *parsing.AgentBlock:
+			blocks[i] = convertAgentBlock(b)
 		}
 	}
 	return blocks
+}
+
+// convertAgentBlock converts a parsing.AgentBlock to a main.AgentBlock
+func convertAgentBlock(b *parsing.AgentBlock) *AgentBlock {
+	script := make([]ScriptEvent, len(b.Script))
+	for j, se := range b.Script {
+		args := make(map[string]string)
+		for k, v := range se.Args {
+			args[k] = v
+		}
+		script[j] = ScriptEvent{
+			Type:            se.Type,
+			Text:            se.Text,
+			Content:         se.Content,
+			Tokens:          se.Tokens,
+			Tool:            se.Tool,
+			Args:            args,
+			Summary:         se.Summary,
+			ResetScratchpad: se.ResetScratchpad,
+			Note:            se.Note,
+		}
+	}
+	scratchpad := make(map[string]string)
+	for k, v := range b.Scratchpad {
+		scratchpad[k] = v
+	}
+	return &AgentBlock{
+		ID:         b.ID,
+		Title:      b.Title,
+		ModelLabel: b.ModelLabel,
+		System:     b.System,
+		Scratchpad: scratchpad,
+		Tools:      b.Tools,
+		Visibility: AgentVisibility{
+			SystemPrompt: b.Visibility.SystemPrompt,
+			ToolCalls:    b.Visibility.ToolCalls,
+			FullContext:  b.Visibility.FullContext,
+			TokenCount:   b.Visibility.TokenCount,
+			ModelName:    b.Visibility.ModelName,
+		},
+		Sidebar: AgentSidebarConfig{
+			Width:     b.Sidebar.Width,
+			StartOpen: *b.Sidebar.StartOpen,
+		},
+		Script: script,
+	}
 }
 
 // model is a helper for type assertion in handlers
@@ -282,6 +347,9 @@ func (m *Model) loadStudentState(student *Student) {
 
 	// Check all modules for completion
 	m.checkAllModulesCompletion()
+
+	// Init agent state if current page has an agent block
+	m.initAgentIfNeeded()
 }
 
 // Update returns all message handlers
@@ -297,6 +365,7 @@ func (m *Model) Update() gt.MessageMap {
 		"PREV_PAGE":  m.handlePrevPage,
 		"NAV_MODULE": m.handleNavModule,
 		"NAV_PAGE":   m.handleNavPage,
+		"NAV_SLIDE":  m.handleNavSlide,
 
 		// Quiz interaction
 		"QUIZ_ANSWER": m.handleQuizAnswer,
@@ -329,6 +398,18 @@ func (m *Model) Update() gt.MessageMap {
 		"CREATE_COHORT": m.handleCreateCohort,
 		"UPDATE_COHORT": m.handleUpdateCohort,
 		"DELETE_COHORT": m.handleDeleteCohort,
+
+		// Agent block
+		"AGENT_ADVANCE":           m.handleAgentAdvance,
+		"AGENT_RESET":             m.handleAgentReset,
+		"AGENT_TOGGLE_SYSTEM":     m.handleAgentToggleSystem,
+		"AGENT_TOGGLE_TOOLS":      m.handleAgentToggleTools,
+		"AGENT_TOGGLE_CONTEXT":    m.handleAgentToggleContext,
+		"AGENT_TOGGLE_SIDEBAR":    m.handleAgentToggleSidebar,
+		"AGENT_TOGGLE_SCRATCHPAD": m.handleAgentToggleScratchpad,
+		"AGENT_VIEW_FILE":         m.handleAgentViewFile,
+		"AGENT_OPEN_WORKSPACE":    m.handleAgentOpenWorkspace,
+		"AGENT_CLOSE_WORKSPACE":   m.handleAgentCloseWorkspace,
 	}
 }
 
@@ -336,6 +417,17 @@ func (m *Model) Update() gt.MessageMap {
 func (m *Model) Render() []byte {
 	m.syncFromLiveSession()
 	html := renderLayout(m).Bytes()
+
+	// Reset animation indices after rendering so subsequent re-renders
+	// (from toggles, etc.) don't replay chat message animations.
+	if m.Agent != nil {
+		for i := range m.Agent.ChatMessages {
+			if m.Agent.ChatMessages[i].GroupIdx >= 0 {
+				m.Agent.ChatMessages[i].GroupIdx = -1
+			}
+		}
+	}
+
 	return append([]byte("<!DOCTYPE html>"), html...)
 }
 

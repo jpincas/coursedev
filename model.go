@@ -27,6 +27,7 @@ type Model struct {
 	StudentEmail  string // Email address
 	CurrentModule string
 	CurrentPage   int
+	CurrentSlide  int // Which section within current page (0 = first)
 	Progress      map[string]*ModuleProgress
 	ActiveQuizzes map[int]*QuizState // blockIndex -> state (multiple quizzes per page)
 	ActiveHotspot string             // ID of currently expanded hotspot
@@ -36,6 +37,9 @@ type Model struct {
 	IsPresenting       bool       // This session is driving a live session
 	PresentingCohortID *uuid.UUID // Which cohort the admin is presenting to
 	FollowingLive      bool       // Position driven by cohort's live session
+
+	// --- Agent block state ---
+	Agent *AgentState // nil when current page has no agent block
 }
 
 // AuthStage represents the current step in the authentication flow
@@ -78,12 +82,20 @@ type CompletionCriteria struct {
 	MinQuizScore    float64 `yaml:"min_quiz_score"`
 }
 
+// PageSection represents a chunk of a page split at H2 boundaries
+type PageSection struct {
+	Title         string  // H2 text (or frontmatter title for first section)
+	NarrativeHTML []byte  // This section's HTML with 0-based block markers
+	Blocks        []Block // Subset of blocks in this section
+}
+
 // Page represents a single page within a module
 type Page struct {
 	Filename      string
 	Meta          PageMeta
-	NarrativeHTML []byte  // Goldmark-rendered HTML with block placeholders
-	Blocks        []Block // Extracted interactive blocks
+	NarrativeHTML []byte       // Goldmark-rendered HTML with block placeholders
+	Blocks        []Block      // Extracted interactive blocks
+	Sections      []PageSection // nil if page has no H2s (renders as single chunk)
 }
 
 // PageMeta contains page-level metadata from frontmatter
@@ -96,10 +108,11 @@ type PageMeta struct {
 
 // ModuleProgress tracks a learner's progress through a module
 type ModuleProgress struct {
-	Started     bool
-	PagesViewed map[int]bool         // Which pages have been viewed
-	QuizScores  map[string]QuizScore // quiz ID -> score
-	CompletedAt *time.Time
+	Started      bool
+	PagesViewed  map[int]bool         // Which pages have been viewed
+	SlidesViewed map[int]map[int]bool // pageIdx -> slideIdx -> viewed
+	QuizScores   map[string]QuizScore // quiz ID -> score
+	CompletedAt  *time.Time
 }
 
 // QuizScore records a learner's performance on a quiz
@@ -138,7 +151,7 @@ func (m *Model) SyncToLiveSession() {
 	if session == nil {
 		return
 	}
-	session.UpdateNavigation(m.CurrentModule, m.CurrentPage)
+	session.UpdateNavigation(m.CurrentModule, m.CurrentPage, m.CurrentSlide)
 	app.Broadcast()
 }
 
@@ -154,16 +167,18 @@ func (m *Model) syncFromLiveSession() {
 		m.FollowingLive = false
 		return
 	}
-	module, page := session.GetNavigation()
-	if module == m.CurrentModule && page == m.CurrentPage {
+	module, page, slide := session.GetNavigation()
+	if module == m.CurrentModule && page == m.CurrentPage && slide == m.CurrentSlide {
 		return // No change
 	}
 	// Advance student's actual position
 	m.CurrentModule = module
 	m.CurrentPage = page
+	m.CurrentSlide = slide
 	m.ActiveQuizzes = make(map[int]*QuizState)
 	m.ActiveHotspot = ""
-	m.markPageViewed()
+	m.Agent = nil
+	m.markSlideViewed()
 	m.checkAndMarkCompletion()
 	// Persist asynchronously (writes are idempotent upserts, safe from goroutine)
 	if m.StudentID != nil {
@@ -196,6 +211,15 @@ func (m *Model) currentPage() *Page {
 	return &mod.Pages[m.CurrentPage]
 }
 
+// currentPageSectionCount returns the number of sections in the current page, or 0 if none
+func (m *Model) currentPageSectionCount() int {
+	page := m.currentPage()
+	if page == nil || page.Sections == nil {
+		return 0
+	}
+	return len(page.Sections)
+}
+
 // ============================================================================
 // Progress Helpers
 // ============================================================================
@@ -204,9 +228,13 @@ func (m *Model) currentPage() *Page {
 func (m *Model) ensureProgress(moduleID string) *ModuleProgress {
 	if m.Progress[moduleID] == nil {
 		m.Progress[moduleID] = &ModuleProgress{
-			PagesViewed: make(map[int]bool),
-			QuizScores:  make(map[string]QuizScore),
+			PagesViewed:  make(map[int]bool),
+			SlidesViewed: make(map[int]map[int]bool),
+			QuizScores:   make(map[string]QuizScore),
 		}
+	}
+	if m.Progress[moduleID].SlidesViewed == nil {
+		m.Progress[moduleID].SlidesViewed = make(map[int]map[int]bool)
 	}
 	return m.Progress[moduleID]
 }
@@ -219,6 +247,45 @@ func (m *Model) markPageViewed() {
 	progress := m.ensureProgress(m.CurrentModule)
 	progress.Started = true
 	progress.PagesViewed[m.CurrentPage] = true
+}
+
+// markSlideViewed marks the current slide as viewed.
+// For pages without sections, it immediately marks the page as viewed.
+// For sectioned pages, it marks the page as viewed only after all slides are seen.
+func (m *Model) markSlideViewed() {
+	if m.CurrentModule == "" {
+		return
+	}
+	page := m.currentPage()
+	if page == nil {
+		return
+	}
+	progress := m.ensureProgress(m.CurrentModule)
+	progress.Started = true
+
+	// Pages without sections: behave like markPageViewed
+	if page.Sections == nil {
+		progress.PagesViewed[m.CurrentPage] = true
+		return
+	}
+
+	// Track this slide
+	if progress.SlidesViewed[m.CurrentPage] == nil {
+		progress.SlidesViewed[m.CurrentPage] = make(map[int]bool)
+	}
+	progress.SlidesViewed[m.CurrentPage][m.CurrentSlide] = true
+
+	// Check if all slides of this page are now viewed
+	allViewed := true
+	for i := range page.Sections {
+		if !progress.SlidesViewed[m.CurrentPage][i] {
+			allViewed = false
+			break
+		}
+	}
+	if allViewed {
+		progress.PagesViewed[m.CurrentPage] = true
+	}
 }
 
 // isModuleComplete checks if a module meets its completion criteria

@@ -269,9 +269,32 @@
   // Init & afterRender hook
   // ============================================================================
 
+  // Scroll agent messages to bottom after staggered animations complete
+  function scrollAgentMessages() {
+    var msgContainer = document.getElementById('agent-messages');
+    if (!msgContainer) return;
+
+    // Find max animation delay by counting animated messages
+    var animatedCount = 0;
+    var children = msgContainer.children;
+    for (var i = 0; i < children.length; i++) {
+      var style = children[i].getAttribute('style') || '';
+      if (style.indexOf('agentFadeSlideIn') !== -1) {
+        animatedCount++;
+      }
+    }
+
+    // Delay scroll to after animations complete
+    var delay = animatedCount > 0 ? (animatedCount * 400 + 400) : 100;
+    setTimeout(function() {
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+    }, delay);
+  }
+
   function afterRender() {
     checkScrollToTop();
     initAnnotations();
+    scrollAgentMessages();
   }
 
   // Run initialization after DOM is ready

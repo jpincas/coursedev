@@ -11,16 +11,20 @@ import (
 // The presenter controls the navigation state; all followers in the cohort see what the presenter sees.
 type LiveSession struct {
 	sync.RWMutex
-	CohortID     uuid.UUID
-	PresenterSID uuid.UUID // Session ID of presenter
+	CohortID      uuid.UUID
+	PresenterSID  uuid.UUID // Session ID of presenter
 	CurrentModule string
 	CurrentPage   int
+	CurrentSlide  int
 
 	// Poll state for this session
 	Poll *LivePollState
 
 	// Annotations keyed by "module:page"
 	Annotations map[string][]AnnotationStroke
+
+	// Agent state for live presentation of agent blocks
+	Agent *AgentState
 }
 
 // AnnotationStroke represents a single drawn stroke on the canvas
@@ -61,7 +65,7 @@ func GetLiveSessionForCohort(cohortID uuid.UUID) *LiveSession {
 
 // CreateLiveSessionForCohort creates a new live session for a cohort.
 // Returns an error if the cohort already has an active session.
-func CreateLiveSessionForCohort(cohortID uuid.UUID, presenterSID uuid.UUID, module string, page int) (*LiveSession, error) {
+func CreateLiveSessionForCohort(cohortID uuid.UUID, presenterSID uuid.UUID, module string, page int, slide int) (*LiveSession, error) {
 	liveSessionRegistry.Lock()
 	defer liveSessionRegistry.Unlock()
 
@@ -74,6 +78,7 @@ func CreateLiveSessionForCohort(cohortID uuid.UUID, presenterSID uuid.UUID, modu
 		PresenterSID:  presenterSID,
 		CurrentModule: module,
 		CurrentPage:   page,
+		CurrentSlide:  slide,
 		Annotations:   make(map[string][]AnnotationStroke),
 	}
 	liveSessionRegistry.byCohort[cohortID] = session
@@ -88,18 +93,19 @@ func DeleteLiveSessionForCohort(cohortID uuid.UUID) {
 }
 
 // UpdateNavigation updates the session's navigation state
-func (s *LiveSession) UpdateNavigation(module string, page int) {
+func (s *LiveSession) UpdateNavigation(module string, page int, slide int) {
 	s.Lock()
 	s.CurrentModule = module
 	s.CurrentPage = page
+	s.CurrentSlide = slide
 	s.Unlock()
 }
 
-// GetNavigation returns the current module and page
-func (s *LiveSession) GetNavigation() (string, int) {
+// GetNavigation returns the current module, page, and slide
+func (s *LiveSession) GetNavigation() (string, int, int) {
 	s.RLock()
 	defer s.RUnlock()
-	return s.CurrentModule, s.CurrentPage
+	return s.CurrentModule, s.CurrentPage, s.CurrentSlide
 }
 
 // StartPoll starts a new poll for a quiz
@@ -183,4 +189,25 @@ func (s *LiveSession) GetAnnotations(module string, page int) []AnnotationStroke
 	s.RLock()
 	defer s.RUnlock()
 	return s.Annotations[annotationKey(module, page)]
+}
+
+// SetAgent stores the presenter's agent state for followers to mirror
+func (s *LiveSession) SetAgent(state *AgentState) {
+	s.Lock()
+	defer s.Unlock()
+	s.Agent = state
+}
+
+// GetAgent returns the presenter's agent state, or nil
+func (s *LiveSession) GetAgent() *AgentState {
+	s.RLock()
+	defer s.RUnlock()
+	return s.Agent
+}
+
+// ClearAgent removes the agent state from the live session
+func (s *LiveSession) ClearAgent() {
+	s.Lock()
+	defer s.Unlock()
+	s.Agent = nil
 }

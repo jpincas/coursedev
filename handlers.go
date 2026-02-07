@@ -209,6 +209,18 @@ func (m *Model) handleNextPage(msg gt.Message, s gt.State) gt.Response {
 		return gt.Respond()
 	}
 
+	// If current page has sections and we're not on the last slide, advance slide
+	sectionCount := mdl.currentPageSectionCount()
+	if sectionCount > 0 && mdl.CurrentSlide < sectionCount-1 {
+		mdl.CurrentSlide++
+		mdl.ActiveQuizzes = make(map[int]*QuizState)
+		mdl.ActiveHotspot = ""
+		mdl.markSlideViewed()
+		mdl.checkAndMarkCompletion()
+		mdl.SyncToLiveSession()
+		return gt.Respond()
+	}
+
 	// Block advancement if required quizzes are unanswered (students only)
 	if !mdl.IsOwner && mdl.currentPageHasUnansweredRequiredQuizzes() {
 		return gt.Respond()
@@ -216,10 +228,13 @@ func (m *Model) handleNextPage(msg gt.Message, s gt.State) gt.Response {
 
 	if mdl.CurrentPage < len(mod.Pages)-1 {
 		mdl.CurrentPage++
+		mdl.CurrentSlide = 0
 		mdl.ActiveQuizzes = make(map[int]*QuizState)
 		mdl.ActiveHotspot = ""
-		mdl.markPageViewed()
+		mdl.Agent = nil
+		mdl.markSlideViewed()
 		mdl.checkAndMarkCompletion()
+		mdl.initAgentIfNeeded()
 
 		// Persist navigation and page view (only for students)
 		if mdl.StudentID != nil {
@@ -242,10 +257,30 @@ func (m *Model) handlePrevPage(msg gt.Message, s gt.State) gt.Response {
 		return gt.Respond()
 	}
 
+	// If on a slide > 0, go to previous slide
+	if mdl.CurrentSlide > 0 {
+		mdl.CurrentSlide--
+		mdl.ActiveQuizzes = make(map[int]*QuizState)
+		mdl.ActiveHotspot = ""
+		mdl.SyncToLiveSession()
+		return gt.Respond()
+	}
+
 	if mdl.CurrentPage > 0 {
 		mdl.CurrentPage--
 		mdl.ActiveQuizzes = make(map[int]*QuizState)
 		mdl.ActiveHotspot = ""
+		mdl.Agent = nil
+
+		// Set slide to last section of previous page (or 0 if no sections)
+		prevPage := mdl.currentPage()
+		if prevPage != nil && prevPage.Sections != nil {
+			mdl.CurrentSlide = len(prevPage.Sections) - 1
+		} else {
+			mdl.CurrentSlide = 0
+		}
+
+		mdl.initAgentIfNeeded()
 
 		// Persist navigation (only for students)
 		if mdl.StudentID != nil {
@@ -285,10 +320,13 @@ func (m *Model) handleNavModule(msg gt.Message, s gt.State) gt.Response {
 
 	mdl.CurrentModule = moduleID
 	mdl.CurrentPage = 0
+	mdl.CurrentSlide = 0
 	mdl.ActiveQuizzes = make(map[int]*QuizState)
 	mdl.ActiveHotspot = ""
-	mdl.markPageViewed()
+	mdl.Agent = nil
+	mdl.markSlideViewed()
 	mdl.checkAndMarkCompletion()
+	mdl.initAgentIfNeeded()
 
 	// Persist navigation and page view (only for students)
 	if mdl.StudentID != nil {
@@ -321,10 +359,13 @@ func (m *Model) handleNavPage(msg gt.Message, s gt.State) gt.Response {
 
 	if pageIdx >= 0 && pageIdx < len(mod.Pages) {
 		mdl.CurrentPage = pageIdx
+		mdl.CurrentSlide = 0
 		mdl.ActiveQuizzes = make(map[int]*QuizState)
 		mdl.ActiveHotspot = ""
-		mdl.markPageViewed()
+		mdl.Agent = nil
+		mdl.markSlideViewed()
 		mdl.checkAndMarkCompletion()
+		mdl.initAgentIfNeeded()
 
 		// Persist navigation and page view (only for students)
 		if mdl.StudentID != nil {
@@ -337,6 +378,30 @@ func (m *Model) handleNavPage(msg gt.Message, s gt.State) gt.Response {
 
 		// Navigate to course view
 		mdl.SetNewRoute("/")
+	}
+
+	return gt.Respond()
+}
+
+func (m *Model) handleNavSlide(msg gt.Message, s gt.State) gt.Response {
+	mdl := model(s)
+
+	if !mdl.IsAuthenticated() {
+		return gt.Respond()
+	}
+
+	slideIdx := msg.ArgsToInt()
+	page := mdl.currentPage()
+	if page == nil || page.Sections == nil {
+		return gt.Respond()
+	}
+
+	if slideIdx >= 0 && slideIdx < len(page.Sections) {
+		mdl.CurrentSlide = slideIdx
+		mdl.ActiveQuizzes = make(map[int]*QuizState)
+		mdl.ActiveHotspot = ""
+		mdl.markSlideViewed()
+		mdl.SyncToLiveSession()
 	}
 
 	return gt.Respond()
@@ -366,12 +431,17 @@ func (m *Model) handleQuizAnswer(msg gt.Message, s gt.State) gt.Response {
 	}
 	msg.MustDecodeArgs(&payload)
 
-	// Get the quiz block
-	if payload.BlockIndex < 0 || payload.BlockIndex >= len(page.Blocks) {
+	// Get the quiz block — use section blocks if page has sections
+	blocks := page.Blocks
+	if page.Sections != nil && mdl.CurrentSlide >= 0 && mdl.CurrentSlide < len(page.Sections) {
+		blocks = page.Sections[mdl.CurrentSlide].Blocks
+	}
+
+	if payload.BlockIndex < 0 || payload.BlockIndex >= len(blocks) {
 		return gt.Respond()
 	}
 
-	quiz, ok := page.Blocks[payload.BlockIndex].(*QuizBlock)
+	quiz, ok := blocks[payload.BlockIndex].(*QuizBlock)
 	if !ok {
 		return gt.Respond()
 	}
@@ -506,7 +576,7 @@ func (m *Model) handleStartPresenting(msg gt.Message, s gt.State) gt.Response {
 	}
 
 	// Create a new live session for this cohort
-	_, err = CreateLiveSessionForCohort(cohortID, mdl.SessionID, mdl.CurrentModule, mdl.CurrentPage)
+	_, err = CreateLiveSessionForCohort(cohortID, mdl.SessionID, mdl.CurrentModule, mdl.CurrentPage, mdl.CurrentSlide)
 	if err != nil {
 		return gt.Respond() // Cohort already has a session
 	}
@@ -525,6 +595,11 @@ func (m *Model) handleStopPresenting(msg gt.Message, s gt.State) gt.Response {
 
 	if !mdl.IsPresenting || mdl.PresentingCohortID == nil {
 		return gt.Respond()
+	}
+
+	// Clear agent from live session before deleting
+	if session := GetLiveSessionForCohort(*mdl.PresentingCohortID); session != nil {
+		session.ClearAgent()
 	}
 
 	// Delete the live session
@@ -566,6 +641,9 @@ func (m *Model) handleJoinSession(msg gt.Message, s gt.State) gt.Response {
 func (m *Model) handleLeaveSession(msg gt.Message, s gt.State) gt.Response {
 	mdl := model(s)
 	mdl.FollowingLive = false
+	// Reinit agent from current page's blocks (fresh state, not instructor's)
+	mdl.Agent = nil
+	mdl.initAgentIfNeeded()
 	return gt.Respond()
 }
 
@@ -592,11 +670,17 @@ func (m *Model) handleStartPoll(msg gt.Message, s gt.State) gt.Response {
 		return gt.Respond()
 	}
 
-	if payload.BlockIndex < 0 || payload.BlockIndex >= len(page.Blocks) {
+	// Use section blocks if page has sections
+	blocks := page.Blocks
+	if page.Sections != nil && mdl.CurrentSlide >= 0 && mdl.CurrentSlide < len(page.Sections) {
+		blocks = page.Sections[mdl.CurrentSlide].Blocks
+	}
+
+	if payload.BlockIndex < 0 || payload.BlockIndex >= len(blocks) {
 		return gt.Respond()
 	}
 
-	quiz, ok := page.Blocks[payload.BlockIndex].(*QuizBlock)
+	quiz, ok := blocks[payload.BlockIndex].(*QuizBlock)
 	if !ok {
 		return gt.Respond()
 	}

@@ -13,7 +13,7 @@ import (
 )
 
 // Regex to match fenced code blocks with our custom languages
-var fencedBlockRegex = regexp.MustCompile("(?s)```(quiz|math|callout|annotated-image|terminal-replay|exercise)\n(.*?)```")
+var fencedBlockRegex = regexp.MustCompile("(?s)```(quiz|math|callout|annotated-image|terminal-replay|exercise|agent)\n(.*?)```")
 
 // ParseMarkdown parses markdown content with custom extensions
 func ParseMarkdown(content []byte) (*ParseResult, error) {
@@ -82,6 +82,8 @@ func parseBlock(blockType string, content []byte) (Block, error) {
 		return parseAnnotatedImageBlock(content)
 	case "exercise":
 		return parseExerciseBlock(content)
+	case "agent":
+		return parseAgentBlock(content)
 	default:
 		return nil, fmt.Errorf("unknown block type: %s", blockType)
 	}
@@ -182,5 +184,112 @@ func parseExerciseBlock(content []byte) (*ExerciseBlock, error) {
 	if err := yaml.Unmarshal(content, &block); err != nil {
 		return nil, fmt.Errorf("failed to parse exercise block: %w", err)
 	}
+	return &block, nil
+}
+
+// Agent block parsing
+type AgentBlock struct {
+	ID         string            `yaml:"id"`
+	Title      string            `yaml:"title"`
+	ModelLabel string            `yaml:"model_label"`
+	System     string            `yaml:"system"`
+	Scratchpad map[string]string `yaml:"scratchpad"`
+	Tools      []string          `yaml:"tools"`
+	Visibility AgentVisibility   `yaml:"visibility"`
+	Sidebar    AgentSidebarConfig `yaml:"sidebar"`
+	Script     []ScriptEvent     `yaml:"script"`
+}
+
+type ScriptEvent struct {
+	Type            string            `yaml:"type"`
+	Text            string            `yaml:"text"`
+	Content         string            `yaml:"content"`
+	Tokens          int               `yaml:"tokens"`
+	Tool            string            `yaml:"tool"`
+	Args            map[string]string `yaml:"args"`
+	Summary         string            `yaml:"summary"`
+	ResetScratchpad bool              `yaml:"reset_scratchpad"`
+	Note            string            `yaml:"note"`
+}
+
+type AgentVisibility struct {
+	SystemPrompt string `yaml:"system_prompt"`
+	ToolCalls    string `yaml:"tool_calls"`
+	FullContext  string `yaml:"full_context"`
+	TokenCount   string `yaml:"token_count"`
+	ModelName    string `yaml:"model_name"`
+}
+
+type AgentSidebarConfig struct {
+	Width     string `yaml:"width"`
+	StartOpen *bool  `yaml:"start_open"`
+}
+
+func (b *AgentBlock) BlockType() string { return "agent" }
+func (b *AgentBlock) BlockID() string   { return b.ID }
+
+func parseAgentBlock(content []byte) (*AgentBlock, error) {
+	var block AgentBlock
+	if err := yaml.Unmarshal(content, &block); err != nil {
+		return nil, fmt.Errorf("failed to parse agent block: %w", err)
+	}
+
+	// Defaults
+	if block.Sidebar.Width == "" {
+		block.Sidebar.Width = "40%"
+	}
+	if block.Sidebar.StartOpen == nil {
+		t := true
+		block.Sidebar.StartOpen = &t
+	}
+
+	// Visibility defaults
+	if block.Visibility.SystemPrompt == "" {
+		block.Visibility.SystemPrompt = "hidden"
+	}
+	if block.Visibility.ToolCalls == "" {
+		block.Visibility.ToolCalls = "hidden"
+	}
+	if block.Visibility.FullContext == "" {
+		block.Visibility.FullContext = "hidden"
+	}
+	if block.Visibility.TokenCount == "" {
+		block.Visibility.TokenCount = "hidden"
+	}
+	if block.Visibility.ModelName == "" {
+		block.Visibility.ModelName = "hidden"
+	}
+
+	// Validation
+	if len(block.Script) == 0 {
+		return nil, fmt.Errorf("agent block %q: script must not be empty", block.ID)
+	}
+	first := block.Script[0].Type
+	if first != "note" && first != "user" {
+		return nil, fmt.Errorf("agent block %q: script must start with note or user, got %q", block.ID, first)
+	}
+
+	for _, v := range []string{block.Visibility.SystemPrompt, block.Visibility.ToolCalls, block.Visibility.FullContext} {
+		if v != "visible" && v != "hidden" && v != "toggleable" {
+			return nil, fmt.Errorf("agent block %q: invalid visibility value %q", block.ID, v)
+		}
+	}
+	for _, v := range []string{block.Visibility.TokenCount, block.Visibility.ModelName} {
+		if v != "visible" && v != "hidden" {
+			return nil, fmt.Errorf("agent block %q: invalid visibility value %q (must be visible or hidden)", block.ID, v)
+		}
+	}
+
+	for i, ev := range block.Script {
+		if ev.Type == "compaction" && ev.Summary == "" {
+			return nil, fmt.Errorf("agent block %q: compaction event at index %d must have a summary", block.ID, i)
+		}
+		if ev.Type == "tool_call" && ev.Tool == "scratchpad_write" {
+			if ev.Args["filename"] == "" || ev.Args["content"] == "" {
+				return nil, fmt.Errorf("agent block %q: scratchpad_write tool_call at index %d must have filename and content args", block.ID, i)
+			}
+		}
+	}
+
 	return &block, nil
 }

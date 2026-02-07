@@ -1,10 +1,14 @@
 package parsing
 
 import (
+	"bytes"
 	"fmt"
+	"html"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -62,12 +66,20 @@ type Module struct {
 	Pages []Page
 }
 
+// PageSection represents a chunk of a page split at H2 boundaries
+type PageSection struct {
+	Title         string  // H2 text (or frontmatter title for first section)
+	NarrativeHTML []byte  // This section's HTML with 0-based block markers
+	Blocks        []Block // Subset of blocks in this section
+}
+
 // Page represents a parsed page within a module
 type Page struct {
 	Filename      string
 	Meta          PageMeta
 	NarrativeHTML []byte
 	Blocks        []Block
+	Sections      []PageSection // nil if page has no H2s (renders as single chunk)
 }
 
 // CourseGraph represents the course structure
@@ -191,6 +203,7 @@ func parseModule(id, modPath string) (*Module, error) {
 			return nil, fmt.Errorf("failed to parse page %s: %w", entry.Name(), err)
 		}
 		page.Filename = entry.Name()
+		ComputeSections(page)
 		pages = append(pages, *page)
 	}
 
@@ -246,4 +259,105 @@ func ParsePage(path string) (*Page, error) {
 		NarrativeHTML: result.HTML,
 		Blocks:        result.Blocks,
 	}, nil
+}
+
+// h2Pattern matches <h2>...</h2> tags (including with attributes)
+var h2Pattern = regexp.MustCompile(`<h2[^>]*>(.*?)</h2>`)
+
+// blockIndexPattern matches block placeholder markers
+var blockIndexPattern = regexp.MustCompile(`<div data-block-index="(\d+)"></div>`)
+
+// ComputeSections splits a page at H2 boundaries into sections.
+// If no H2 headers are found, Sections stays nil and the page renders as before.
+func ComputeSections(page *Page) {
+	locs := h2Pattern.FindAllIndex(page.NarrativeHTML, -1)
+	if len(locs) == 0 {
+		return
+	}
+
+	// Extract H2 titles
+	matches := h2Pattern.FindAllSubmatch(page.NarrativeHTML, -1)
+
+	// Build raw section ranges: [start, end) in NarrativeHTML
+	type rawSection struct {
+		title string
+		start int
+		end   int
+	}
+	sections := make([]rawSection, 0, len(locs)+1)
+
+	// Section 0: content before first H2
+	if locs[0][0] > 0 {
+		sections = append(sections, rawSection{
+			title: page.Meta.Title,
+			start: 0,
+			end:   locs[0][0],
+		})
+	}
+
+	// Sections from each H2
+	for i, loc := range locs {
+		h2Title := html.UnescapeString(string(matches[i][1]))
+		// Strip the H2 tag itself — section HTML starts after the </h2>
+		contentStart := loc[1]
+		var contentEnd int
+		if i+1 < len(locs) {
+			contentEnd = locs[i+1][0]
+		} else {
+			contentEnd = len(page.NarrativeHTML)
+		}
+		sections = append(sections, rawSection{
+			title: h2Title,
+			start: contentStart,
+			end:   contentEnd,
+		})
+	}
+
+	// Check if first section (pre-H2) is empty/whitespace-only
+	if len(sections) > 0 && sections[0].title == page.Meta.Title {
+		html := bytes.TrimSpace(page.NarrativeHTML[sections[0].start:sections[0].end])
+		if len(html) == 0 {
+			sections = sections[1:]
+		}
+	}
+
+	if len(sections) == 0 {
+		return
+	}
+
+	// Build PageSections with correct blocks and re-indexed markers
+	page.Sections = make([]PageSection, len(sections))
+	for i, sec := range sections {
+		sectionHTML := page.NarrativeHTML[sec.start:sec.end]
+
+		// Find which blocks are in this section by looking at data-block-index markers
+		blockMatches := blockIndexPattern.FindAllSubmatch(sectionHTML, -1)
+		var sectionBlocks []Block
+		oldToNew := make(map[int]int) // original block index -> new 0-based index
+
+		for _, bm := range blockMatches {
+			origIdx, err := strconv.Atoi(string(bm[1]))
+			if err != nil {
+				continue
+			}
+			if origIdx >= 0 && origIdx < len(page.Blocks) {
+				oldToNew[origIdx] = len(sectionBlocks)
+				sectionBlocks = append(sectionBlocks, page.Blocks[origIdx])
+			}
+		}
+
+		// Re-index block markers to 0-based within this section
+		reindexed := blockIndexPattern.ReplaceAllFunc(sectionHTML, func(match []byte) []byte {
+			sub := blockIndexPattern.FindSubmatch(match)
+			origIdx, _ := strconv.Atoi(string(sub[1]))
+			newIdx := oldToNew[origIdx]
+			return []byte(fmt.Sprintf(`<div data-block-index="%d"></div>`, newIdx))
+		})
+
+		page.Sections[i] = PageSection{
+			Title:         sec.title,
+			NarrativeHTML: reindexed,
+			Blocks:        sectionBlocks,
+		}
+	}
 }

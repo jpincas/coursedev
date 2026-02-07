@@ -56,6 +56,6 @@ explanation: "The key shift is from AI as a Q&A assistant to AI as a capable wor
 
 ## What's Next
 
-Let's dive in. First up: **How do these systems actually work?**
+But first — a demo. On the next page, you'll see exactly what we mean by "AI that does work."
 
-Understanding the mechanism will help you predict when AI will succeed, when it will struggle, and how to set it up for success.
+Then we'll dive into **how these systems actually work** — the mechanism that makes this possible, when it succeeds, when it struggles, and how to set it up for success.

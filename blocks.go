@@ -65,3 +65,44 @@ type ExerciseValidation struct {
 
 func (b *ExerciseBlock) BlockType() string { return "exercise" }
 func (b *ExerciseBlock) BlockID() string   { return b.ID }
+
+// AgentBlock represents a scripted AI conversation walkthrough
+type AgentBlock struct {
+	ID         string
+	Title      string
+	ModelLabel string
+	System     string
+	Scratchpad map[string]string
+	Tools      []string
+	Visibility AgentVisibility
+	Sidebar    AgentSidebarConfig
+	Script     []ScriptEvent
+}
+
+type ScriptEvent struct {
+	Type            string
+	Text            string
+	Content         string
+	Tokens          int
+	Tool            string
+	Args            map[string]string
+	Summary         string
+	ResetScratchpad bool
+	Note            string
+}
+
+type AgentVisibility struct {
+	SystemPrompt string
+	ToolCalls    string
+	FullContext  string
+	TokenCount   string
+	ModelName    string
+}
+
+type AgentSidebarConfig struct {
+	Width     string
+	StartOpen bool
+}
+
+func (b *AgentBlock) BlockType() string { return "agent" }
+func (b *AgentBlock) BlockID() string   { return b.ID }

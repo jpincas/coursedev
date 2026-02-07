@@ -2,9 +2,52 @@
 
 ## What It Is
 
-An `agent` block embeddable in training markdown that gives learners a real AI chat interface to practice concepts from the lesson. The course creator configures each agent instance declaratively — different system prompts, available tools, guided prompt sequences or free-range mode, and visibility controls that can reveal or hide the "machinery" behind the AI (system prompt, tool calls, full context window) for pedagogical purposes.
+An `agent` block embeddable in training markdown that gives learners a **scripted, interactive walkthrough** of an AI conversation. The course creator choreographs the entire exchange — user messages, assistant responses, tool calls, compactions, resets — and the learner steps through it like a guided demo. The sidebar becomes a conversation player, not a live chat client.
 
-The agent renders in a persistent right sidebar, not inline with the narrative content. This keeps the lesson material and the practice environment side-by-side.
+This is a deliberate design choice. Scripted conversations give the course creator full control over what the learner sees, ensuring demos always illustrate the intended concept clearly. No API variance, no hallucinations derailing a lesson, no rate limits during a live class.
+
+The agent renders in a persistent right sidebar alongside the lesson content.
+
+---
+
+## Concepts
+
+### Script Events
+
+A script is an ordered list of events. Each event has a `type` that determines what it does:
+
+| Type | What It Does |
+|---|---|
+| `note` | Displays a pedagogical note to the learner. The instructor's voice. Doesn't appear in the chat or context — it's outside the simulation. |
+| `user` | Adds a user message to the chat and context window. |
+| `assistant` | Adds an assistant response to the chat and context window. |
+| `tool_call` | Adds a tool invocation to the chat (if visible) and context window. |
+| `tool_result` | Adds a tool response to the chat (if visible) and context window. If the tool is `scratchpad_write`, also mutates the scratchpad state. |
+| `compaction` | Replaces all context messages before this point with a summary. Demonstrates how real systems manage token limits. |
+| `clear` | Resets conversation and optionally scratchpad back to initial state. A fresh start mid-script. |
+
+### Step Grouping
+
+Events fire in logical groups so the learner isn't clicking "Next" for every individual message. The grouping rules:
+
+- A **`note`** is always its own step. The learner reads it, then clicks to advance.
+- A **`user`** event starts a group. All subsequent `tool_call`, `tool_result`, and `assistant` events auto-advance (with a brief staggered delay for visual pacing) until hitting the next `note`, `user`, `compaction`, or `clear`.
+- A **`compaction`** is its own step.
+- A **`clear`** is its own step.
+
+So the learner's experience is: read a note → click Next → watch an exchange play out with natural pacing → read the next note → click Next → watch the next exchange. Like stepping through a debugger, but for conversations.
+
+### Scratchpad
+
+The scratchpad is a simulated filesystem — a `map[string]string` on the agent state. The block can declare initial files, and `scratchpad_write` tool results in the script mutate the map. The scratchpad panel in the sidebar shows the current file state, and learners can click to view any file. It's props on a stage, not a real filesystem.
+
+### Visibility Controls
+
+The course creator controls what "backstage" information the learner sees, turning the sidebar into a teaching tool about how AI systems work:
+
+- **`visible`** — Always shown.
+- **`hidden`** — Never shown. Learner doesn't know it exists.
+- **`toggleable`** — Hidden by default with a toggle to reveal.
 
 ---
 
@@ -14,12 +57,18 @@ The agent renders in a persistent right sidebar, not inline with the narrative c
 
 ````markdown
 ```agent
-id: dns-lookup-practice
-title: "DNS Resolution Assistant"
+id: basic-chat-demo
+title: "Simple Conversation"
+
 system: |
-  You are a networking tutor. Help the student understand DNS resolution.
-  When they ask you to look up a domain, walk through the resolution process
-  step by step before giving the answer.
+  You are a helpful assistant.
+
+script:
+  - type: user
+    content: "What's the capital of France?"
+
+  - type: assistant
+    content: "The capital of France is Paris."
 ```
 ````
 
@@ -27,275 +76,294 @@ system: |
 
 ````markdown
 ```agent
-id: prompt-engineering-lab
-title: "Prompt Engineering Sandbox"
-model: llama-3.3-70b-versatile
-max_turns: 20
-temperature: 0.7
+id: context-window-demo
+title: "How Context Windows Work"
 
+# Model label shown in status bar (purely cosmetic — no real API call)
+model_label: llama-3.3-70b
+
+# System prompt — the learner may or may not see this depending on visibility
 system: |
-  You are a helpful assistant. You have access to a scratchpad where you
-  can read and write files. Help the student with whatever they ask.
+  You are a helpful assistant with access to a scratchpad
+  for reading and writing files.
 
-# Guided mode: learner steps through these prompts in order.
-# Each step has a prompt (what gets sent) and a note (shown to the learner
-# explaining the pedagogical purpose of this step).
-mode: guided
-steps:
-  - note: "Let's start with a simple, vague prompt and see what happens."
-    prompt: "Tell me about dogs."
-  - note: "Now let's add specificity. Notice how the output changes."
-    prompt: "List 5 health considerations for adopting an adult rescue greyhound."
-  - note: "Now try adding a persona and output format constraint."
-    prompt: "As a veterinarian, create a table comparing the top 3 joint supplements for greyhounds, with columns for name, active ingredient, and typical dosage."
-  - note: "Free turn — write your own prompt applying what you've learned."
-    prompt: ""  # Empty = learner writes their own
+# Initial scratchpad state — files that exist before the demo starts
+scratchpad:
+  "project-brief.md": |
+    # Project Atlas
+    A distributed caching layer for the analytics pipeline.
+    Target latency: <50ms p99. Budget: $200k.
+  "meeting-notes.md": |
+    # Standup 2025-01-15
+    - Cache hit rate dropped to 60% after deploy
+    - Sarah investigating memory pressure on node-3
 
-# Tools available to the agent
-tools:
-  - scratchpad    # Built-in: read/write files to cohort scratchpad
-  - web_search    # Built-in: simulated or real web search
-
-# What the learner can see — the teaching controls
-visibility:
-  system_prompt: visible       # visible | hidden | toggleable
-  tool_calls: toggleable       # visible | hidden | toggleable
-  full_context: hidden         # visible | hidden | toggleable
-  token_count: visible         # visible | hidden
-  temperature: visible         # visible | hidden
-
-# Sidebar appearance
-sidebar:
-  width: 40%           # default 40%, range 30-60%
-  start_open: true     # whether sidebar is open when page loads
-```
-````
-
-### Free-Range Mode (Default)
-
-````markdown
-```agent
-id: go-tutor
-title: "Go Tutor"
-system: |
-  You are an expert Go programmer acting as a tutor. The student is
-  learning about HTTP handlers. Guide them but don't give away answers
-  immediately — use Socratic questioning.
-mode: free
+# Tools the agent "has" — for display in system prompt / context panel
 tools:
   - scratchpad
+
+# What the learner can see
 visibility:
   system_prompt: toggleable
   tool_calls: visible
+  full_context: visible
+  token_count: visible
+  model_name: visible
+
+# Sidebar appearance
+sidebar:
+  width: 45%
+  start_open: true
+
+# The choreographed conversation
+script:
+  - type: note
+    text: |
+      This demo shows how an AI agent uses tools. Open the scratchpad
+      panel to see the pre-loaded files, then click Next to begin.
+
+  - type: user
+    content: "What's the project budget?"
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "project-brief.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Project Atlas
+      A distributed caching layer for the analytics pipeline.
+      Target latency: <50ms p99. Budget: $200k.
+
+  - type: assistant
+    content: "The budget for Project Atlas is $200k."
+
+  - type: note
+    text: |
+      Notice how the tool call and result both appear in the context
+      panel. The model 'sees' the file contents as part of the
+      conversation history. Now watch it synthesise across documents.
+
+  - type: user
+    content: "Write a summary combining both documents."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "meeting-notes.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Standup 2025-01-15
+      - Cache hit rate dropped to 60% after deploy
+      - Sarah investigating memory pressure on node-3
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "summary.md"
+      content: |
+        # Project Atlas Summary
+        ## Overview
+        Distributed caching layer, $200k budget, <50ms p99 target.
+        ## Current Status
+        Cache hit rate at 60% post-deploy. Memory pressure on node-3
+        under investigation by Sarah.
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written 204 bytes to summary.md"
+
+  - type: assistant
+    content: "I've created summary.md combining the key points from both documents. Check the scratchpad to see it."
+
+  - type: note
+    text: |
+      Check the scratchpad — there are now three files. The agent
+      synthesised a new document from the existing ones.
+
+      Now watch what happens when we compact the context. The detailed
+      message history gets replaced with a summary.
+
+  - type: compaction
+    summary: |
+      [Earlier: user asked about project budget ($200k). Agent read
+      project-brief.md and meeting-notes.md, then created summary.md
+      combining key points from both documents.]
+
+  - type: note
+    text: |
+      Look at the context panel. The detailed back-and-forth is gone,
+      replaced by a summary. What happens when we ask about specifics
+      that were in the compacted messages?
+
+  - type: user
+    content: "What was the exact cache hit rate from the standup notes?"
+
+  - type: assistant
+    content: |
+      I know I reviewed some standup notes earlier, but I don't have the
+      specific numbers in my current context. Let me check the file again.
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "meeting-notes.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Standup 2025-01-15
+      - Cache hit rate dropped to 60% after deploy
+      - Sarah investigating memory pressure on node-3
+
+  - type: assistant
+    content: "The cache hit rate dropped to 60% after the deploy."
+
+  - type: note
+    text: |
+      Interesting — the model had to re-read the file because the
+      specific number was lost during compaction. The summary only
+      said "key points" without exact figures. This is the fundamental
+      tradeoff of compaction: you save tokens but lose detail.
+
+  - type: clear
+    reset_scratchpad: true
+
+  - type: note
+    text: |
+      We've reset everything — conversation cleared, scratchpad back
+      to its starting state. That concludes the context window demo.
 ```
 ````
 
 ---
 
-## Modes
+## Script Event Schemas
 
-### `free` (Default)
-
-Standard chat interface. The learner types whatever they want. The conversation continues until they navigate away or hit `max_turns`.
-
-### `guided`
-
-The course creator defines a sequence of steps. Each step has:
-
-- **`note`** — Displayed to the learner above the chat input, explaining the purpose of this step. Think of it as the instructor whispering in their ear.
-- **`prompt`** — The text that will be sent to the agent. Three variants:
-  - **Pre-filled**: The prompt text is shown in the input field, read-only. The learner clicks "Send" (or a "Next Step" button) to dispatch it. They can see exactly what's being sent.
-  - **Editable pre-fill**: `editable: true` on the step. The prompt is pre-filled but the learner can modify it before sending.
-  - **Empty**: `prompt: ""` — The learner writes their own. This is a "now you try" step.
-
-The learner progresses through steps in order. They can't skip ahead, but they can go back and review previous exchanges (read-only). After completing all steps, the guided section ends and the agent optionally unlocks into free-range mode (`free_after_guided: true`).
-
-### Step Schema
+### `note`
 
 ```yaml
-steps:
-  - note: "Explanation shown to learner"
-    prompt: "Text sent to the agent"
-    editable: false           # default false; true lets learner modify
-    free_after_guided: true   # only on last step; unlocks free mode after
+- type: note
+  text: "Instructional text shown to the learner."
 ```
 
----
+Displayed as a styled callout above the chat area (or between chat messages as a divider). Not part of the simulated conversation — it's the course creator speaking directly to the learner.
 
-## Tools
-
-Tools are declared by name in the agent block. The server provides tool definitions to the Groq API and handles tool call execution server-side.
-
-### Built-in Tools
-
-#### `scratchpad`
-
-Read and write files to a per-cohort shared directory. This is the primary "hands-on" tool — learners and the agent can collaborate on files.
-
-```
-Tool: scratchpad_read
-Parameters: { "filename": "notes.md" }
-Returns: file contents or "File not found"
-
-Tool: scratchpad_write
-Parameters: { "filename": "notes.md", "content": "..." }
-Returns: "Written N bytes to notes.md"
-
-Tool: scratchpad_list
-Parameters: {}
-Returns: list of files in the scratchpad
-```
-
-Implementation: Files stored at `data/scratchpads/{cohort_id}/`. Simple filesystem operations. Files are capped at a reasonable size (e.g. 50KB) to prevent abuse. The scratchpad directory is displayed as a collapsible panel below the chat in the sidebar, showing current files with ability to view them.
-
-#### `web_search` (Optional, Later Phase)
-
-Could be real (via a search API) or simulated (course creator provides canned results for expected queries). The simulated version is interesting pedagogically — you can control exactly what the agent "finds".
-
-### Custom Tools (Later Phase)
-
-Course creators could define custom tools with fixed responses to demonstrate tool-use concepts:
+### `user`
 
 ```yaml
-tools:
-  - name: get_weather
-    description: "Get current weather for a city"
-    parameters:
-      city: { type: string, description: "City name" }
-    mock_response: |
-      {"temperature": 22, "conditions": "partly cloudy", "city": "${city}"}
+- type: user
+  content: "The user's message text."
 ```
 
-This is powerful for teaching about function calling — the learner sees the tool definition, watches the model decide to call it, sees the response injected, and sees how the model incorporates it. All without any real API needed.
+Appears as a user chat bubble. Added to the context messages array.
 
----
+### `assistant`
 
-## Visibility Controls
-
-This is the key pedagogical differentiator. The course creator controls what "backstage" information the learner can see, turning the chat into a teaching tool about how AI systems work, not just a chat window.
-
-### Visibility Levels
-
-- **`visible`** — Always shown. Can't be hidden.
-- **`hidden`** — Never shown. Learner doesn't know it exists.
-- **`toggleable`** — Hidden by default with a toggle button to reveal. The learner can peek behind the curtain.
-
-### What Can Be Controlled
-
-| Element | Key | What It Shows |
-|---|---|---|
-| System prompt | `system_prompt` | The full system message, displayed in a collapsible panel at the top of the sidebar |
-| Tool calls | `tool_calls` | When the agent calls a tool, show the function name, arguments, and response |
-| Full context | `full_context` | The complete messages array being sent to the API on each turn — shows how context accumulates |
-| Token count | `token_count` | Running token count for the conversation (input + output) |
-| Temperature | `temperature` | The temperature setting, potentially with a slider to adjust it live |
-| Model name | `model_name` | Which model is being used |
-
-### Rendering Implications
-
-When `tool_calls: visible`, tool invocations appear as distinct styled blocks in the conversation:
-
-```
-🔧 Tool Call: scratchpad_write
-   filename: "solution.go"
-   content: "package main..."
-   
-📎 Tool Result: Written 142 bytes to solution.go
+```yaml
+- type: assistant
+  content: "The assistant's response text."
+  tokens: 45    # Optional: simulated token count for this response
 ```
 
-When `full_context: toggleable` and toggled on, a panel shows the raw JSON messages array, updating after each turn. This is gold for teaching about context windows, token limits, and how conversation history works.
+Appears as an assistant chat bubble. Added to the context messages array. The optional `tokens` field increments the simulated token counter for realism.
 
----
+### `tool_call`
 
-## Sidebar Layout
-
-### Layout Architecture
-
-When a page has an agent block, the layout shifts from single-column to split-pane:
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  Header / Navigation                                     │
-├───────────────────────────────┬──────────────────────────┤
-│                               │                          │
-│   Lesson Content              │   Agent Sidebar          │
-│   (narrative + inline blocks) │                          │
-│                               │ ┌──────────────────────┐ │
-│                               │ │ Title Bar + Controls │ │
-│                               │ ├──────────────────────┤ │
-│                               │ │ [System Prompt]      │ │
-│                               │ │ (if visible)         │ │
-│                               │ ├──────────────────────┤ │
-│                               │ │ [Guided Step Note]   │ │
-│                               │ │ (if guided mode)     │ │
-│                               │ ├──────────────────────┤ │
-│                               │ │                      │ │
-│                               │ │ Chat Messages        │ │
-│                               │ │                      │ │
-│                               │ │                      │ │
-│                               │ ├──────────────────────┤ │
-│                               │ │ [Scratchpad Panel]   │ │
-│                               │ │ (collapsible)        │ │
-│                               │ ├──────────────────────┤ │
-│                               │ │ Input + Send         │ │
-│                               │ │ [Token Count] [Temp] │ │
-│                               │ └──────────────────────┘ │
-│                               │                          │
-├───────────────────────────────┴──────────────────────────┤
-│  Page Navigation (prev/next)                             │
-└─────────────────────────────────────────────────────────┘
+```yaml
+- type: tool_call
+  tool: scratchpad_read
+  args:
+    filename: "notes.md"
 ```
 
-### Sidebar Behaviour
+Appears in the chat as a styled tool invocation block (if `tool_calls` visibility allows). Added to context messages. The `args` field is a free-form map rendered as formatted key-value pairs.
 
-- **Only one agent per page.** If a markdown file has multiple agent blocks, that's a content validation error caught at startup.
-- **Sidebar presence changes layout.** The render function checks whether the current page has an agent block. If yes, the content area gets `width: 60%` and the sidebar gets `width: 40%` (configurable).
-- **Collapsible.** A toggle button in the header allows minimising the sidebar to a thin strip with just the agent title, freeing up screen space for reading.
-- **Scrolls independently.** The lesson content and the chat have independent scroll contexts.
-- **Persists only for the current page.** Navigating away destroys the agent state. Navigating back starts fresh. This is intentional — each agent instance is a self-contained exercise.
+### `tool_result`
+
+```yaml
+- type: tool_result
+  tool: scratchpad_read
+  content: "File contents here..."
+```
+
+Appears in the chat as a styled tool response block (if `tool_calls` visibility allows). Added to context messages.
+
+**Side effects:** If `tool` is `scratchpad_write`, the corresponding `args` from the preceding `tool_call` are used to update the scratchpad map. The content of the `tool_result` is what's shown in the chat ("Written N bytes to file.md"), while the actual file content comes from the `tool_call`'s args. This keeps the scratchpad in sync with what the script describes happening.
+
+### `compaction`
+
+```yaml
+- type: compaction
+  summary: "Summary text that replaces prior context messages."
+```
+
+Replaces all context messages (except the system prompt) with a single summary message. The chat display shows a visual divider: "── Context compacted ──". The full context panel updates to show just the system prompt + summary + any messages after this point.
+
+The simulated token count drops to reflect the shorter context.
+
+### `clear`
+
+```yaml
+- type: clear
+  reset_scratchpad: false    # default: false
+  note: "Starting fresh."    # optional: shown as a divider in chat
+```
+
+Resets the conversation: chat messages cleared, context messages reset to just the system prompt. If `reset_scratchpad: true`, the scratchpad map resets to the initial state declared in the block's `scratchpad` field (or empty if none). The optional `note` is shown as a divider in the chat area.
 
 ---
 
 ## State Model
 
-### Agent State (Per-Session)
+### Agent State (Per-Session, Ephemeral)
 
 ```go
 type AgentState struct {
-    // Config — copied from the parsed AgentBlock at activation time
-    Config    AgentBlock
+    // Config — copied from the parsed AgentBlock at page load
+    Config AgentBlock
 
-    // Conversation
-    Messages  []AgentMessage        // Display messages (what the learner sees)
-    APIMessages []groq.ChatMessage  // Full API message history (may include hidden tool calls)
-    
-    // Guided mode
-    CurrentStep   int     // Index into Config.Steps
-    StepCompleted bool    // Whether current step's response has been received
-    GuidedDone    bool    // All steps completed
-    FreeUnlocked  bool    // Guided finished and free_after_guided is true
-    
-    // UI state
-    SidebarOpen     bool
-    ScratchpadOpen  bool
-    ShowSystem      bool    // Current toggle state (only relevant if toggleable)
-    ShowToolCalls   bool
-    ShowFullContext  bool
-    
-    // Operational
-    Loading       bool      // Waiting for Groq API response
-    Error         string    // Last error message, if any
-    TotalTokens   int       // Running token count
-    InputDraft    string    // Current input field content (for editable guided steps)
+    // Script playback position
+    ScriptIndex int  // Index of the next event to process
+
+    // Accumulated display state
+    ChatMessages    []ChatMessage    // What's shown in the chat panel
+    ContextMessages []ContextMessage // What's shown in the full context panel
+    CurrentNote     string           // Currently displayed note text (empty if none)
+
+    // Simulated scratchpad — map of filename to content
+    Scratchpad        map[string]string // Current state
+    InitialScratchpad map[string]string // Starting state (for reset)
+
+    // Simulated metrics
+    TokenCount int
+
+    // UI toggles
+    SidebarOpen    bool
+    ScratchpadOpen bool
+    ShowSystem     bool
+    ShowToolCalls  bool
+    ShowFullContext bool
+    ViewingFile    string // Filename currently being viewed (empty if none)
 }
 
-type AgentMessage struct {
-    Role      string    // "user", "assistant", "tool_call", "tool_result", "system", "step_note"
-    Content   string
-    ToolName  string    // For tool_call/tool_result messages
-    ToolArgs  string    // JSON string of tool arguments
-    Timestamp time.Time
-    StepIndex int       // Which guided step this belongs to (-1 for free)
+type ChatMessage struct {
+    Type     string // "user", "assistant", "tool_call", "tool_result",
+                    // "compaction_divider", "clear_divider"
+    Content  string
+    ToolName string            // For tool_call and tool_result
+    ToolArgs map[string]string // For tool_call
+    GroupIdx int               // Position within its event group (for staggered animation)
+}
+
+type ContextMessage struct {
+    Role    string // "system", "user", "assistant", "tool_call",
+                   // "tool_result", "compaction_summary"
+    Content string
 }
 ```
 
@@ -305,14 +373,75 @@ type AgentMessage struct {
 type Model struct {
     gt.Router
     // ... existing fields ...
-    
-    // Agent state — nil if current page has no agent block,
-    // or if agent hasn't been activated yet
+
+    // Agent state — nil when current page has no agent block
     Agent *AgentState
 }
 ```
 
-The agent state is initialised when the learner navigates to a page that has an agent block. **It is ephemeral — navigating away from the page destroys the state entirely.** Navigating back to the same page starts a fresh agent session. There is no persistence of agent conversations across page navigations. This is deliberate: each page's agent is a self-contained practice environment tied to that lesson's content. The `NEXT_PAGE` / `PREV_PAGE` / `NAV_PAGE` handlers nil out `model.Agent` as part of navigation.
+Agent state is **ephemeral**. It is initialised fresh when navigating to a page with an agent block and nil'd out when navigating away. No persistence across page transitions.
+
+### Initialisation
+
+When the learner navigates to a page with an agent block, the page navigation handler initialises the agent state:
+
+```go
+func initAgentState(block AgentBlock) *AgentState {
+    initial := make(map[string]string)
+    for k, v := range block.Scratchpad {
+        initial[k] = v
+    }
+    current := make(map[string]string)
+    for k, v := range block.Scratchpad {
+        current[k] = v
+    }
+
+    state := &AgentState{
+        Config:            block,
+        ScriptIndex:       0,
+        Scratchpad:        current,
+        InitialScratchpad: initial,
+        SidebarOpen:       block.Sidebar.StartOpen,
+        ShowSystem:        block.Visibility.SystemPrompt == "visible",
+        ShowToolCalls:     block.Visibility.ToolCalls == "visible",
+        ShowFullContext:    block.Visibility.FullContext == "visible",
+    }
+
+    // Seed context with system prompt
+    state.ContextMessages = []ContextMessage{
+        {Role: "system", Content: block.System},
+    }
+
+    // Include initial token estimate for system prompt
+    state.TokenCount = estimateTokens(block.System)
+
+    return state
+}
+```
+
+### Navigation Handlers Clear Agent State
+
+```go
+func (m *Model) handleNextPage(msg gt.Message, s gt.State) gt.Response {
+    model := s.(*Model)
+    mod := model.Modules[model.CurrentModule]
+
+    if model.CurrentPage < len(mod.Pages)-1 {
+        model.CurrentPage++
+        model.ActiveQuiz = nil
+        model.ActiveHotspot = ""
+        model.Agent = nil // Clear agent state
+    }
+
+    // Check if new page has an agent block — initialise if so
+    newPage := mod.Pages[model.CurrentPage]
+    if agentBlock := findAgentBlock(newPage.Blocks); agentBlock != nil {
+        model.Agent = initAgentState(*agentBlock)
+    }
+
+    return gt.Respond()
+}
+```
 
 ---
 
@@ -321,286 +450,239 @@ The agent state is initialised when the learner navigates to a page that has an 
 ```go
 // In Update() MessageMap:
 
-// Chat interaction
-"AGENT_SEND":           m.handleAgentSend,         // Send a message (free mode or empty guided step)
-"AGENT_SEND_STEP":      m.handleAgentSendStep,     // Send the pre-filled guided step prompt
-"AGENT_EDIT_DRAFT":     m.handleAgentEditDraft,     // Update input draft text
-
-// Guided mode navigation  
-"AGENT_NEXT_STEP":      m.handleAgentNextStep,      // Advance to next guided step
+// Script advancement
+"AGENT_ADVANCE":           m.handleAgentAdvance,
 
 // Visibility toggles
-"AGENT_TOGGLE_SYSTEM":  m.handleAgentToggleSystem,
-"AGENT_TOGGLE_TOOLS":   m.handleAgentToggleTools,
-"AGENT_TOGGLE_CONTEXT": m.handleAgentToggleContext,
+"AGENT_TOGGLE_SYSTEM":     m.handleAgentToggleSystem,
+"AGENT_TOGGLE_TOOLS":      m.handleAgentToggleTools,
+"AGENT_TOGGLE_CONTEXT":    m.handleAgentToggleContext,
 
 // Sidebar controls
 "AGENT_TOGGLE_SIDEBAR":    m.handleAgentToggleSidebar,
 "AGENT_TOGGLE_SCRATCHPAD": m.handleAgentToggleScratchpad,
 
-// Agent management
-"AGENT_RESET":          m.handleAgentReset,         // Clear conversation, restart
-"AGENT_SET_TEMP":       m.handleAgentSetTemp,       // Adjust temperature (if visible)
+// Scratchpad navigation
+"AGENT_VIEW_FILE":         m.handleAgentViewFile,
+
+// Reset
+"AGENT_RESET":             m.handleAgentReset,
 ```
 
-### The Send Flow
+### The Advance Handler
+
+This is the core of the playback system. When the learner clicks "Next," it processes the next logical group of events:
 
 ```go
-func (m *Model) handleAgentSend(msg gt.Message, s gt.State) gt.Response {
+func (m *Model) handleAgentAdvance(msg gt.Message, s gt.State) gt.Response {
     model := s.(*Model)
-    if model.Agent == nil || model.Agent.Loading {
+    agent := model.Agent
+    if agent == nil {
         return gt.Respond()
     }
-    
-    userText := msg.ArgsToString()
-    if userText == "" {
-        return gt.Respond()
-    }
-    
-    // Add user message to display history
-    model.Agent.Messages = append(model.Agent.Messages, AgentMessage{
-        Role:    "user",
-        Content: userText,
-        Timestamp: time.Now(),
-    })
-    
-    // Add to API messages
-    model.Agent.APIMessages = append(model.Agent.APIMessages, groq.ChatMessage{
-        Role:    "user",
-        Content: userText,
-    })
-    
-    // Set loading state — the UI will show a spinner
-    model.Agent.Loading = true
-    model.Agent.InputDraft = ""
-    
-    // Dispatch async API call via goroutine.
-    // When complete, it sends a message back into this session.
-    go func() {
-        resp, tokens, err := callGroqAPI(model.Agent)
-        // Send the result back as a message to this session
-        session.Send(gt.NewMessage("AGENT_RESPONSE", AgentResponsePayload{
-            Response: resp,
-            Tokens:   tokens,
-            Error:    err,
-        }))
-    }()
-    
-    return gt.Respond()
-}
 
-func (m *Model) handleAgentResponse(msg gt.Message, s gt.State) gt.Response {
-    model := s.(*Model)
-    var payload AgentResponsePayload
-    msg.MustDecodeArgs(&payload)
-    
-    model.Agent.Loading = false
-    
-    if payload.Error != nil {
-        model.Agent.Error = payload.Error.Error()
-        return gt.Respond()
+    script := agent.Config.Script
+    if agent.ScriptIndex >= len(script) {
+        return gt.Respond() // Script complete
     }
-    
-    model.Agent.TotalTokens += payload.Tokens
-    
-    // Process response — may include tool calls
-    for _, choice := range payload.Response.Choices {
-        msg := choice.Message
-        
-        if msg.ToolCalls != nil {
-            // Handle tool calls: execute them, add results to API messages,
-            // and make another API call with the results.
-            // This is a loop that continues until the model responds with
-            // plain text (no more tool calls).
-            model.processToolCalls(msg.ToolCalls)
-            // Recurse: call API again with tool results
-            go func() {
-                resp, tokens, err := callGroqAPI(model.Agent)
-                session.Send(gt.NewMessage("AGENT_RESPONSE", AgentResponsePayload{
-                    Response: resp, Tokens: tokens, Error: err,
-                }))
-            }()
-            return gt.Respond()
-        }
-        
-        // Plain text response
-        model.Agent.Messages = append(model.Agent.Messages, AgentMessage{
-            Role:      "assistant",
-            Content:   msg.Content,
-            Timestamp: time.Now(),
-        })
-        model.Agent.APIMessages = append(model.Agent.APIMessages, groq.ChatMessage{
-            Role:    "assistant",
-            Content: msg.Content,
-        })
+
+    event := script[agent.ScriptIndex]
+
+    switch event.Type {
+
+    case "note":
+        agent.CurrentNote = event.Text
+        agent.ScriptIndex++
+
+    case "user":
+        agent.CurrentNote = ""
+        agent.ScriptIndex = processEventGroup(agent, agent.ScriptIndex)
+
+    case "compaction":
+        agent.CurrentNote = ""
+        processCompaction(agent, event)
+        agent.ScriptIndex++
+
+    case "clear":
+        agent.CurrentNote = ""
+        processClear(agent, event)
+        agent.ScriptIndex++
     }
-    
-    // If in guided mode, mark step as completed
-    if model.Agent.Config.Mode == "guided" && !model.Agent.GuidedDone {
-        model.Agent.StepCompleted = true
+
+    // If instructor, broadcast
+    if model.IsInstructor {
+        sharedPresentation.Agent = model.Agent
+        app.Broadcast()
     }
-    
+
     return gt.Respond()
 }
 ```
 
-### Tool Call Processing
+### Event Group Processing
 
 ```go
-func (m *Model) processToolCalls(calls []groq.ToolCall) {
-    for _, call := range calls {
-        // Add tool call to display messages (if visibility allows)
-        m.Agent.Messages = append(m.Agent.Messages, AgentMessage{
-            Role:     "tool_call",
-            ToolName: call.Function.Name,
-            ToolArgs: call.Function.Arguments,
-            Timestamp: time.Now(),
-        })
-        
-        // Execute the tool
-        result := m.executeToolCall(call)
-        
-        // Add tool result to display messages
-        m.Agent.Messages = append(m.Agent.Messages, AgentMessage{
-            Role:     "tool_result",
-            ToolName: call.Function.Name,
-            Content:  result,
-            Timestamp: time.Now(),
-        })
-        
-        // Add to API messages (tool call + result)
-        m.Agent.APIMessages = append(m.Agent.APIMessages, groq.ChatMessage{
-            Role:       "assistant",
-            ToolCalls:  []groq.ToolCall{call},
-        })
-        m.Agent.APIMessages = append(m.Agent.APIMessages, groq.ChatMessage{
-            Role:       "tool",
-            ToolCallID: call.ID,
-            Content:    result,
-        })
-    }
-}
+// processEventGroup processes a user-initiated group: the user message
+// and all subsequent tool_call, tool_result, assistant events until
+// hitting a boundary (note, user, compaction, clear, or end of script).
+// Returns the new script index.
+func processEventGroup(agent *AgentState, startIdx int) int {
+    script := agent.Config.Script
+    idx := startIdx
+    groupPosition := 0
 
-func (m *Model) executeToolCall(call groq.ToolCall) string {
-    switch call.Function.Name {
-    case "scratchpad_read":
-        return m.executeScratchpadRead(call.Function.Arguments)
-    case "scratchpad_write":
-        return m.executeScratchpadWrite(call.Function.Arguments)
-    case "scratchpad_list":
-        return m.executeScratchpadList()
-    default:
-        // Check for custom mock tools defined in the agent block
-        if mock, ok := m.Agent.Config.MockTools[call.Function.Name]; ok {
-            return mock.Render(call.Function.Arguments)
+    for idx < len(script) {
+        event := script[idx]
+
+        switch event.Type {
+        case "user":
+            if idx > startIdx {
+                return idx // Next user message = new group
+            }
+            appendUserEvent(agent, event, groupPosition)
+            groupPosition++
+            idx++
+
+        case "assistant":
+            appendAssistantEvent(agent, event, groupPosition)
+            groupPosition++
+            idx++
+
+        case "tool_call":
+            appendToolCallEvent(agent, event, groupPosition)
+            groupPosition++
+            idx++
+
+        case "tool_result":
+            appendToolResultEvent(agent, event, groupPosition)
+            applyToolSideEffects(agent, script, idx)
+            groupPosition++
+            idx++
+
+        default:
+            return idx // Boundary: note, compaction, clear
         }
-        return "Unknown tool: " + call.Function.Name
     }
+
+    return idx
 }
 ```
 
----
-
-## Groq API Integration
-
-### Client
+### Event Processors
 
 ```go
-// groq/client.go
-
-type Client struct {
-    APIKey     string
-    HTTPClient *http.Client
-    BaseURL    string  // https://api.groq.com/openai/v1
+func appendUserEvent(agent *AgentState, event ScriptEvent, groupIdx int) {
+    agent.ChatMessages = append(agent.ChatMessages, ChatMessage{
+        Type:     "user",
+        Content:  event.Content,
+        GroupIdx: groupIdx,
+    })
+    agent.ContextMessages = append(agent.ContextMessages, ContextMessage{
+        Role:    "user",
+        Content: event.Content,
+    })
+    agent.TokenCount += estimateTokens(event.Content)
 }
 
-type ChatRequest struct {
-    Model       string        `json:"model"`
-    Messages    []ChatMessage `json:"messages"`
-    Tools       []Tool        `json:"tools,omitempty"`
-    Temperature float64       `json:"temperature,omitempty"`
-    MaxTokens   int           `json:"max_tokens,omitempty"`
+func appendAssistantEvent(agent *AgentState, event ScriptEvent, groupIdx int) {
+    agent.ChatMessages = append(agent.ChatMessages, ChatMessage{
+        Type:     "assistant",
+        Content:  event.Content,
+        GroupIdx: groupIdx,
+    })
+    agent.ContextMessages = append(agent.ContextMessages, ContextMessage{
+        Role:    "assistant",
+        Content: event.Content,
+    })
+    tokens := event.Tokens
+    if tokens == 0 {
+        tokens = estimateTokens(event.Content)
+    }
+    agent.TokenCount += tokens
 }
 
-type ChatMessage struct {
-    Role       string     `json:"role"`
-    Content    string     `json:"content,omitempty"`
-    ToolCalls  []ToolCall `json:"tool_calls,omitempty"`
-    ToolCallID string     `json:"tool_call_id,omitempty"`
+func appendToolCallEvent(agent *AgentState, event ScriptEvent, groupIdx int) {
+    agent.ChatMessages = append(agent.ChatMessages, ChatMessage{
+        Type:     "tool_call",
+        ToolName: event.Tool,
+        ToolArgs: event.Args,
+        GroupIdx: groupIdx,
+    })
+    argsJSON, _ := json.Marshal(event.Args)
+    agent.ContextMessages = append(agent.ContextMessages, ContextMessage{
+        Role:    "tool_call",
+        Content: fmt.Sprintf("%s(%s)", event.Tool, string(argsJSON)),
+    })
 }
 
-type ChatResponse struct {
-    Choices []Choice `json:"choices"`
-    Usage   Usage    `json:"usage"`
+func appendToolResultEvent(agent *AgentState, event ScriptEvent, groupIdx int) {
+    agent.ChatMessages = append(agent.ChatMessages, ChatMessage{
+        Type:     "tool_result",
+        ToolName: event.Tool,
+        Content:  event.Content,
+        GroupIdx: groupIdx,
+    })
+    agent.ContextMessages = append(agent.ContextMessages, ContextMessage{
+        Role:    "tool_result",
+        Content: event.Content,
+    })
 }
 
-type Usage struct {
-    PromptTokens     int `json:"prompt_tokens"`
-    CompletionTokens int `json:"completion_tokens"`
-    TotalTokens      int `json:"total_tokens"`
+func applyToolSideEffects(agent *AgentState, script []ScriptEvent, idx int) {
+    event := script[idx]
+    if event.Tool != "scratchpad_write" {
+        return
+    }
+    // Find the preceding tool_call to get the write args
+    for i := idx - 1; i >= 0; i-- {
+        if script[i].Type == "tool_call" && script[i].Tool == "scratchpad_write" {
+            filename := script[i].Args["filename"]
+            content := script[i].Args["content"]
+            agent.Scratchpad[filename] = content
+            return
+        }
+    }
+}
+
+func processCompaction(agent *AgentState, event ScriptEvent) {
+    agent.ContextMessages = []ContextMessage{
+        agent.ContextMessages[0], // Keep system prompt
+        {Role: "compaction_summary", Content: event.Summary},
+    }
+    agent.ChatMessages = append(agent.ChatMessages, ChatMessage{
+        Type:    "compaction_divider",
+        Content: event.Summary,
+    })
+    agent.TokenCount = estimateTokens(agent.Config.System) +
+        estimateTokens(event.Summary)
+}
+
+func processClear(agent *AgentState, event ScriptEvent) {
+    agent.ChatMessages = nil
+    agent.ContextMessages = []ContextMessage{
+        {Role: "system", Content: agent.Config.System},
+    }
+    agent.TokenCount = estimateTokens(agent.Config.System)
+
+    if event.Note != "" {
+        agent.ChatMessages = append(agent.ChatMessages, ChatMessage{
+            Type:    "clear_divider",
+            Content: event.Note,
+        })
+    }
+
+    if event.ResetScratchpad {
+        agent.Scratchpad = make(map[string]string)
+        for k, v := range agent.InitialScratchpad {
+            agent.Scratchpad[k] = v
+        }
+    }
+}
+
+func estimateTokens(text string) int {
+    return len(text) / 4 // Rough approximation
 }
 ```
-
-### Configuration
-
-API key set via environment variable `GROQ_API_KEY`. Default model: `llama-3.3-70b-versatile`. The model can be overridden per agent block.
-
-### No Streaming — Gotea Handles This Naturally
-
-The agent's API interaction is just state as far as Gotea is concerned. The flow is:
-
-1. User sends message → handler sets `Loading: true` → re-render shows spinner
-2. Handler spawns a goroutine that makes the Groq API call
-3. Goroutine completes → sends `AGENT_RESPONSE` message back into the session
-4. Response handler sets `Loading: false`, appends the message → re-render shows the response
-
-There's no special async plumbing needed. Gotea's message-driven architecture means the API call result is just another message that triggers a state change and re-render. morphdom diffs the DOM and the chat updates.
-
-Groq is fast enough (1-3s typically) that a loading spinner is perfectly fine for a learning context. Streaming would add complexity for marginal UX benefit here.
-
----
-
-## Scratchpad
-
-### Per-Cohort Shared Storage
-
-```
-data/
-└── scratchpads/
-    └── {cohort_id}/
-        └── {agent_id}/
-            ├── notes.md
-            ├── solution.go
-            └── ...
-```
-
-The cohort ID comes from the session or a URL parameter. If no cohort system exists yet, it defaults to a single shared scratchpad per agent ID.
-
-### Why Per-Cohort?
-
-In an instructor-led class, all learners in the same cohort share a scratchpad. This enables:
-
-- The instructor can seed the scratchpad with starter files before the lesson.
-- Learners can see each other's work (collaborative exercises).
-- The agent can read files that the instructor placed there.
-
-For self-paced learning, each learner effectively gets their own "cohort of one."
-
-### Scratchpad UI
-
-A collapsible panel in the sidebar, below the chat:
-
-```
-┌─ Scratchpad ──────────── [▼ collapse] ┐
-│                                        │
-│  📄 notes.md          (2.1 KB)  [view] │
-│  📄 solution.go       (0.8 KB)  [view] │
-│  📄 config.yaml       (0.3 KB)  [view] │
-│                                        │
-└────────────────────────────────────────┘
-```
-
-Clicking "view" shows file contents in a modal or expands inline. The learner can also write/edit files directly via the scratchpad UI (sends a `SCRATCHPAD_WRITE` message), not just through the agent.
 
 ---
 
@@ -612,73 +694,81 @@ Clicking "view" shows file contents in a modal or expands inline. The learner ca
 type AgentBlock struct {
     ID    string `yaml:"id"`
     Title string `yaml:"title"`
-    
-    // Model configuration
-    Model       string  `yaml:"model"`       // default: llama-3.3-70b-versatile
-    MaxTurns    int     `yaml:"max_turns"`   // default: 50
-    Temperature float64 `yaml:"temperature"` // default: 0.7
-    MaxTokens   int     `yaml:"max_tokens"`  // max tokens per response, default: 2048
-    
+
+    // Display label (cosmetic)
+    ModelLabel string `yaml:"model_label"`
+
     // System prompt
     System string `yaml:"system"`
-    
-    // Mode
-    Mode  string      `yaml:"mode"`  // "free" (default) or "guided"
-    Steps []AgentStep `yaml:"steps"` // Only used in guided mode
-    
-    // Tools
-    Tools     []string             `yaml:"tools"`      // Built-in tool names
-    MockTools map[string]MockTool  `yaml:"mock_tools"` // Custom mock tools
-    
-    // Visibility
+
+    // Initial scratchpad files
+    Scratchpad map[string]string `yaml:"scratchpad"`
+
+    // Tool names — for display purposes
+    Tools []string `yaml:"tools"`
+
+    // Visibility controls
     Visibility AgentVisibility `yaml:"visibility"`
-    
+
     // Sidebar config
     Sidebar AgentSidebarConfig `yaml:"sidebar"`
-    
-    // Post-guided behaviour
-    FreeAfterGuided bool `yaml:"free_after_guided"`
+
+    // The choreographed conversation
+    Script []ScriptEvent `yaml:"script"`
 }
 
-type AgentStep struct {
-    Note     string `yaml:"note"`
-    Prompt   string `yaml:"prompt"`
-    Editable bool   `yaml:"editable"` // default: false
+type ScriptEvent struct {
+    Type string `yaml:"type"` // note, user, assistant, tool_call,
+                              // tool_result, compaction, clear
+
+    // For note
+    Text string `yaml:"text"`
+
+    // For user, assistant
+    Content string `yaml:"content"`
+    Tokens  int    `yaml:"tokens"`
+
+    // For tool_call, tool_result
+    Tool string            `yaml:"tool"`
+    Args map[string]string `yaml:"args"`
+
+    // For compaction
+    Summary string `yaml:"summary"`
+
+    // For clear
+    ResetScratchpad bool   `yaml:"reset_scratchpad"`
+    Note            string `yaml:"note"`
 }
 
 type AgentVisibility struct {
     SystemPrompt string `yaml:"system_prompt"` // visible | hidden | toggleable
-    ToolCalls    string `yaml:"tool_calls"`
-    FullContext  string `yaml:"full_context"`
-    TokenCount   string `yaml:"token_count"`
-    Temperature  string `yaml:"temperature"`
-    ModelName    string `yaml:"model_name"`
+    ToolCalls    string `yaml:"tool_calls"`    // visible | hidden | toggleable
+    FullContext  string `yaml:"full_context"`  // visible | hidden | toggleable
+    TokenCount   string `yaml:"token_count"`   // visible | hidden
+    ModelName    string `yaml:"model_name"`    // visible | hidden
 }
 
 type AgentSidebarConfig struct {
-    Width     string `yaml:"width"`      // CSS width, default "40%"
+    Width     string `yaml:"width"`      // CSS value, default "40%"
     StartOpen bool   `yaml:"start_open"` // default: true
-}
-
-type MockTool struct {
-    Name         string            `yaml:"name"`
-    Description  string            `yaml:"description"`
-    Parameters   map[string]Param  `yaml:"parameters"`
-    MockResponse string            `yaml:"mock_response"` // supports ${param} interpolation
 }
 ```
 
 ### Goldmark Extension
 
-The `agent` fenced block parser extracts the YAML into an `AgentBlock` struct, same as other blocks. The placeholder marker is emitted into the HTML, but the **render function treats it differently**: instead of rendering inline, it sets a flag that activates the sidebar layout.
+Same pattern as other block types: the `agent` fenced block parser extracts YAML into an `AgentBlock` struct, emits a placeholder marker in the HTML. The render function detects the agent block and activates the sidebar layout.
 
 ### Validation at Startup
 
 - Agent ID must be unique within a module.
-- If `mode: guided`, must have at least one step.
-- `visibility` values must be one of `visible`, `hidden`, `toggleable`.
-- Referenced built-in tools must be from the known set.
 - At most one agent block per page.
+- `visibility` values must be one of `visible`, `hidden`, `toggleable`.
+- Script must not be empty.
+- Script must start with a `note` or `user` event (not `tool_result` or `assistant`).
+- Every `tool_result` must be preceded by a `tool_call` (not necessarily immediately — another `tool_call`/`tool_result` pair can intervene for parallel calls).
+- `tool_call` args for `scratchpad_write` must have `filename` and `content` keys.
+- `compaction` events must have a non-empty `summary`.
+- Referenced tool names in script events must be in the block's `tools` list.
 
 ---
 
@@ -690,85 +780,95 @@ The `agent` fenced block parser extracts the YAML into an `AgentBlock` struct, s
 func (m *Model) renderCurrentPage(s gt.State) []byte {
     model := s.(*Model)
     page := model.currentPage()
-    
-    // Check if this page has an agent block
+
     agentBlock := findAgentBlock(page.Blocks)
-    
+
     if agentBlock != nil {
-        // Two-column layout
+        agentState := model.getAgentStateForRender()
         return renderLayout(model,
             h.Div(a.Attrs(a.Class("split-layout")),
                 h.Div(a.Attrs(a.Class("content-pane")),
                     renderPageContent(page, model.ActiveQuiz, model.ActiveHotspot),
                     renderPageNav(model),
                 ),
-                renderAgentSidebar(model.Agent),
+                renderAgentSidebar(agentState, model.FollowInstructor),
             ),
         ).Bytes()
     }
-    
-    // Standard single-column layout
+
     return renderLayout(model,
         renderPageContent(page, model.ActiveQuiz, model.ActiveHotspot),
         renderPageNav(model),
     ).Bytes()
 }
+
+func (m *Model) getAgentStateForRender() *AgentState {
+    if m.FollowInstructor && sharedPresentation.Agent != nil {
+        return sharedPresentation.Agent
+    }
+    return m.Agent
+}
 ```
 
-### Agent Sidebar Render
+### Agent Sidebar
 
 ```go
-func renderAgentSidebar(state *AgentState) h.Element {
+func renderAgentSidebar(state *AgentState, followMode bool) h.Element {
     if state == nil {
         return h.Nothing()
     }
-    
+
+    if !state.SidebarOpen {
+        return h.Aside(a.Attrs(a.Class("agent-sidebar collapsed")),
+            renderAgentTitleBar(state),
+        )
+    }
+
     children := []h.Element{
         renderAgentTitleBar(state),
     }
-    
-    if !state.SidebarOpen {
-        // Collapsed — just show title bar with expand button
-        return h.Aside(a.Attrs(a.Class("agent-sidebar collapsed")), children...)
-    }
-    
-    // System prompt panel (if visible or toggled on)
+
+    // System prompt panel
     if shouldShow(state.Config.Visibility.SystemPrompt, state.ShowSystem) {
         children = append(children, renderSystemPromptPanel(state))
     }
-    
-    // Toggle button for system prompt (if toggleable)
     if state.Config.Visibility.SystemPrompt == "toggleable" {
-        children = append(children, renderToggleButton("AGENT_TOGGLE_SYSTEM",
-            "System Prompt", state.ShowSystem))
+        children = append(children, renderToggleButton(
+            "AGENT_TOGGLE_SYSTEM", "System Prompt", state.ShowSystem))
     }
-    
-    // Guided step note
-    if state.Config.Mode == "guided" && !state.GuidedDone {
-        step := state.Config.Steps[state.CurrentStep]
-        children = append(children, renderStepNote(step, state.CurrentStep,
-            len(state.Config.Steps)))
+
+    // Current note
+    if state.CurrentNote != "" {
+        children = append(children, renderCurrentNote(state.CurrentNote))
     }
-    
+
     // Chat messages
-    children = append(children, renderAgentMessages(state))
-    
-    // Full context panel (if visible or toggled on)
+    children = append(children, renderChatMessages(state))
+
+    // Full context panel
     if shouldShow(state.Config.Visibility.FullContext, state.ShowFullContext) {
         children = append(children, renderFullContextPanel(state))
     }
-    
+    if state.Config.Visibility.FullContext == "toggleable" {
+        children = append(children, renderToggleButton(
+            "AGENT_TOGGLE_CONTEXT", "Full Context", state.ShowFullContext))
+    }
+
     // Scratchpad panel
-    if hasScatchpadTool(state.Config.Tools) {
+    if containsTool(state.Config.Tools, "scratchpad") {
         children = append(children, renderScratchpadPanel(state))
     }
-    
-    // Input area
-    children = append(children, renderAgentInput(state))
-    
-    // Status bar (token count, temperature, model)
-    children = append(children, renderAgentStatusBar(state))
-    
+
+    // Advance control (or follow-mode banner)
+    if followMode {
+        children = append(children, renderFollowModeBanner())
+    } else {
+        children = append(children, renderAdvanceControl(state))
+    }
+
+    // Status bar
+    children = append(children, renderStatusBar(state))
+
     return h.Aside(a.Attrs(a.Class("agent-sidebar")), children...)
 }
 ```
@@ -776,115 +876,265 @@ func renderAgentSidebar(state *AgentState) h.Element {
 ### Chat Message Rendering
 
 ```go
-func renderAgentMessages(state *AgentState) h.Element {
+func renderChatMessages(state *AgentState) h.Element {
     var msgs []h.Element
-    
-    for _, m := range state.Messages {
-        switch m.Role {
+
+    for _, m := range state.ChatMessages {
+        switch m.Type {
         case "user":
-            msgs = append(msgs, renderUserMessage(m))
+            msgs = append(msgs, renderUserBubble(m))
+
         case "assistant":
-            msgs = append(msgs, renderAssistantMessage(m))
+            msgs = append(msgs, renderAssistantBubble(m))
+
         case "tool_call":
             if shouldShow(state.Config.Visibility.ToolCalls, state.ShowToolCalls) {
-                msgs = append(msgs, renderToolCallMessage(m))
+                msgs = append(msgs, renderToolCallBubble(m))
             }
+
         case "tool_result":
             if shouldShow(state.Config.Visibility.ToolCalls, state.ShowToolCalls) {
-                msgs = append(msgs, renderToolResultMessage(m))
+                msgs = append(msgs, renderToolResultBubble(m))
             }
+
+        case "compaction_divider":
+            msgs = append(msgs, h.Div(a.Attrs(a.Class("chat-divider compaction")),
+                h.Span(a.Attrs(), h.Text("── Context compacted ──")),
+            ))
+
+        case "clear_divider":
+            msgs = append(msgs, h.Div(a.Attrs(a.Class("chat-divider clear")),
+                h.Span(a.Attrs(), h.Text(m.Content)),
+            ))
         }
     }
-    
-    if state.Loading {
-        msgs = append(msgs, renderLoadingIndicator())
-    }
-    
-    return h.Div(a.Attrs(a.Class("agent-messages"), a.Id("agent-messages")),
+
+    return h.Div(a.Attrs(a.Class("chat-messages"), a.Id("agent-messages")),
         msgs...,
     )
 }
 ```
 
-### Guided Mode Input
-
-In guided mode, the input area changes depending on the current step:
+### Tool Call / Result Bubbles
 
 ```go
-func renderAgentInput(state *AgentState) h.Element {
-    // If loading, disable everything
-    if state.Loading {
-        return renderDisabledInput("Thinking...")
-    }
-    
-    // Guided mode — waiting for the user to advance
-    if state.Config.Mode == "guided" && !state.GuidedDone && !state.FreeUnlocked {
-        step := state.Config.Steps[state.CurrentStep]
-        
-        if state.StepCompleted {
-            // Response received, show "Next Step" button
-            if state.CurrentStep < len(state.Config.Steps)-1 {
-                return h.Div(a.Attrs(a.Class("agent-input guided")),
-                    h.Button(a.Attrs(
-                        a.Class("btn-next-step"),
-                        a.OnClick(gt.SendBasicMessageNoArgs("AGENT_NEXT_STEP")),
-                    ), h.Text("Next Step →")),
-                )
-            }
-            // Last step completed
-            if state.Config.FreeAfterGuided {
-                return h.Div(a.Attrs(a.Class("agent-input guided")),
-                    h.Button(a.Attrs(
-                        a.Class("btn-next-step"),
-                        a.OnClick(gt.SendBasicMessageNoArgs("AGENT_NEXT_STEP")),
-                    ), h.Text("Continue to Free Mode →")),
-                )
-            }
-            return h.Div(a.Attrs(a.Class("agent-input guided-complete")),
-                h.P(a.Attrs(), h.Text("✓ All steps completed")),
-            )
-        }
-        
-        if step.Prompt == "" {
-            // Empty prompt — learner writes their own
-            return renderFreeInput(state)
-        }
-        
-        if step.Editable {
-            // Editable pre-fill
-            return renderEditableStepInput(state, step)
-        }
-        
-        // Read-only pre-fill — just a send button
-        return h.Div(a.Attrs(a.Class("agent-input guided")),
-            h.Div(a.Attrs(a.Class("prefilled-prompt")),
-                h.Text(step.Prompt),
+func renderToolCallBubble(m ChatMessage) h.Element {
+    var argLines []h.Element
+    for k, v := range m.ToolArgs {
+        argLines = append(argLines,
+            h.Div(a.Attrs(a.Class("tool-arg")),
+                h.Span(a.Attrs(a.Class("tool-arg-key")), h.Text(k+": ")),
+                h.Span(a.Attrs(a.Class("tool-arg-val")), h.Text(v)),
             ),
-            h.Button(a.Attrs(
-                a.Class("btn-send"),
-                a.OnClick(gt.SendBasicMessage("AGENT_SEND_STEP",
-                    fmt.Sprintf("%d", state.CurrentStep))),
-            ), h.Text("Send")),
         )
     }
-    
-    // Free mode
-    return renderFreeInput(state)
+
+    return h.Div(a.Attrs(a.Class("chat-msg tool-call")),
+        h.Div(a.Attrs(a.Class("tool-header")),
+            h.Span(a.Attrs(a.Class("tool-icon")), h.Text("🔧")),
+            h.Span(a.Attrs(), h.Text("Tool Call: "+m.ToolName)),
+        ),
+        h.Div(a.Attrs(a.Class("tool-args")), argLines...),
+    )
+}
+
+func renderToolResultBubble(m ChatMessage) h.Element {
+    return h.Div(a.Attrs(a.Class("chat-msg tool-result")),
+        h.Div(a.Attrs(a.Class("tool-header")),
+            h.Span(a.Attrs(a.Class("tool-icon")), h.Text("📎")),
+            h.Span(a.Attrs(), h.Text("Result: "+m.ToolName)),
+        ),
+        h.Pre(a.Attrs(a.Class("tool-result-content")), h.Text(m.Content)),
+    )
+}
+```
+
+### Full Context Panel
+
+```go
+func renderFullContextPanel(state *AgentState) h.Element {
+    var entries []h.Element
+
+    for _, cm := range state.ContextMessages {
+        roleClass := "context-role-" + cm.Role
+        entries = append(entries,
+            h.Div(a.Attrs(a.Class("context-entry "+roleClass)),
+                h.Div(a.Attrs(a.Class("context-role-label")),
+                    h.Text(cm.Role)),
+                h.Pre(a.Attrs(a.Class("context-content")),
+                    h.Text(cm.Content)),
+            ),
+        )
+    }
+
+    return h.Div(a.Attrs(a.Class("full-context-panel")),
+        h.Div(a.Attrs(a.Class("panel-header")), h.Text("Full Context")),
+        h.Div(a.Attrs(a.Class("context-entries")), entries...),
+    )
+}
+```
+
+### Advance Control
+
+```go
+func renderAdvanceControl(state *AgentState) h.Element {
+    atEnd := state.ScriptIndex >= len(state.Config.Script)
+
+    if atEnd {
+        return h.Div(a.Attrs(a.Class("agent-advance complete")),
+            h.Span(a.Attrs(), h.Text("✓ Demo complete")),
+            h.Button(a.Attrs(
+                a.Class("btn-reset"),
+                a.OnClick(gt.SendBasicMessageNoArgs("AGENT_RESET")),
+            ), h.Text("Restart")),
+        )
+    }
+
+    next := state.Config.Script[state.ScriptIndex]
+    buttonText := "Next"
+    switch next.Type {
+    case "user":
+        buttonText = "▶ Run next exchange"
+    case "compaction":
+        buttonText = "Compact context"
+    case "clear":
+        buttonText = "Clear & reset"
+    }
+
+    return h.Div(a.Attrs(a.Class("agent-advance")),
+        h.Button(a.Attrs(
+            a.Class("btn-advance"),
+            a.OnClick(gt.SendBasicMessageNoArgs("AGENT_ADVANCE")),
+        ), h.Text(buttonText)),
+        h.Span(a.Attrs(a.Class("step-counter")),
+            h.Text(fmt.Sprintf("Step %d / %d",
+                state.ScriptIndex, len(state.Config.Script)))),
+    )
+}
+
+func renderFollowModeBanner() h.Element {
+    return h.Div(a.Attrs(a.Class("agent-follow-banner")),
+        h.Text("Your instructor is leading this demo"),
+    )
+}
+```
+
+### Scratchpad Panel
+
+```go
+func renderScratchpadPanel(state *AgentState) h.Element {
+    if !state.ScratchpadOpen {
+        fileCount := len(state.Scratchpad)
+        return h.Div(a.Attrs(a.Class("scratchpad-panel collapsed")),
+            h.Button(a.Attrs(
+                a.Class("panel-toggle"),
+                a.OnClick(gt.SendBasicMessageNoArgs("AGENT_TOGGLE_SCRATCHPAD")),
+            ), h.Text(fmt.Sprintf("Scratchpad (%d files) ▸", fileCount))),
+        )
+    }
+
+    var files []h.Element
+    for filename, content := range state.Scratchpad {
+        isViewing := state.ViewingFile == filename
+        fileEl := h.Div(a.Attrs(a.Class("scratchpad-file")),
+            h.Div(a.Attrs(a.Class("file-header")),
+                h.Span(a.Attrs(a.Class("file-icon")), h.Text("📄")),
+                h.Span(a.Attrs(a.Class("file-name")), h.Text(filename)),
+                h.Button(a.Attrs(
+                    a.Class("btn-view-file"),
+                    a.OnClick(gt.SendBasicMessage("AGENT_VIEW_FILE", filename)),
+                ), h.Text(ternary(isViewing, "hide", "view"))),
+            ),
+        )
+        if isViewing {
+            fileEl = h.Div(a.Attrs(a.Class("scratchpad-file viewing")),
+                h.Div(a.Attrs(a.Class("file-header")),
+                    h.Span(a.Attrs(a.Class("file-icon")), h.Text("📄")),
+                    h.Span(a.Attrs(a.Class("file-name")), h.Text(filename)),
+                    h.Button(a.Attrs(
+                        a.Class("btn-view-file"),
+                        a.OnClick(gt.SendBasicMessage("AGENT_VIEW_FILE", "")),
+                    ), h.Text("hide")),
+                ),
+                h.Pre(a.Attrs(a.Class("file-content")), h.Text(content)),
+            )
+        }
+        files = append(files, fileEl)
+    }
+
+    return h.Div(a.Attrs(a.Class("scratchpad-panel")),
+        h.Div(a.Attrs(a.Class("panel-header")),
+            h.Text("Scratchpad"),
+            h.Button(a.Attrs(
+                a.Class("panel-toggle"),
+                a.OnClick(gt.SendBasicMessageNoArgs("AGENT_TOGGLE_SCRATCHPAD")),
+            ), h.Text("▾")),
+        ),
+        h.Div(a.Attrs(a.Class("scratchpad-files")), files...),
+    )
+}
+```
+
+### Status Bar
+
+```go
+func renderStatusBar(state *AgentState) h.Element {
+    var items []h.Element
+
+    if state.Config.Visibility.TokenCount == "visible" {
+        items = append(items,
+            h.Span(a.Attrs(a.Class("status-item")),
+                h.Text(fmt.Sprintf("~%d tokens", state.TokenCount))))
+    }
+    if state.Config.Visibility.ModelName == "visible" && state.Config.ModelLabel != "" {
+        items = append(items,
+            h.Span(a.Attrs(a.Class("status-item model")),
+                h.Text(state.Config.ModelLabel)))
+    }
+
+    return h.Div(a.Attrs(a.Class("agent-status-bar")), items...)
 }
 ```
 
 ---
 
-## Scroll-to-Bottom After Render
+## Staggered Playback (Visual Pacing)
 
-One client-side JS addition needed: after morphdom patches, scroll the agent messages container to the bottom if new messages were added.
+When a group fires (user → tool_call → tool_result → assistant), displaying everything instantly feels abrupt. CSS animation creates natural pacing without complicating server-side logic.
+
+All events in a group are added to the DOM simultaneously, but each gets a sequential animation delay based on `GroupIdx`:
+
+```css
+.chat-msg {
+    opacity: 0;
+    animation: fadeSlideIn 300ms ease forwards;
+}
+
+.chat-msg[data-group-idx="0"] { animation-delay: 0ms; }
+.chat-msg[data-group-idx="1"] { animation-delay: 400ms; }
+.chat-msg[data-group-idx="2"] { animation-delay: 800ms; }
+.chat-msg[data-group-idx="3"] { animation-delay: 1200ms; }
+.chat-msg[data-group-idx="4"] { animation-delay: 1600ms; }
+.chat-msg[data-group-idx="5"] { animation-delay: 2000ms; }
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+```
+
+The render function emits `data-group-idx` from the `GroupIdx` field on `ChatMessage`. Only messages from the most recent advance get animation — older messages have `GroupIdx` reset to -1 (no delay).
+
+### Scroll-to-Bottom
 
 ```javascript
-// In training.js
 document.addEventListener('gotea:render', function() {
     const msgContainer = document.getElementById('agent-messages');
     if (msgContainer) {
-        msgContainer.scrollTop = msgContainer.scrollHeight;
+        // Delay to account for staggered animations
+        setTimeout(function() {
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+        }, 2500);
     }
 });
 ```
@@ -893,236 +1143,248 @@ document.addEventListener('gotea:render', function() {
 
 ## Instructor Follow-Along Mode
 
-When learners are in follow-along mode (following the instructor's navigation), the agent sidebar shows a **read-only mirror** of the instructor's agent session. This is the same broadcast pattern used for page navigation, extended to agent state.
-
-### How It Works
-
-The instructor is the only one interacting with the agent. Their session makes the Groq API calls, processes tool responses, and advances through guided steps. After each state change, `app.Broadcast()` fires, and every learner's render cycle picks up the instructor's agent state.
+When learners are in follow-along mode, the agent sidebar shows a **read-only mirror** of the instructor's agent session. Same broadcast pattern as page navigation.
 
 ### Shared State
 
-The instructor's `AgentState` lives on a shared struct (same pattern as `sharedPresentation`):
-
 ```go
-// Package-level shared state for instructor-led sessions
 var sharedPresentation struct {
     CurrentModule string
     CurrentPage   int
-    Agent         *AgentState  // Instructor's live agent state
+    Agent         *AgentState // Instructor's live agent state
 }
 ```
 
-### Render Decision
+### Behaviour
 
-```go
-func (m *Model) getAgentStateForRender() *AgentState {
-    if m.FollowInstructor && sharedPresentation.Agent != nil {
-        return sharedPresentation.Agent  // Read-only: show instructor's session
-    }
-    return m.Agent  // Self-paced: show own session
-}
-```
+- The instructor clicks "Next" — their handler updates their `AgentState`, copies it to `sharedPresentation.Agent`, and calls `app.Broadcast()`.
+- Every learner's render picks up the instructor's state via `getAgentStateForRender()`.
+- Learners see the same chat, same notes, same scratchpad mutations, same context panel — all in real-time.
+- The advance button is replaced with "Your instructor is leading this demo."
+- The instructor can narrate alongside: "Watch what happens when this vague prompt is sent..."
 
-### Learner UI Differences in Follow Mode
+### On Release
 
-When following the instructor, the learner sees:
+When the instructor releases follow mode, each learner gets a **fresh** `AgentState` initialised from the block config. They don't inherit the instructor's conversation — they start their own walkthrough from step 0.
 
-- The full chat history as the instructor builds it (messages appear in real-time via broadcast).
-- Tool calls, system prompt panels, etc. — all controlled by the instructor's visibility toggles.
-- The guided step notes (so learners can read the pedagogical context).
-- **No input field.** The chat is read-only. The input area is replaced with a banner: "Your instructor is leading this demo."
-- The loading spinner when the instructor's API call is in-flight.
+---
 
-This means the instructor can narrate as they go: "Watch what happens when I send this vague prompt... now compare that to this more specific one..." — and every learner sees the same conversation building in real-time.
-
-### Instructor Agent Messages
-
-The instructor's agent messages go through the normal `AGENT_SEND` / `AGENT_RESPONSE` flow, but the handlers also update `sharedPresentation.Agent` and call `app.Broadcast()`:
-
-```go
-func (m *Model) handleAgentResponse(msg gt.Message, s gt.State) gt.Response {
-    model := s.(*Model)
-    // ... normal response processing ...
-    
-    // If this is the instructor session, broadcast the updated state
-    if model.IsInstructor {
-        sharedPresentation.Agent = model.Agent
-        app.Broadcast()
-    }
-    
-    return gt.Respond()
-}
-```
-
-### Transition to Self-Paced
-
-When the instructor releases control (exits follow-along mode), learners can interact with the agent themselves. At that point, each learner gets a **fresh** `AgentState` initialised from the agent block config on their current page — they don't inherit the instructor's conversation history. The instructor's demo is gone; now they practice on their own.
+## File Structure Additions
 
 ```
 training-app/
-├── groq/
-│   ├── client.go              # Groq API HTTP client
-│   ├── types.go               # Request/response types
-│   └── tools.go               # Tool definitions for the API
-├── agent/
-│   ├── state.go               # AgentState struct and initialisation
-│   ├── tools.go               # Tool execution (scratchpad, mock tools)
-│   └── scratchpad.go          # Scratchpad filesystem operations
-├── agent_handlers.go          # Message handlers for agent interactions
-├── agent_renderers.go         # Render functions for the sidebar UI
+├── agent.go                   # AgentBlock, AgentState, ScriptEvent structs
+│                              #   initAgentState, findAgentBlock
+├── agent_handlers.go          # Message handlers (advance, toggles, reset, view file)
+├── agent_playback.go          # Event processing (processEventGroup, processCompaction,
+│                              #   processClear, append*Event, applyToolSideEffects)
+├── agent_renderers.go         # All render functions for the sidebar UI
+├── parsing/
+│   └── goldmark_extensions.go # Add agent block parser case
 ├── static/
 │   └── css/
-│       └── agent.css          # Sidebar and chat UI styles
+│       └── agent.css          # Sidebar layout, chat bubbles, tool blocks,
+│                              #   panels, animations, status bar
 ```
-
----
-
-## Example Training Content
-
-Here's what a lesson on prompt engineering might look like, demonstrating the full feature set:
-
-````markdown
----
-title: "Prompt Engineering Fundamentals"
-duration: 30m
----
-
-# Prompt Engineering
-
-The way you phrase a request to an AI model dramatically affects the quality
-of the response. In this lesson, you'll experiment with different prompting
-strategies using a live AI agent.
-
-## Why Prompts Matter
-
-A language model doesn't "understand" your intent — it predicts the most
-likely continuation given the text you provide. A vague prompt produces
-vague output. A specific, well-structured prompt produces focused, useful
-output.
-
-## The System Prompt
-
-Look at the sidebar. You'll notice the agent has a **system prompt** that
-you can toggle open. This is the instruction set that shapes the agent's
-behaviour before your conversation even starts. As you work through the
-guided exercises, pay attention to how the system prompt influences
-responses.
-
-## Let's Practice
-
-The agent on the right will walk you through a series of prompts. Each
-step builds on the last. Pay attention to how small changes in phrasing
-produce very different outputs.
-
-```agent
-id: prompt-eng-101
-title: "Prompt Practice"
-model: llama-3.3-70b-versatile
-temperature: 0.7
-
-system: |
-  You are a helpful assistant with expertise in many topics.
-  Always be thorough and specific in your responses.
-  When asked about a topic, provide concrete examples.
-
-mode: guided
-steps:
-  - note: |
-      We're starting with a deliberately vague prompt. Notice how the model
-      gives a broad, unfocused response. There's no way for it to know what
-      you actually need.
-    prompt: "Tell me about dogs."
-
-  - note: |
-      Now we've added specificity — a particular breed, a particular context
-      (adoption), and a concrete ask (health considerations). Compare this
-      response to the previous one.
-    prompt: "What are the top 5 health considerations when adopting an adult rescue greyhound?"
-
-  - note: |
-      Here we're adding a **persona** (veterinarian) and an **output format**
-      (table with specific columns). These constraints dramatically improve
-      the usefulness of the output.
-    prompt: "As a veterinarian, create a table comparing the top 3 joint supplements for greyhounds, with columns for name, active ingredient, and typical dosage."
-
-  - note: |
-      Your turn. Using what you've learned about specificity, personas, and
-      format constraints, write a prompt about a topic of your choice.
-      Try to be as precise as possible.
-    prompt: ""
-
-  - note: |
-      Now toggle open the system prompt panel and read it. Then write a prompt
-      that *conflicts* with the system instructions. What happens? This
-      demonstrates the relationship between system prompts and user prompts.
-    prompt: ""
-    editable: true
-
-free_after_guided: true
-
-visibility:
-  system_prompt: toggleable
-  tool_calls: hidden
-  full_context: toggleable
-  token_count: visible
-  temperature: visible
-
-sidebar:
-  width: 45%
-  start_open: true
-```
-
-## Key Takeaways
-
-After completing the guided exercises, reflect on these patterns:
-
-1. **Specificity wins.** Vague inputs produce vague outputs.
-2. **Personas focus expertise.** Telling the model *who* to be shapes *what* it says.
-3. **Format constraints** (tables, lists, JSON) make outputs immediately useful.
-4. **System prompts set the baseline** that user prompts build on.
-````
 
 ---
 
 ## Implementation Phases
 
-This feature is large enough to phase internally:
+### Phase A — Core Playback
 
-### Phase A — Core Chat
+- `AgentBlock` and `ScriptEvent` parsing from markdown (Goldmark extension).
+- `AgentState` struct and `initAgentState`.
+- `AGENT_ADVANCE` handler with event group processing.
+- Sidebar layout (split-pane when agent block present).
+- Chat message rendering (user + assistant bubbles).
+- Note rendering.
+- Advance button with step counter.
+- Agent state lifecycle (init on page nav, nil on nav away).
+- `AGENT_RESET` handler.
 
-- `AgentBlock` parsing and validation.
-- Groq API client (non-streaming).
-- Basic `AgentState` with free-mode chat.
-- Sidebar layout and message rendering.
-- `AGENT_SEND` / `AGENT_RESPONSE` message flow.
+### Phase B — Tools & Scratchpad
 
-### Phase B — Guided Mode
+- Tool call / tool result chat bubbles.
+- Scratchpad initial state from block config.
+- Scratchpad panel (file list, view/hide file contents).
+- `scratchpad_write` side effects.
+- Scratchpad reset on `clear` events.
 
-- Step sequencing with notes.
-- Pre-filled prompts (read-only and editable).
-- Step navigation (next step, completion detection).
-- `free_after_guided` unlock.
+### Phase C — Context & Visibility
 
-### Phase C — Visibility Controls
+- Full context panel rendering.
+- Visibility toggle buttons and state.
+- System prompt panel.
+- Compaction event processing and context panel update.
+- Token count display (estimated).
+- Model name display in status bar.
 
-- System prompt panel (visible/hidden/toggleable).
-- Tool call display with styled blocks.
-- Full context panel showing raw messages array.
-- Token count and temperature display.
+### Phase D — Instructor Follow-Along
 
-### Phase D — Tools & Scratchpad
+- Instructor advance broadcasts shared agent state.
+- Learner read-only view in follow mode.
+- Follow-mode banner replaces advance button.
+- Fresh state on follow mode release.
 
-- Scratchpad read/write/list implementation.
-- Scratchpad UI panel in sidebar.
-- Tool definitions sent to Groq API.
-- Tool call execution loop (call → result → re-call).
-- Mock tools with template interpolation.
+### Phase E — Polish
 
-### Phase E — Instructor Follow-Along & Polish
-
-- Instructor agent broadcast (shared state + `Broadcast()`).
-- Read-only learner view in follow mode.
-- Scroll-to-bottom JS.
-- Sidebar collapse/expand.
+- CSS staggered animation for event groups.
+- Scroll-to-bottom JS with animation delay.
+- Sidebar collapse / expand.
 - Startup content validation for agent blocks.
-- CSS styling and theming for chat UI.
+- Clear event dividers.
+- Contextual advance button text.
+
+---
+
+## Example: Full Lesson on Tool Use
+
+````markdown
+---
+title: "How AI Agents Use Tools"
+duration: 25m
+notes: "Ensure scratchpad panel is visible during demo"
+---
+
+# How AI Agents Use Tools
+
+A language model on its own can only generate text. But when we give it
+**tools** — functions it can call — it becomes an agent that can interact
+with the world. In this demo, you'll see exactly how tool calling works
+from the inside.
+
+## The Anatomy of a Tool Call
+
+When a model decides to use a tool, it doesn't execute anything itself.
+Instead, it outputs a structured request: "I'd like to call function X
+with these arguments." The **orchestrator** (the system running the model)
+executes the function and feeds the result back into the conversation.
+
+The model then uses that result to formulate its response.
+
+```agent
+id: tool-use-demo
+title: "Tool Calling Internals"
+model_label: llama-3.3-70b
+
+system: |
+  You are a helpful assistant. You have a scratchpad tool for
+  reading and writing files. Use it when the user asks you to
+  save, read, or work with files.
+
+scratchpad:
+  "readme.md": |
+    # My Project
+    A simple web server written in Go.
+
+tools:
+  - scratchpad
+
+visibility:
+  system_prompt: toggleable
+  tool_calls: visible
+  full_context: toggleable
+  token_count: visible
+  model_name: visible
+
+sidebar:
+  width: 45%
+  start_open: true
+
+script:
+  - type: note
+    text: |
+      Toggle open the system prompt to see the model's instructions.
+      Notice it's told about the scratchpad tool. Also check the
+      scratchpad panel — there's already a file there.
+
+  - type: user
+    content: "What files do I have?"
+
+  - type: tool_call
+    tool: scratchpad_list
+    args: {}
+
+  - type: tool_result
+    tool: scratchpad_list
+    content: "readme.md"
+
+  - type: assistant
+    content: "You have one file: readme.md. Would you like me to read it?"
+
+  - type: note
+    text: |
+      The model chose to call `scratchpad_list` to answer your question.
+      Watch the tool call and result in the chat — the model received a
+      plain text list of filenames, then used that to write its response.
+
+  - type: user
+    content: "Yes, read it and then add a section about installation."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "readme.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # My Project
+      A simple web server written in Go.
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "readme.md"
+      content: |
+        # My Project
+        A simple web server written in Go.
+
+        ## Installation
+        ```
+        go install github.com/example/myproject@latest
+        ```
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written 112 bytes to readme.md"
+
+  - type: assistant
+    content: |
+      Done! I've read the file and added an Installation section.
+      Check the scratchpad to see the updated readme.md.
+
+  - type: note
+    text: |
+      Two things to notice:
+
+      1. The model made TWO tool calls in sequence — read then write.
+         The orchestrator executed each one and fed the results back.
+
+      2. Check the scratchpad — readme.md has been updated. The model
+         composed new content that preserved the original and added to it.
+
+      Now toggle open the full context panel and scroll through. You can
+      see the complete message history the model receives on every turn.
+
+  - type: compaction
+    summary: "[Earlier: user asked about files (has readme.md). Assistant read it and added an Installation section.]"
+
+  - type: note
+    text: |
+      We just compacted the context. The detailed messages have been
+      replaced with a summary. The model loses the specifics but
+      retains the gist. This is the fundamental tradeoff: compaction
+      saves tokens but loses detail.
+
+      That concludes the tool calling demo.
+```
+
+## Key Takeaways
+
+- Models don't execute tools. They **request** tool calls.
+- An orchestrator executes the tools and feeds results back.
+- Each tool call and result becomes part of the context window.
+- Compaction trades detail for token efficiency.
+````
