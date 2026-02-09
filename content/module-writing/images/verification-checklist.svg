@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" style="max-width: 760px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title-main { fill: #a1a1aa; font-size: 20px; font-weight: 600; }
+    .title-section { fill: #fafafa; font-size: 18px; font-weight: 600; }
+    .item { fill: #fafafa; font-size: 15px; }
+    .shape { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .checkbox { fill: none; stroke: #00d9c0; stroke-width: 2; }
+  </style>
+
+  <!-- Main title -->
+  <text x="40" y="50" class="title-main">Verification Checklist</text>
+
+  <!-- Left column: Data Analysis Checks -->
+  <rect x="40" y="80" width="320" height="280" rx="6" class="shape" />
+  <text x="60" y="115" class="title-section">Data Analysis Checks</text>
+
+  <!-- Checkbox 1 -->
+  <rect x="70" y="150" width="20" height="20" rx="3" class="checkbox" />
+  <text x="100" y="165" class="item">Inspect generated code</text>
+
+  <!-- Checkbox 2 -->
+  <rect x="70" y="190" width="20" height="20" rx="3" class="checkbox" />
+  <text x="100" y="205" class="item">Verify data interpretation</text>
+
+  <!-- Checkbox 3 -->
+  <rect x="70" y="230" width="20" height="20" rx="3" class="checkbox" />
+  <text x="100" y="245" class="item">Spot-check calculations</text>
+
+  <!-- Checkbox 4 -->
+  <rect x="70" y="270" width="20" height="20" rx="3" class="checkbox" />
+  <text x="100" y="285" class="item">Confirm charts match data</text>
+
+  <!-- Checkbox 5 -->
+  <rect x="70" y="310" width="20" height="20" rx="3" class="checkbox" />
+  <text x="100" y="325" class="item">Check sample sizes</text>
+
+  <!-- Right column: Document Synthesis Checks -->
+  <rect x="400" y="80" width="320" height="280" rx="6" class="shape" />
+  <text x="420" y="115" class="title-section">Document Synthesis Checks</text>
+
+  <!-- Checkbox 1 -->
+  <rect x="430" y="150" width="20" height="20" rx="3" class="checkbox" />
+  <text x="460" y="165" class="item">Verify connections exist</text>
+
+  <!-- Checkbox 2 -->
+  <rect x="430" y="190" width="20" height="20" rx="3" class="checkbox" />
+  <text x="460" y="205" class="item">Check quote accuracy</text>
+
+  <!-- Checkbox 3 -->
+  <rect x="430" y="230" width="20" height="20" rx="3" class="checkbox" />
+  <text x="460" y="245" class="item">Confirm statistics match</text>
+
+  <!-- Checkbox 4 -->
+  <rect x="430" y="270" width="20" height="20" rx="3" class="checkbox" />
+  <text x="460" y="285" class="item">Ensure no false causation</text>
+
+  <!-- Checkbox 5 -->
+  <rect x="430" y="310" width="20" height="20" rx="3" class="checkbox" />
+  <text x="460" y="325" class="item">Check tone aligns with evidence</text>
+</svg>

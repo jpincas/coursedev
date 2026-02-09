@@ -3,6 +3,8 @@ package parsing
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"path/filepath"
 	"regexp"
 
 	"github.com/yuin/goldmark"
@@ -13,10 +15,11 @@ import (
 )
 
 // Regex to match fenced code blocks with our custom languages
-var fencedBlockRegex = regexp.MustCompile("(?s)```(quiz|math|callout|annotated-image|terminal-replay|exercise|agent)\n(.*?)```")
+var fencedBlockRegex = regexp.MustCompile("(?s)```(quiz|math|callout|annotated-image|terminal-replay|exercise|agent-demo|agent)\n(.*?)```")
 
-// ParseMarkdown parses markdown content with custom extensions
-func ParseMarkdown(content []byte) (*ParseResult, error) {
+// ParseMarkdown parses markdown content with custom extensions.
+// baseDir is the directory containing the markdown file, used for resolving relative paths.
+func ParseMarkdown(content []byte, baseDir string) (*ParseResult, error) {
 	// First pass: extract custom blocks and replace with placeholders
 	var blocks []Block
 	blockIndex := 0
@@ -31,7 +34,7 @@ func ParseMarkdown(content []byte) (*ParseResult, error) {
 		blockType := string(submatches[1])
 		blockContent := submatches[2]
 
-		block, err := parseBlock(blockType, blockContent)
+		block, err := parseBlock(blockType, blockContent, baseDir)
 		if err != nil {
 			// On parse error, leave the original content (will render as code block)
 			return match
@@ -72,7 +75,7 @@ func ParseMarkdown(content []byte) (*ParseResult, error) {
 }
 
 // parseBlock parses a custom block based on its type
-func parseBlock(blockType string, content []byte) (Block, error) {
+func parseBlock(blockType string, content []byte, baseDir string) (Block, error) {
 	switch blockType {
 	case "quiz":
 		return parseQuizBlock(content)
@@ -82,8 +85,8 @@ func parseBlock(blockType string, content []byte) (Block, error) {
 		return parseAnnotatedImageBlock(content)
 	case "exercise":
 		return parseExerciseBlock(content)
-	case "agent":
-		return parseAgentBlock(content)
+	case "agent", "agent-demo":
+		return parseAgentBlock(content, baseDir)
 	default:
 		return nil, fmt.Errorf("unknown block type: %s", blockType)
 	}
@@ -228,7 +231,45 @@ type AgentSidebarConfig struct {
 func (b *AgentBlock) BlockType() string { return "agent" }
 func (b *AgentBlock) BlockID() string   { return b.ID }
 
-func parseAgentBlock(content []byte) (*AgentBlock, error) {
+func parseAgentBlock(content []byte, baseDir string) (*AgentBlock, error) {
+	// Check if the content is a path reference to an external YAML file
+	var pathRef struct {
+		Path string `yaml:"path"`
+	}
+	if err := yaml.Unmarshal(content, &pathRef); err == nil && pathRef.Path != "" {
+		// Resolve the path: if it starts with /content/, treat as relative to project root
+		// by going up from baseDir to find the content/ ancestor
+		resolvedPath := pathRef.Path
+		if filepath.IsAbs(resolvedPath) {
+			// Absolute paths like /content/module-prompting/foo.yaml:
+			// find the content dir by walking up from baseDir
+			dir := baseDir
+			for dir != "/" && dir != "." {
+				if filepath.Base(dir) == "content" {
+					resolvedPath = filepath.Join(filepath.Dir(dir), resolvedPath)
+					break
+				}
+				dir = filepath.Dir(dir)
+			}
+		} else {
+			resolvedPath = filepath.Join(baseDir, resolvedPath)
+		}
+
+		data, err := os.ReadFile(resolvedPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load agent block from path %q: %w", pathRef.Path, err)
+		}
+		// Strip markdown fences if the file is wrapped in them (e.g. ```agent\n...\n```)
+		trimmed := bytes.TrimSpace(data)
+		if bytes.HasPrefix(trimmed, []byte("```")) {
+			if idx := bytes.IndexByte(trimmed, '\n'); idx >= 0 {
+				trimmed = trimmed[idx+1:]
+			}
+			trimmed = bytes.TrimSuffix(bytes.TrimSpace(trimmed), []byte("```"))
+		}
+		content = trimmed
+	}
+
 	var block AgentBlock
 	if err := yaml.Unmarshal(content, &block); err != nil {
 		return nil, fmt.Errorf("failed to parse agent block: %w", err)

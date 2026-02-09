@@ -90,6 +90,22 @@ PREPARE → DELEGATE → VERIFY → DELIVER
       (iterate)
 ```
 
+## Model Comparison: When To Use Which Tool
+
+**Claude (Anthropic)**
+- Strengths: Long context (up to 1M tokens), instruction following, coding, safety, structured output
+- Best for: Complex multi-file tasks, codebase analysis, technical writing, tasks requiring extended context
+
+**GPT (OpenAI)**
+- Strengths: Multimodal capabilities, ecosystem integrations, plugins, broad knowledge base
+- Best for: Tasks mixing text/images/audio, quick iterations, general knowledge queries, integration-heavy workflows
+
+**Gemini (Google)**
+- Strengths: Google ecosystem integration, 2M token context window, multimodal understanding
+- Best for: Tasks involving Google Workspace, extremely long documents, multimodal analysis
+
+**This is not a product comparison.** Each tool has specific strengths. The question isn't "which is best" — it's "which matches this task?" Use the right tool for the job.
+
 ```quiz
 id: final-quiz
 type: multiple-choice
@@ -107,4 +123,4 @@ explanation: "LLMs are prediction engines — they predict what text comes next 
 
 You're now equipped to work with AI as a capable partner, not just a chatbot.
 
-Go build something.
+Now go build something.

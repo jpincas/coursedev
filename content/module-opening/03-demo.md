@@ -4,13 +4,24 @@ duration: "5m"
 tags: [demo, delegation]
 ---
 
-# The Demo
+# The Demo: From Chaos to Report
 
-This is what we mean by "AI that does work."
+Imagine a disorganised folder with mixed file types — meeting notes, spreadsheets, emails, timelines — the kind of chaos that accumulates on real projects.
 
-The sidebar on the right is an AI conversation walkthrough. The **scratchpad** shows five messy project files — meeting notes, budget data, client emails, a project timeline, and team feedback. The kind of chaos that accumulates on real projects.
+With one delegation instruction, AI can:
+- Plan and execute the task autonomously
+- Process multiple file types
+- Deliver a polished, finished document
 
-Step through the conversation using the **Next** button. Watch one instruction turn this mess into a polished executive report.
+Notice: No step-by-step instructions. Just describing the outcome you want. AI figures out how to get there.
+
+**This is what we mean by "AI that does work."**
+
+## How It Works
+
+The **file explorer on the left** shows five messy project files — meeting notes, budget data, client emails, a project timeline, and team feedback.
+
+The **conversation panel on the right** walks through the AI interaction. Step through using the **Next** button and watch one instruction turn this mess into a polished executive report.
 
 ```agent
 id: opening-demo
@@ -84,7 +95,7 @@ sidebar:
 
 script:
   - type: note
-    text: "This is a live walkthrough of AI doing real work. Open the Scratchpad panel below to see five project files — meeting notes, budget data, client emails, a timeline, and team survey results. Messy, disorganised, typical."
+    text: "This is a live walkthrough of AI doing real work. The file explorer shows five project files — meeting notes, budget data, client emails, a timeline, and team survey results. Messy, disorganised, typical."
 
   - type: note
     text: "Now watch. One instruction. No templates, no step-by-step breakdown. Just describe the outcome you need."

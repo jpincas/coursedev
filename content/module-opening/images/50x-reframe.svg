@@ -1,0 +1,330 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 350"
+     style="max-width: 900px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title { font-size: 20px; font-weight: 600; }
+    .label { font-size: 16px; }
+    .accent-text { fill: #00d9c0; font-weight: 700; }
+    .dim { fill: #a1a1aa; }
+    .bright { fill: #fafafa; }
+    .person { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .dot { fill: #3f3f46; }
+    .accent-dot { fill: #00d9c0; }
+    .check { stroke: #00d9c0; stroke-width: 2; fill: none; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00d9c0" />
+    </marker>
+  </defs>
+
+  <!-- LEFT SIDE: Old Thinking -->
+  <text x="100" y="50" class="title dim">Old Thinking</text>
+
+  <!-- 5 person icons -->
+  <circle cx="75" cy="115" r="15" class="person" />
+  <circle cx="125" cy="115" r="15" class="person" />
+  <circle cx="175" cy="115" r="15" class="person" />
+  <circle cx="225" cy="115" r="15" class="person" />
+  <circle cx="275" cy="115" r="15" class="person" />
+
+  <text x="175" y="170" text-anchor="middle" class="label dim">Find 5 podcast guests</text>
+
+  <!-- Arrow with label -->
+  <line x1="320" y1="115" x2="410" y2="115"
+        stroke="#00d9c0" stroke-width="3" marker-end="url(#arrowhead)" />
+  <text x="365" y="100" text-anchor="middle" style="font-size: 14px; fill: #00d9c0; font-weight: 600;">Mental Shift</text>
+
+  <!-- RIGHT SIDE: 50x Thinking -->
+  <text x="450" y="50" class="title bright">50x Thinking</text>
+
+  <!-- Grid of 1000 dots (20x50 grid, but we'll show a dense representative sample) -->
+  <!-- Top portion: tight grid of dots representing massive scale -->
+  <g id="crowd">
+    <!-- We'll create a 25x25 grid (625 dots) to represent the massive scale -->
+    <circle cx="460" cy="90" r="3" class="dot" />
+    <circle cx="475" cy="90" r="3" class="dot" />
+    <circle cx="490" cy="90" r="3" class="dot" />
+    <circle cx="505" cy="90" r="3" class="dot" />
+    <circle cx="520" cy="90" r="3" class="dot" />
+    <circle cx="535" cy="90" r="3" class="dot" />
+    <circle cx="550" cy="90" r="3" class="dot" />
+    <circle cx="565" cy="90" r="3" class="dot" />
+    <circle cx="580" cy="90" r="3" class="dot" />
+    <circle cx="595" cy="90" r="3" class="dot" />
+    <circle cx="610" cy="90" r="3" class="dot" />
+    <circle cx="625" cy="90" r="3" class="dot" />
+    <circle cx="640" cy="90" r="3" class="dot" />
+    <circle cx="655" cy="90" r="3" class="dot" />
+    <circle cx="670" cy="90" r="3" class="dot" />
+    <circle cx="685" cy="90" r="3" class="dot" />
+    <circle cx="700" cy="90" r="3" class="dot" />
+    <circle cx="715" cy="90" r="3" class="dot" />
+    <circle cx="730" cy="90" r="3" class="dot" />
+    <circle cx="745" cy="90" r="3" class="dot" />
+    <circle cx="760" cy="90" r="3" class="dot" />
+    <circle cx="775" cy="90" r="3" class="dot" />
+    <circle cx="790" cy="90" r="3" class="dot" />
+    <circle cx="805" cy="90" r="3" class="dot" />
+    <circle cx="820" cy="90" r="3" class="dot" />
+
+    <circle cx="460" cy="103" r="3" class="dot" />
+    <circle cx="475" cy="103" r="3" class="dot" />
+    <circle cx="490" cy="103" r="3" class="dot" />
+    <circle cx="505" cy="103" r="3" class="dot" />
+    <circle cx="520" cy="103" r="3" class="dot" />
+    <circle cx="535" cy="103" r="3" class="dot" />
+    <circle cx="550" cy="103" r="3" class="dot" />
+    <circle cx="565" cy="103" r="3" class="dot" />
+    <circle cx="580" cy="103" r="3" class="dot" />
+    <circle cx="595" cy="103" r="3" class="dot" />
+    <circle cx="610" cy="103" r="3" class="dot" />
+    <circle cx="625" cy="103" r="3" class="dot" />
+    <circle cx="640" cy="103" r="3" class="dot" />
+    <circle cx="655" cy="103" r="3" class="dot" />
+    <circle cx="670" cy="103" r="3" class="dot" />
+    <circle cx="685" cy="103" r="3" class="dot" />
+    <circle cx="700" cy="103" r="3" class="dot" />
+    <circle cx="715" cy="103" r="3" class="dot" />
+    <circle cx="730" cy="103" r="3" class="dot" />
+    <circle cx="745" cy="103" r="3" class="dot" />
+    <circle cx="760" cy="103" r="3" class="dot" />
+    <circle cx="775" cy="103" r="3" class="dot" />
+    <circle cx="790" cy="103" r="3" class="dot" />
+    <circle cx="805" cy="103" r="3" class="dot" />
+    <circle cx="820" cy="103" r="3" class="dot" />
+
+    <circle cx="460" cy="116" r="3" class="dot" />
+    <circle cx="475" cy="116" r="3" class="dot" />
+    <circle cx="490" cy="116" r="3" class="dot" />
+    <circle cx="505" cy="116" r="3" class="dot" />
+    <circle cx="520" cy="116" r="3" class="dot" />
+    <circle cx="535" cy="116" r="3" class="dot" />
+    <circle cx="550" cy="116" r="3" class="dot" />
+    <circle cx="565" cy="116" r="3" class="dot" />
+    <circle cx="580" cy="116" r="3" class="dot" />
+    <circle cx="595" cy="116" r="3" class="dot" />
+    <circle cx="610" cy="116" r="3" class="dot" />
+    <circle cx="625" cy="116" r="3" class="dot" />
+    <circle cx="640" cy="116" r="3" class="dot" />
+    <circle cx="655" cy="116" r="3" class="dot" />
+    <circle cx="670" cy="116" r="3" class="dot" />
+    <circle cx="685" cy="116" r="3" class="dot" />
+    <circle cx="700" cy="116" r="3" class="dot" />
+    <circle cx="715" cy="116" r="3" class="dot" />
+    <circle cx="730" cy="116" r="3" class="dot" />
+    <circle cx="745" cy="116" r="3" class="dot" />
+    <circle cx="760" cy="116" r="3" class="dot" />
+    <circle cx="775" cy="116" r="3" class="dot" />
+    <circle cx="790" cy="116" r="3" class="dot" />
+    <circle cx="805" cy="116" r="3" class="dot" />
+    <circle cx="820" cy="116" r="3" class="dot" />
+
+    <circle cx="460" cy="129" r="3" class="dot" />
+    <circle cx="475" cy="129" r="3" class="dot" />
+    <circle cx="490" cy="129" r="3" class="dot" />
+    <circle cx="505" cy="129" r="3" class="dot" />
+    <circle cx="520" cy="129" r="3" class="dot" />
+    <circle cx="535" cy="129" r="3" class="dot" />
+    <circle cx="550" cy="129" r="3" class="dot" />
+    <circle cx="565" cy="129" r="3" class="dot" />
+    <circle cx="580" cy="129" r="3" class="dot" />
+    <circle cx="595" cy="129" r="3" class="dot" />
+    <circle cx="610" cy="129" r="3" class="dot" />
+    <circle cx="625" cy="129" r="3" class="dot" />
+    <circle cx="640" cy="129" r="3" class="dot" />
+    <circle cx="655" cy="129" r="3" class="dot" />
+    <circle cx="670" cy="129" r="3" class="dot" />
+    <circle cx="685" cy="129" r="3" class="dot" />
+    <circle cx="700" cy="129" r="3" class="dot" />
+    <circle cx="715" cy="129" r="3" class="dot" />
+    <circle cx="730" cy="129" r="3" class="dot" />
+    <circle cx="745" cy="129" r="3" class="dot" />
+    <circle cx="760" cy="129" r="3" class="dot" />
+    <circle cx="775" cy="129" r="3" class="dot" />
+    <circle cx="790" cy="129" r="3" class="dot" />
+    <circle cx="805" cy="129" r="3" class="dot" />
+    <circle cx="820" cy="129" r="3" class="dot" />
+
+    <circle cx="460" cy="142" r="3" class="dot" />
+    <circle cx="475" cy="142" r="3" class="dot" />
+    <circle cx="490" cy="142" r="3" class="dot" />
+    <circle cx="505" cy="142" r="3" class="dot" />
+    <circle cx="520" cy="142" r="3" class="dot" />
+    <circle cx="535" cy="142" r="3" class="dot" />
+    <circle cx="550" cy="142" r="3" class="dot" />
+    <circle cx="565" cy="142" r="3" class="dot" />
+    <circle cx="580" cy="142" r="3" class="dot" />
+    <circle cx="595" cy="142" r="3" class="dot" />
+    <circle cx="610" cy="142" r="3" class="dot" />
+    <circle cx="625" cy="142" r="3" class="dot" />
+    <circle cx="640" cy="142" r="3" class="dot" />
+    <circle cx="655" cy="142" r="3" class="dot" />
+    <circle cx="670" cy="142" r="3" class="dot" />
+    <circle cx="685" cy="142" r="3" class="dot" />
+    <circle cx="700" cy="142" r="3" class="dot" />
+    <circle cx="715" cy="142" r="3" class="dot" />
+    <circle cx="730" cy="142" r="3" class="dot" />
+    <circle cx="745" cy="142" r="3" class="dot" />
+    <circle cx="760" cy="142" r="3" class="dot" />
+    <circle cx="775" cy="142" r="3" class="dot" />
+    <circle cx="790" cy="142" r="3" class="dot" />
+    <circle cx="805" cy="142" r="3" class="dot" />
+    <circle cx="820" cy="142" r="3" class="dot" />
+
+    <circle cx="460" cy="155" r="3" class="dot" />
+    <circle cx="475" cy="155" r="3" class="dot" />
+    <circle cx="490" cy="155" r="3" class="dot" />
+    <circle cx="505" cy="155" r="3" class="dot" />
+    <circle cx="520" cy="155" r="3" class="dot" />
+    <circle cx="535" cy="155" r="3" class="dot" />
+    <circle cx="550" cy="155" r="3" class="dot" />
+    <circle cx="565" cy="155" r="3" class="dot" />
+    <circle cx="580" cy="155" r="3" class="dot" />
+    <circle cx="595" cy="155" r="3" class="dot" />
+    <circle cx="610" cy="155" r="3" class="dot" />
+    <circle cx="625" cy="155" r="3" class="dot" />
+    <circle cx="640" cy="155" r="3" class="dot" />
+    <circle cx="655" cy="155" r="3" class="dot" />
+    <circle cx="670" cy="155" r="3" class="dot" />
+    <circle cx="685" cy="155" r="3" class="dot" />
+    <circle cx="700" cy="155" r="3" class="dot" />
+    <circle cx="715" cy="155" r="3" class="dot" />
+    <circle cx="730" cy="155" r="3" class="dot" />
+    <circle cx="745" cy="155" r="3" class="dot" />
+    <circle cx="760" cy="155" r="3" class="dot" />
+    <circle cx="775" cy="155" r="3" class="dot" />
+    <circle cx="790" cy="155" r="3" class="dot" />
+    <circle cx="805" cy="155" r="3" class="dot" />
+    <circle cx="820" cy="155" r="3" class="dot" />
+
+    <circle cx="460" cy="168" r="3" class="dot" />
+    <circle cx="475" cy="168" r="3" class="dot" />
+    <circle cx="490" cy="168" r="3" class="dot" />
+    <circle cx="505" cy="168" r="3" class="dot" />
+    <circle cx="520" cy="168" r="3" class="dot" />
+    <circle cx="535" cy="168" r="3" class="dot" />
+    <circle cx="550" cy="168" r="3" class="dot" />
+    <circle cx="565" cy="168" r="3" class="dot" />
+    <circle cx="580" cy="168" r="3" class="dot" />
+    <circle cx="595" cy="168" r="3" class="dot" />
+    <circle cx="610" cy="168" r="3" class="dot" />
+    <circle cx="625" cy="168" r="3" class="dot" />
+    <circle cx="640" cy="168" r="3" class="dot" />
+    <circle cx="655" cy="168" r="3" class="dot" />
+    <circle cx="670" cy="168" r="3" class="dot" />
+    <circle cx="685" cy="168" r="3" class="dot" />
+    <circle cx="700" cy="168" r="3" class="dot" />
+    <circle cx="715" cy="168" r="3" class="dot" />
+    <circle cx="730" cy="168" r="3" class="dot" />
+    <circle cx="745" cy="168" r="3" class="dot" />
+    <circle cx="760" cy="168" r="3" class="dot" />
+    <circle cx="775" cy="168" r="3" class="dot" />
+    <circle cx="790" cy="168" r="3" class="dot" />
+    <circle cx="805" cy="168" r="3" class="dot" />
+    <circle cx="820" cy="168" r="3" class="dot" />
+
+    <circle cx="460" cy="181" r="3" class="dot" />
+    <circle cx="475" cy="181" r="3" class="dot" />
+    <circle cx="490" cy="181" r="3" class="dot" />
+    <circle cx="505" cy="181" r="3" class="dot" />
+    <circle cx="520" cy="181" r="3" class="dot" />
+    <circle cx="535" cy="181" r="3" class="dot" />
+    <circle cx="550" cy="181" r="3" class="dot" />
+    <circle cx="565" cy="181" r="3" class="dot" />
+    <circle cx="580" cy="181" r="3" class="dot" />
+    <circle cx="595" cy="181" r="3" class="dot" />
+    <circle cx="610" cy="181" r="3" class="dot" />
+    <circle cx="625" cy="181" r="3" class="dot" />
+    <circle cx="640" cy="181" r="3" class="dot" />
+    <circle cx="655" cy="181" r="3" class="dot" />
+    <circle cx="670" cy="181" r="3" class="dot" />
+    <circle cx="685" cy="181" r="3" class="dot" />
+    <circle cx="700" cy="181" r="3" class="dot" />
+    <circle cx="715" cy="181" r="3" class="dot" />
+    <circle cx="730" cy="181" r="3" class="dot" />
+    <circle cx="745" cy="181" r="3" class="dot" />
+    <circle cx="760" cy="181" r="3" class="dot" />
+    <circle cx="775" cy="181" r="3" class="dot" />
+    <circle cx="790" cy="181" r="3" class="dot" />
+    <circle cx="805" cy="181" r="3" class="dot" />
+    <circle cx="820" cy="181" r="3" class="dot" />
+
+    <circle cx="460" cy="194" r="3" class="dot" />
+    <circle cx="475" cy="194" r="3" class="dot" />
+    <circle cx="490" cy="194" r="3" class="dot" />
+    <circle cx="505" cy="194" r="3" class="dot" />
+    <circle cx="520" cy="194" r="3" class="dot" />
+    <circle cx="535" cy="194" r="3" class="dot" />
+    <circle cx="550" cy="194" r="3" class="dot" />
+    <circle cx="565" cy="194" r="3" class="dot" />
+    <circle cx="580" cy="194" r="3" class="dot" />
+    <circle cx="595" cy="194" r="3" class="dot" />
+    <circle cx="610" cy="194" r="3" class="dot" />
+    <circle cx="625" cy="194" r="3" class="dot" />
+    <circle cx="640" cy="194" r="3" class="dot" />
+    <circle cx="655" cy="194" r="3" class="dot" />
+    <circle cx="670" cy="194" r="3" class="dot" />
+    <circle cx="685" cy="194" r="3" class="dot" />
+    <circle cx="700" cy="194" r="3" class="dot" />
+    <circle cx="715" cy="194" r="3" class="dot" />
+    <circle cx="730" cy="194" r="3" class="dot" />
+    <circle cx="745" cy="194" r="3" class="dot" />
+    <circle cx="760" cy="194" r="3" class="dot" />
+    <circle cx="775" cy="194" r="3" class="dot" />
+    <circle cx="790" cy="194" r="3" class="dot" />
+    <circle cx="805" cy="194" r="3" class="dot" />
+    <circle cx="820" cy="194" r="3" class="dot" />
+
+    <circle cx="460" cy="207" r="3" class="dot" />
+    <circle cx="475" cy="207" r="3" class="dot" />
+    <circle cx="490" cy="207" r="3" class="dot" />
+    <circle cx="505" cy="207" r="3" class="dot" />
+    <circle cx="520" cy="207" r="3" class="dot" />
+    <circle cx="535" cy="207" r="3" class="dot" />
+    <circle cx="550" cy="207" r="3" class="dot" />
+    <circle cx="565" cy="207" r="3" class="dot" />
+    <circle cx="580" cy="207" r="3" class="dot" />
+    <circle cx="595" cy="207" r="3" class="dot" />
+    <circle cx="610" cy="207" r="3" class="dot" />
+    <circle cx="625" cy="207" r="3" class="dot" />
+    <circle cx="640" cy="207" r="3" class="dot" />
+    <circle cx="655" cy="207" r="3" class="dot" />
+    <circle cx="670" cy="207" r="3" class="dot" />
+    <circle cx="685" cy="207" r="3" class="dot" />
+    <circle cx="700" cy="207" r="3" class="dot" />
+    <circle cx="715" cy="207" r="3" class="dot" />
+    <circle cx="730" cy="207" r="3" class="dot" />
+    <circle cx="745" cy="207" r="3" class="dot" />
+    <circle cx="760" cy="207" r="3" class="dot" />
+    <circle cx="775" cy="207" r="3" class="dot" />
+    <circle cx="790" cy="207" r="3" class="dot" />
+    <circle cx="805" cy="207" r="3" class="dot" />
+    <circle cx="820" cy="207" r="3" class="dot" />
+
+    <!-- Add some accent dots with checkmarks to show evaluation -->
+    <circle cx="580" cy="103" r="3" class="accent-dot" />
+    <polyline points="577,101 579,104 584,98" class="check" />
+
+    <circle cx="640" cy="129" r="3" class="accent-dot" />
+    <polyline points="637,127 639,130 644,124" class="check" />
+
+    <circle cx="715" cy="155" r="3" class="accent-dot" />
+    <polyline points="712,153 714,156 719,150" class="check" />
+
+    <circle cx="505" cy="181" r="3" class="accent-dot" />
+    <polyline points="502,179 504,182 509,176" class="check" />
+
+    <circle cx="775" cy="194" r="3" class="accent-dot" />
+    <polyline points="772,192 774,195 779,189" class="check" />
+  </g>
+
+  <!-- Labels with 1000 emphasized -->
+  <text x="640" y="280" text-anchor="middle" class="label bright">Evaluate </text>
+  <text x="712" y="280" text-anchor="middle" class="label accent-text">1,000</text>
+  <text x="640" y="305" text-anchor="middle" class="label bright">candidates globally</text>
+
+  <!-- "..." to indicate continuation of the massive scale -->
+  <text x="640" y="235" text-anchor="middle" style="font-size: 24px; fill: #a1a1aa; letter-spacing: 4px;">...</text>
+</svg>

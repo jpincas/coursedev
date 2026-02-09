@@ -1,0 +1,36 @@
+flowchart TD
+    User["User<br/><small>Delegates course creation task</small>"]
+
+    CourseDirector["course-director agent<br/><small>Analyses needs, plans modules</small>"]
+
+    MB1["module-builder 1<br/><small>Creates opening module</small>"]
+    MB2["module-builder 2<br/><small>Creates context module</small>"]
+    MB3["module-builder 3<br/><small>Creates prompting module</small>"]
+    More["...<br/><small>More module-builders</small>"]
+
+    Quiz1["/quiz skill"]
+    Agent1["/agent-demo skill"]
+    Mermaid1["/mermaid skill"]
+    Excalidraw1["/excalidraw skill"]
+    Image1["/image-generator skill"]
+
+    Quiz2["/quiz skill"]
+    Agent2["/agent-demo skill"]
+    Mermaid2["/mermaid skill"]
+
+    User --> CourseDirector
+    CourseDirector --> MB1
+    CourseDirector --> MB2
+    CourseDirector --> MB3
+    CourseDirector --> More
+
+    MB1 --> Quiz1
+    MB1 --> Agent1
+    MB1 --> Mermaid1
+
+    MB2 --> Quiz2
+    MB2 --> Agent2
+    MB2 --> Mermaid2
+
+    MB3 --> Excalidraw1
+    MB3 --> Image1

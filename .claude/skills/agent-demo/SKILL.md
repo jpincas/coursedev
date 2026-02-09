@@ -18,7 +18,7 @@ You create **agent demo blocks** — scripted, interactive AI conversation walkt
 
 A complete ` ```agent ` fenced code block in valid YAML, ready to paste into a markdown lesson page. The block contains:
 - Metadata (id, title, model label, system prompt)
-- Scratchpad files (the simulated filesystem)
+- Initial files (the simulated filesystem)
 - Visibility and sidebar configuration
 - A script of events (the choreographed conversation)
 
@@ -31,13 +31,20 @@ model_label: <string>  # Optional. Cosmetic model name (e.g., "Claude", "GPT-4")
 system: |              # Optional. System prompt for the simulated AI
   The AI's instructions...
 
-scratchpad:            # Optional. Initial files in the simulated filesystem
+scratchpad:            # Optional. Initial files in the simulated filesystem (YAML key is "scratchpad" but students see it as a file explorer)
   "filename.txt": |    # Keys are filenames (quoted), values are file content
     File content here...
+  "data/report.csv": | # Paths with "/" create folder structure in the explorer
+    Header,Value
+    Row1,Data
 
 tools:                 # Optional. List of tool names the AI "has access to"
-  - scratchpad_read
-  - scratchpad_write
+  - scratchpad_read    # Read a file
+  - scratchpad_write   # Create or overwrite a file
+  - list_files         # List files in a directory
+  - move_file          # Move/rename a file
+  - create_folder      # Create a new folder
+  - delete_file        # Delete a file
 
 visibility:            # Optional. Controls what learners can see
   system_prompt: hidden    # visible | hidden | toggleable (default: hidden)
@@ -109,7 +116,7 @@ For `scratchpad_write`, the `args` MUST include `filename` and `content`:
 
 ### `tool_result` — Tool Output
 
-The result of a tool call. Part of the current event group. For `scratchpad_write`, the preceding `tool_call`'s args are used to actually mutate the scratchpad files.
+The result of a tool call. Part of the current event group. For `scratchpad_write`, the preceding `tool_call`'s args are used to actually create/update the file in the filesystem.
 
 ```yaml
 - type: tool_result
@@ -137,7 +144,7 @@ Replaces all prior context messages (except system prompt) with a summary. Teach
 
 ### `clear` — Reset Conversation
 
-Clears chat messages and context. Optionally resets scratchpad to initial state. Button text changes to "Clear & reset".
+Clears chat messages and context. Optionally resets files to initial state. Button text changes to "Clear & reset".
 
 ```yaml
 - type: clear
@@ -153,6 +160,9 @@ These rules are enforced at parse time. Violations cause a build error:
 2. `script` must start with a `note` or `user` event
 3. Every `tool_result` must be preceded by a `tool_call` with the same tool name
 4. `scratchpad_write` tool_calls must have `filename` and `content` in args
+4b. `move_file` tool_calls must have `source` and `destination` in args
+4c. `create_folder` tool_calls must have `path` in args
+4d. `delete_file` tool_calls must have `filename` in args
 5. `compaction.summary` must not be empty
 6. At most one agent block per page
 7. Agent ID must be unique within the module
@@ -171,9 +181,9 @@ This is critical to understand for pacing:
 
 ## Design Principles
 
-### 1. Scratchpad Files Should Feel Real
+### 1. Files Should Feel Real
 
-Don't use placeholder content. Create realistic files that look like actual project artifacts — with imperfections, varying formats, realistic data. The scratchpad IS the demo's stage set. If the files feel fake, the whole demo feels fake.
+Don't use placeholder content. Create realistic files that look like actual project artifacts — with imperfections, varying formats, realistic data. The filesystem IS the demo's stage set. If the files feel fake, the whole demo feels fake.
 
 Good: A CSV with inconsistent formatting and a few blank cells
 Bad: A perfectly formatted CSV with generic "Item 1", "Item 2" data
@@ -225,7 +235,7 @@ When the user asks you to create an agent demo:
 
 1. **Understand the context:** Read the page, surrounding pages, and module metadata.
 2. **Identify the teaching point:** What ONE concept should this demo illustrate?
-3. **Design the scratchpad:** What files does the AI need to work with? Make them realistic.
+3. **Design the files:** What files does the AI need to work with? Make them realistic.
 4. **Write the system prompt:** Match the demo's scenario. Keep it focused.
 5. **Choreograph the script:**
    - Open with 1-2 notes to set context
@@ -237,7 +247,7 @@ When the user asks you to create an agent demo:
 
 ## Complete Reference Example
 
-Below is a full, self-contained agent demo block. Study the patterns: realistic scratchpad files, opening notes that set context, a single user instruction that models delegation, a realistic AI work sequence (read all files, then synthesise), and closing notes that connect back to the lesson.
+Below is a full, self-contained agent demo block. Study the patterns: realistic project files in a folder, opening notes that set context, a single user instruction that models delegation, a realistic AI work sequence (list files, read all, then synthesise), and closing notes that connect back to the lesson.
 
 ````yaml
 ```agent
@@ -251,7 +261,7 @@ system: |
   a professional tone suitable for executive audiences.
 
 scratchpad:
-  "meeting-notes.txt": |
+  "project/meeting-notes.txt": |
     Project Phoenix - Team Standup Jan 15
     Attendees: Sarah (PM), Dev team, Lisa (Design)
     - API migration 60% complete, targeting Feb 1
@@ -260,7 +270,7 @@ scratchpad:
     - Contractor rates up 15% — budget concern
     - Sarah to escalate timeline risk to leadership
     - Next milestone review: Jan 22
-  "budget-q1.csv": |
+  "project/budget-q1.csv": |
     Category,Planned,Actual,Variance
     Development,45000,38000,-7000
     Design,15000,12500,-2500
@@ -268,7 +278,7 @@ scratchpad:
     Contractors,20000,27500,+7500
     Testing,7000,4200,-2800
     Total,95000,91400,-3600
-  "client-emails.txt": |
+  "project/client-emails.txt": |
     From: David Chen <d.chen@acmecorp.com>
     Date: Jan 14
     Subject: RE: Project Phoenix Timeline
@@ -283,6 +293,7 @@ scratchpad:
     Revised plan by end of next week.
 
 tools:
+  - list_files
   - scratchpad_read
   - scratchpad_write
 
@@ -298,7 +309,7 @@ sidebar:
 
 script:
   - type: note
-    text: "This is a live walkthrough of AI doing real work. The scratchpad shows three project files — meeting notes, budget data, and client emails. Messy, disorganised, typical."
+    text: "This is a live walkthrough of AI doing real work. The file explorer shows three project files — meeting notes, budget data, and client emails. Messy, disorganised, typical."
 
   - type: note
     text: "Now watch. One instruction. No templates, no step-by-step breakdown. Just describe the outcome you need."
@@ -306,13 +317,26 @@ script:
   - type: user
     content: "I've got a project folder with meeting notes, budget data, and client emails. I need an executive status report for leadership by end of day. Pull together the key points, flag the risks, and make it professional."
 
+  - type: tool_call
+    tool: list_files
+    args:
+      path: "project"
+
+  - type: tool_result
+    tool: list_files
+    content: |
+      3 files in project/:
+      - project/budget-q1.csv
+      - project/client-emails.txt
+      - project/meeting-notes.txt
+
   - type: assistant
     content: "I'll review all the project materials and create a professional executive status report. Let me start by reading through each file."
 
   - type: tool_call
     tool: scratchpad_read
     args:
-      filename: "meeting-notes.txt"
+      filename: "project/meeting-notes.txt"
 
   - type: tool_result
     tool: scratchpad_read
@@ -329,7 +353,7 @@ script:
   - type: tool_call
     tool: scratchpad_read
     args:
-      filename: "budget-q1.csv"
+      filename: "project/budget-q1.csv"
 
   - type: tool_result
     tool: scratchpad_read
@@ -345,7 +369,7 @@ script:
   - type: tool_call
     tool: scratchpad_read
     args:
-      filename: "client-emails.txt"
+      filename: "project/client-emails.txt"
 
   - type: tool_result
     tool: scratchpad_read
@@ -413,20 +437,103 @@ script:
 ````
 
 Key patterns to notice in this example:
-- **Scratchpad files have realistic imperfections** — inconsistent formats, real-looking data, email thread with dates
+- **Files in a `project/` folder** — realistic directory structure, not scattered at root
+- **`list_files` before reading** — the AI discovers the directory contents, then reads each file
+- **Files have realistic imperfections** — inconsistent formats, real-looking data, email thread with dates
 - **Opening notes** set up what the learner should pay attention to (2 notes)
 - **Single user message** models the skill being taught (delegation = describe outcome, not steps)
 - **AI reads ALL files before writing** — realistic tool-call pattern, not shortcutting
-- **tool_result content matches scratchpad content** — the read results should echo what's in the files
+- **tool_result content matches file content** — the read results should echo what's in the files
 - **Closing notes** connect back to the lesson's teaching point (2 notes)
 - **Visibility** matches a delegation-focused lesson: tool_calls visible (see the work), system_prompt toggleable (can peek), full_context hidden (not the focus)
 
-## Additional Tool Types
+## File System Tools
 
-Beyond `scratchpad_read` and `scratchpad_write`, you can invent any tool name for the demo. The tool name appears in the UI. Common useful tools:
+Six tools have **real side effects** — they actually mutate the filesystem during playback. Note: tool names use the internal `scratchpad_` prefix in YAML but display as `read_file`/`write_file` to students:
+
+### `scratchpad_read` — Read a file
+```yaml
+- type: tool_call
+  tool: scratchpad_read
+  args:
+    filename: "data/report.csv"    # Supports folder paths
+```
+No side effect (read-only). The `tool_result` content should echo the file content.
+
+### `scratchpad_write` — Create or overwrite a file
+```yaml
+- type: tool_call
+  tool: scratchpad_write
+  args:
+    filename: "reports/summary.md"  # Creates file; parent folders auto-expand in explorer
+    content: |
+      # Summary
+      Content here...
+```
+**Side effect:** Creates/overwrites the file in the scratchpad. Parent folders auto-expand.
+
+### `list_files` — List directory contents
+```yaml
+- type: tool_call
+  tool: list_files
+  args:
+    path: "data"                    # Or "." for root
+```
+No side effect. The `tool_result` content should list the files (you write it manually).
+
+### `move_file` — Move or rename a file
+```yaml
+- type: tool_call
+  tool: move_file
+  args:
+    source: "old-report.docx"
+    destination: "archive/old-report.docx"
+```
+**Side effect:** Removes the source file, creates the destination. Parent folders auto-expand.
+
+### `create_folder` — Create a folder
+```yaml
+- type: tool_call
+  tool: create_folder
+  args:
+    path: "reports"
+```
+**Side effect:** Registers the folder as expanded in the explorer. Parent folders also expand.
+
+### `delete_file` — Delete a file
+```yaml
+- type: tool_call
+  tool: delete_file
+  args:
+    filename: "old-draft.docx"
+```
+**Side effect:** Removes the file. If it was being previewed, the preview clears.
+
+## Folder Paths in Scratchpad
+
+File keys can contain `/` to represent folder structure. The workspace explorer renders these as a tree with expandable folders:
+
+```yaml
+scratchpad:
+  "data/sales.csv": |
+    Product,Revenue
+    Widget,12000
+  "data/support.csv": |
+    Ticket,Status
+    T-001,Open
+  "reports/summary.md": |
+    # Q4 Summary
+    ...
+```
+
+This creates two folders (`data/`, `reports/`) with files inside them. All folders from the initial scratchpad are auto-expanded on load. Folders created during playback (via `create_folder` or `scratchpad_write` to a new path) also auto-expand.
+
+**When to use folders:** Use folder structure when the demo involves organising files, working with project directories, or when realistic file layout adds to the teaching point. Keep files flat when folder structure would just add noise.
+
+## Cosmetic Tool Types
+
+Beyond the six tools above, you can use any tool name. These appear in the UI with generic icons but have no server-side behavior:
 
 - `web_search` — simulated web search (args: `query`)
 - `fetch_url` — simulated URL fetch (args: `url`)
 - Any domain-specific tool name that makes sense for the scenario
-
-These don't have special server-side behavior (only `scratchpad_write` actually mutates the scratchpad), but they appear correctly in the chat UI and add realism.

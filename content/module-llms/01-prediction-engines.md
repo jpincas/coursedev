@@ -16,17 +16,11 @@ That's it. That's the core of it. Everything else — the apparent intelligence,
 
 Here's how it works at the most basic level.
 
-The model sees a sequence of text:
+The model sees a sequence of text and predicts what comes next — not just once, but token by token, building up the response one step at a time.
 
-> "The capital of France is ▊"
+![Next-Token Prediction Chain](/content/module-llms/images/token-prediction-chain.svg)
 
-And it predicts probabilities for what word comes next:
-
-- **"Paris"** — 97.3% probability
-- **"Lyon"** — 0.8%
-- **"Berlin"** — 0.2%
-
-It picks the most likely continuation and adds it. Then it does it again. And again. Word by word, token by token, building up a response.
+At each step, the model evaluates all possible next tokens and assigns probabilities. It picks the highest probability option and adds it to the sequence. Then it does it again with the new, longer sequence. And again. Word by word, token by token, building up a response.
 
 ```callout
 type: info
@@ -57,6 +51,121 @@ Understanding the mechanism explains everything.
 If you give it something that looks like patterns it's seen before, it excels. Professional email? Seen millions. Legal document format? Seen millions. Code in Python? Seen millions.
 
 But it has no connection to ground truth. It doesn't "know" things — it predicts what text about things looks like.
+
+## What AI Does Well (and What It Doesn't)
+
+This prediction mechanism creates a fascinating pattern: **the hard problems are easy and the easy problems are hard.**
+
+That insight comes from the Carnegie Endowment for International Peace, and it captures something fundamental about AI capability in 2026.
+
+**AI excels at:**
+- **Code generation** — 41% of all code written globally is now AI-generated
+- **Pattern recognition** — document review, contract analysis, spotting anomalies
+- **Synthesis** — combining information from multiple sources into coherent summaries
+- **First drafts** — getting something usable down fast across any format
+
+**AI struggles with:**
+- **Hallucination drift** — accuracy degrades across very long chains of reasoning
+- **Cultural nuance** — context-dependent meaning, subtle implications
+- **Phrasing sensitivity** — minor changes to how you ask can produce wildly different results
+- **Novel common-sense reasoning** — genuinely new situations where pattern-matching fails
+
+The paradox: AI can write production-ready code for complex algorithms, but might confidently claim a fictitious historical event occurred because the description "sounds right."
+
+```callout
+type: tip
+title: "Calibrating Your Expectations"
+content: "AI is extraordinarily good at tasks with clear patterns and structures it has seen millions of times. It is less reliable when genuine novelty, cultural context, or factual grounding matters. Plan your work accordingly."
+```
+
+## Prediction in Action
+
+Watch how changing the context changes what the model predicts. The same opening, two different contexts, two completely different outputs.
+
+```agent
+id: prediction-in-action
+title: "Prediction Changes with Context"
+model_label: "Claude"
+
+system: |
+  You are a helpful writing assistant. You complete tasks based on the
+  context and instructions provided. Be concise and direct.
+
+scratchpad:
+  "company-overview.txt": |
+    Meridian Technologies — Annual Report 2025
+
+    Founded: 2019
+    Industry: Cloud Infrastructure
+    Employees: 340
+    Revenue: $42M (up 28% YoY)
+    Key Product: CloudBridge — automated migration platform
+
+    Q4 Highlights:
+    - Signed 3 Fortune 500 clients
+    - Launched CloudBridge v3 with AI-assisted migration
+    - Opened London office for European expansion
+    - Named "Rising Star" by Gartner in cloud migration category
+
+tools:
+  - scratchpad_read
+
+visibility:
+  system_prompt: hidden
+  tool_calls: visible
+  full_context: hidden
+
+sidebar:
+  width: "45%"
+  start_open: true
+
+script:
+  - type: note
+    text: "Watch how the same request produces completely different outputs depending on what context the model has seen. This is prediction in action."
+
+  - type: user
+    content: "Write a one-paragraph summary of Meridian Technologies."
+
+  - type: assistant
+    content: "Meridian Technologies is a technology company that provides innovative solutions for businesses. The company focuses on delivering cutting-edge products and services to help organizations achieve their goals. With a commitment to quality and customer satisfaction, Meridian Technologies continues to grow its presence in the technology sector."
+
+  - type: note
+    text: "Generic, vague, almost meaningless. The model had no context — so it predicted what a generic company description looks like. Now watch what happens when we give it actual information."
+
+  - type: user
+    content: "Actually, let me give you our company overview first. Read the file, then write that summary."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "company-overview.txt"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      Meridian Technologies — Annual Report 2025
+
+      Founded: 2019
+      Industry: Cloud Infrastructure
+      Employees: 340
+      Revenue: $42M (up 28% YoY)
+      Key Product: CloudBridge — automated migration platform
+
+      Q4 Highlights:
+      - Signed 3 Fortune 500 clients
+      - Launched CloudBridge v3 with AI-assisted migration
+      - Opened London office for European expansion
+      - Named "Rising Star" by Gartner in cloud migration category
+
+  - type: assistant
+    content: "Meridian Technologies is a cloud infrastructure company founded in 2019 that has grown to 340 employees and $42M in revenue, up 28% year-over-year. The company's flagship product, CloudBridge, is an automated migration platform that recently launched its third version with AI-assisted capabilities. In Q4 2025, Meridian signed three Fortune 500 clients, expanded into Europe with a London office, and earned Gartner's 'Rising Star' recognition in cloud migration."
+
+  - type: note
+    text: "Same model. Same request. Dramatically different output. The first response was the model predicting 'what does a generic company description look like?' The second was predicting 'what does a summary of THIS company look like, given these facts?' Context changed the prediction."
+
+  - type: note
+    text: "This is the core mechanism at work. The model doesn't 'know' about Meridian Technologies. It predicts what good text looks like given the patterns it has seen — and the context you provide shapes those predictions entirely."
+```
 
 ```quiz
 id: llms-core-mechanism

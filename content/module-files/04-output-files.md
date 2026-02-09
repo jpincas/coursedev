@@ -10,6 +10,8 @@ Output files are the deliverables AI creates for you. Not chat text that you cop
 
 ## What AI Can Create
 
+![AI generating different output file types: documents, spreadsheets, presentations, code, and visualizations](/content/module-files/images/output-file-types.svg)
+
 **Documents**
 - Reports and white papers
 - Meeting summaries
@@ -57,6 +59,14 @@ title: "Professional Quality"
 content: "AI-generated files are ready for professional use. You can send that document to your boss, share that spreadsheet with your team, present those slides to clients."
 ```
 
+## AI Operating in Your File System
+
+Beyond creating individual files, AI can work with your entire file system — organising, moving, and cleaning up files just as a human assistant would.
+
+```agent
+path: /content/module-files/agent-desktop-cleanup.yaml
+```
+
 ## Asking for Files
 
 To receive files instead of chat text, be explicit:
@@ -66,6 +76,12 @@ To receive files instead of chat text, be explicit:
 - "Save this as a CSV file"
 
 Don't just ask for "a report" — ask for "a Word document containing the report."
+
+```callout
+type: tip
+title: "Creating Long Documents"
+content: "For reports, proposals, and other substantial documents, we'll cover the optimal method — sectional drafting — in the Document Creation module. This technique dramatically improves quality for longer work."
+```
 
 ## Iteration on Files
 

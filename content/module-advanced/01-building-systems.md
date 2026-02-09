@@ -50,6 +50,36 @@ title: "The Investment"
 content: "Setting up skills, preferences, and connections takes initial effort. But that investment compounds — every future task benefits from the infrastructure you've built."
 ```
 
+## Token Economics
+
+Tokens are the new currency. Understanding the economics matters.
+
+**The consumption problem:**
+Agents consume **100x more tokens** than simple chat. Why? Because the entire conversation history is resent with every message in stateless APIs.
+
+**The pricing trajectory:**
+Token pricing has dropped from **$20 per million tokens** in late 2022 to roughly **$0.40 per million** by August 2025.
+
+But consumption has exploded. Working with agents can mean sending tens of millions of tokens per day.
+
+**Cost optimisation strategies:**
+
+**Prompt caching** — Place static content (system prompts, reference docs) at the start. Caching saves **60-80%** on repeated content.
+
+**Model cascading** — Use cheap models for simple tasks, premium models for complex ones. Reduces costs **30-50%**.
+
+**Batch processing** — Most platforms offer **50% discount** for batch API requests that don't need immediate responses.
+
+**Fine-tuning** — For high-volume stable workloads, fine-tuned models can be more cost-effective than prompt engineering.
+
+```callout
+type: note
+title: "Deloitte's Guidance"
+content: "Business leaders should treat AI economics with the same rigour as energy or capital allocation, recognising tokens as the new currency."
+```
+
+For enterprises deploying agents at scale, token costs become a genuine line item. The cheapest solution is often not the best solution — but understanding the tradeoffs matters.
+
 ```quiz
 id: advanced-systems
 type: multiple-choice
@@ -61,4 +91,17 @@ options:
   - "They have more technical background"
 answer: 2
 explanation: "Effective AI users build infrastructure — skills, preferences, connections — that makes every future task easier. They invest in reusable systems rather than starting from scratch each time."
+```
+
+```quiz
+id: token-economics
+type: multiple-choice
+question: "Why do agentic workflows consume 100x more tokens than simple chat?"
+options:
+  - "Agents use more complex language models"
+  - "The entire conversation history is resent with every message in stateless APIs"
+  - "Agents require more computational power"
+  - "Agents use multiple models simultaneously"
+answer: 1
+explanation: "Stateless APIs mean the entire conversation history gets resent with every message. As conversations grow longer and agents take more actions, token consumption explodes — 100x higher than simple chat interactions."
 ```

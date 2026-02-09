@@ -1,0 +1,21 @@
+flowchart TD
+    T1["Tier 1: AI Add-ins<br/><small>GPTExcel, Numerous.ai</small>"]
+    T1D["Formula generation • Report summaries • Basic cleaning"]
+
+    T2["Tier 2: Chat-to-SQL Translators<br/><small>Julius AI</small>"]
+    T2D["Type questions • Receive charts • Statistical output"]
+
+    T3["Tier 3: Full-Stack AI Analysts<br/><small>Anomaly AI, Quadratic</small>"]
+    T3D["Connect datasets • Inspect schemas • Build dashboards"]
+
+    T1 --> T1D
+    T1D --> T2
+    T2 --> T2D
+    T2D --> T3
+    T3 --> T3D
+
+    classDef tierLabel fill:#27272a,stroke:#00d9c0,stroke-width:2px,color:#fafafa
+    classDef tierDetail fill:#27272a,stroke:#3f3f46,stroke-width:1px,color:#a1a1aa
+
+    class T1,T2,T3 tierLabel
+    class T1D,T2D,T3D tierDetail

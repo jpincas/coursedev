@@ -408,6 +408,7 @@ func (m *Model) Update() gt.MessageMap {
 		"AGENT_TOGGLE_SIDEBAR":    m.handleAgentToggleSidebar,
 		"AGENT_TOGGLE_SCRATCHPAD": m.handleAgentToggleScratchpad,
 		"AGENT_VIEW_FILE":         m.handleAgentViewFile,
+		"AGENT_TOGGLE_FOLDER":     m.handleAgentToggleFolder,
 		"AGENT_OPEN_WORKSPACE":    m.handleAgentOpenWorkspace,
 		"AGENT_CLOSE_WORKSPACE":   m.handleAgentCloseWorkspace,
 	}

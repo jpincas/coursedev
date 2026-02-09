@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 // AgentState holds per-session ephemeral state for an agent block walkthrough.
 // Initialised fresh when navigating to a page with an agent block, nil'd when navigating away.
 type AgentState struct {
@@ -22,13 +24,14 @@ type AgentState struct {
 	TokenCount int
 
 	// UI toggles
-	WorkspaceOpen  bool
-	SidebarOpen    bool
-	ScratchpadOpen bool
-	ShowSystem     bool
-	ShowToolCalls  bool
-	ShowFullContext bool
-	ViewingFile    string
+	WorkspaceOpen   bool
+	SidebarOpen     bool
+	ScratchpadOpen  bool
+	ShowSystem      bool
+	ShowToolCalls   bool
+	ShowFullContext  bool
+	ViewingFile     string
+	ExpandedFolders map[string]bool // Track which folder paths are expanded in explorer
 }
 
 // ChatMessage is a single entry in the agent chat panel
@@ -63,10 +66,19 @@ func initAgentState(block *AgentBlock) *AgentState {
 		ChatMessages:      nil,
 		Scratchpad:        current,
 		InitialScratchpad: initial,
+		ExpandedFolders:   make(map[string]bool),
 		SidebarOpen:       block.Sidebar.StartOpen,
 		ShowSystem:        false, // modal starts closed; opened via title bar icon
 		ShowToolCalls:     block.Visibility.ToolCalls == "visible",
-		ShowFullContext:    block.Visibility.FullContext == "visible",
+		ShowFullContext:    false, // toggled via title bar icon; always available
+	}
+
+	// Auto-expand all folders that exist in the initial scratchpad
+	for path := range current {
+		parts := strings.Split(path, "/")
+		for i := 1; i < len(parts); i++ {
+			state.ExpandedFolders[strings.Join(parts[:i], "/")] = true
+		}
 	}
 
 	// Seed context with system prompt

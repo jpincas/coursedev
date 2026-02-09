@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 430"
+     style="max-width: 1010px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .stage-title { fill: #00d9c0; font-size: 22px; font-weight: 600; }
+    .example { fill: #fafafa; font-size: 16px; }
+    .iterate-label { fill: #00d9c0; font-size: 16px; }
+    .shape { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+  </style>
+  <defs>
+    <marker id="arrowhead-grey" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#a1a1aa" />
+    </marker>
+    <marker id="arrowhead-accent" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00d9c0" />
+    </marker>
+  </defs>
+
+  <!-- Stage 1: PREPARE -->
+  <rect x="40" y="80" width="180" height="240" rx="8" ry="8" class="shape" />
+  <text x="130" y="118" text-anchor="middle" class="stage-title">PREPARE</text>
+  <text x="60" y="173" class="example">Define outcome</text>
+  <text x="60" y="213" class="example">Gather context</text>
+  <text x="60" y="253" class="example">Set constraints</text>
+
+  <!-- Arrow 1 to 2 -->
+  <line x1="230" y1="200" x2="280" y2="200"
+        stroke="#a1a1aa" stroke-width="2" marker-end="url(#arrowhead-grey)" />
+
+  <!-- Stage 2: DELEGATE -->
+  <rect x="290" y="80" width="180" height="240" rx="8" ry="8" class="shape" />
+  <text x="380" y="118" text-anchor="middle" class="stage-title">DELEGATE</text>
+  <text x="310" y="173" class="example">Clear instruction</text>
+  <text x="310" y="213" class="example">Provide files</text>
+  <text x="310" y="253" class="example">Step away</text>
+
+  <!-- Arrow 2 to 3 -->
+  <line x1="480" y1="200" x2="530" y2="200"
+        stroke="#a1a1aa" stroke-width="2" marker-end="url(#arrowhead-grey)" />
+
+  <!-- Stage 3: VERIFY -->
+  <rect x="540" y="80" width="180" height="240" rx="8" ry="8" class="shape" />
+  <text x="630" y="118" text-anchor="middle" class="stage-title">VERIFY</text>
+  <text x="560" y="173" class="example">Spot-check facts</text>
+  <text x="560" y="213" class="example">Check coherence</text>
+  <text x="560" y="253" class="example">Test purpose</text>
+
+  <!-- Iteration arrow (VERIFY back to DELEGATE) -->
+  <path d="M 630 340 L 630 390 L 380 390 L 380 250"
+        stroke="#00d9c0" stroke-width="2" fill="none" marker-end="url(#arrowhead-accent)" />
+  <text x="490" y="405" text-anchor="middle" class="iterate-label">iterate</text>
+
+  <!-- Arrow 3 to 4 -->
+  <line x1="730" y1="200" x2="780" y2="200"
+        stroke="#a1a1aa" stroke-width="2" marker-end="url(#arrowhead-grey)" />
+
+  <!-- Stage 4: DELIVER -->
+  <rect x="790" y="80" width="180" height="240" rx="8" ry="8" class="shape" />
+  <text x="880" y="118" text-anchor="middle" class="stage-title">DELIVER</text>
+  <text x="810" y="173" class="example">File to destination</text>
+  <text x="810" y="213" class="example">Work complete</text>
+  <text x="810" y="253" class="example">You own result</text>
+</svg>

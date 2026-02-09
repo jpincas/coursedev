@@ -1,0 +1,496 @@
+```agent
+id: iteration-demo
+title: "The Iteration Pattern in Action"
+model_label: "Claude"
+
+system: |
+  You are a business proposal writer. You help teams create professional,
+  persuasive proposals for prospective clients. You write in a clear,
+  professional style and pay close attention to client needs and feedback.
+
+scratchpad:
+  "reference/client-brief.md": |
+    # Acme Healthcare — Client Brief
+
+    **Organization:** Acme Healthcare
+    Regional hospital network with 3 facilities and approximately 800 staff members
+
+    **Project Objective:** Modernize patient data systems
+
+    **Budget Range:** $150,000 - $200,000
+
+    **Timeline:** Q2 2026 implementation (April-June)
+
+    **Key Pain Point:**
+    Data is siloed across departments. Clinical, billing, and administrative
+    systems don't communicate. This causes delays in patient care, billing
+    errors, and duplicate data entry work.
+
+    **Decision Makers:**
+    - CTO: Needs technical implementation details, integration approach, security
+    - CFO: Focused on ROI, cost structure, ongoing support costs
+
+  "reference/pricing-tiers.md": |
+    # Pricing Structure — Healthcare Integration Services
+
+    ## Tier 1: Essential
+    **Price:** $120,000
+    - Core system integration (2 departments of client's choice)
+    - Data migration and validation
+    - 6 months post-implementation support
+    - Standard security protocols
+
+    ## Tier 2: Professional
+    **Price:** $180,000
+    - Full integration across all departments
+    - Complete data migration and validation
+    - 12 months post-implementation support
+    - Staff training program included (3 sessions)
+    - Advanced security and compliance protocols
+    - Quarterly system health checks
+
+    ## Tier 3: Enterprise
+    **Price:** Custom (typically $220,000+)
+    - Everything in Professional tier
+    - Dedicated customer success manager
+    - Quarterly optimization reviews
+    - Priority support with 4-hour response time
+    - Custom reporting dashboards
+    - Annual strategic planning session
+
+  "reference/previous-proposal.md": |
+    # Previous Proposal Example — TechCorp Integration
+
+    ## Why We're the Right Partner
+
+    You're dealing with disconnected systems that slow your team down.
+    We've solved this exact problem for 12 organizations over the past 3 years.
+
+    **Our track record:**
+    • 3-year focus on healthcare data integration
+    • 12 successful implementations (hospitals, clinics, regional networks)
+    • Average 40% reduction in duplicate data entry
+    • Zero security incidents across all clients
+
+    ## What We'll Do
+
+    We don't just connect systems — we redesign your data workflow.
+
+    **Phase 1: Discovery** (Weeks 1-2)
+    Map existing systems, identify integration points, define success metrics
+
+    **Phase 2: Architecture** (Weeks 3-4)
+    Design integration architecture, security protocols, data validation rules
+
+    **Phase 3: Implementation** (Weeks 5-10)
+    Build integrations, migrate data, test thoroughly
+
+    **Phase 4: Training & Launch** (Weeks 11-12)
+    Train your team, go live with support, monitor closely
+
+    ## Timeline
+
+    Start: April 1, 2026
+    Go-live: June 15, 2026
+    Full deployment: June 30, 2026
+
+    12-week implementation from kickoff to full deployment.
+
+tools:
+  - scratchpad_read
+  - scratchpad_write
+
+visibility:
+  system_prompt: toggleable
+  tool_calls: visible
+  full_context: hidden
+
+sidebar:
+  width: "45%"
+  start_open: true
+
+script:
+  - type: note
+    text: "Watch how specific feedback transforms output quality. The first draft will be decent but generic — typical AI output without guidance."
+
+  - type: user
+    content: "Write a proposal for Acme Healthcare based on the client brief"
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "reference/client-brief.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Acme Healthcare — Client Brief
+
+      **Organization:** Acme Healthcare
+      Regional hospital network with 3 facilities and approximately 800 staff members
+
+      **Project Objective:** Modernize patient data systems
+
+      **Budget Range:** $150,000 - $200,000
+
+      **Timeline:** Q2 2026 implementation (April-June)
+
+      **Key Pain Point:**
+      Data is siloed across departments. Clinical, billing, and administrative
+      systems don't communicate. This causes delays in patient care, billing
+      errors, and duplicate data entry work.
+
+      **Decision Makers:**
+      - CTO: Needs technical implementation details, integration approach, security
+      - CFO: Focused on ROI, cost structure, ongoing support costs
+
+  - type: assistant
+    content: "I'll create a professional proposal for Acme Healthcare addressing their patient data modernization needs."
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "proposal-draft.md"
+      content: |
+        # Healthcare Data Integration Proposal
+        ## For Acme Healthcare
+
+        ### Executive Summary
+
+        In today's healthcare landscape, integrated data systems are essential
+        for delivering quality patient care. Acme Healthcare's current challenge
+        with siloed data across departments creates operational inefficiencies
+        that impact both patient outcomes and financial performance.
+
+        We propose a comprehensive data integration solution that will unify
+        your clinical, billing, and administrative systems into a cohesive
+        platform. This will eliminate duplicate data entry, reduce billing
+        errors, and improve care coordination across your three facilities.
+
+        ### Our Approach
+
+        Our proven methodology includes:
+        - Comprehensive system assessment and integration planning
+        - Secure data migration with validation protocols
+        - Staff training and change management support
+        - Ongoing technical support post-implementation
+
+        ### Technical Implementation
+
+        We will implement industry-standard integration protocols to connect
+        your existing systems. Our approach ensures data security, compliance
+        with healthcare regulations, and minimal disruption to operations.
+
+        Key technical components:
+        - API-based integration architecture
+        - Real-time data synchronization
+        - Role-based access controls
+        - Comprehensive audit logging
+
+        ### Investment
+
+        Based on your requirements and budget, we recommend our Professional
+        tier solution at $180,000. This includes full integration across all
+        departments, complete data migration, staff training, and 12 months
+        of post-implementation support.
+
+        ### Timeline
+
+        We can begin implementation in Q2 2026 as requested, with a typical
+        project timeline of 12-14 weeks from kickoff to full deployment.
+
+        ### Next Steps
+
+        We would welcome the opportunity to discuss this proposal in detail
+        and answer any questions from your technical and financial leadership.
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to proposal-draft.md (51 lines)"
+
+  - type: assistant
+    content: "I've created a comprehensive proposal addressing Acme Healthcare's data integration needs. The proposal covers their key pain points, outlines our technical approach, and recommends the Professional tier pricing that fits their budget."
+
+  - type: note
+    text: "The first draft has the right structure but lacks specificity. Watch how targeted feedback improves it."
+
+  - type: user
+    content: "The opening is too generic. Lead with our 3-year track record in healthcare integration, not a market overview. The pricing section needs the tiered structure from the pricing doc — show all three options with clear differences."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "reference/pricing-tiers.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Pricing Structure — Healthcare Integration Services
+
+      ## Tier 1: Essential
+      **Price:** $120,000
+      - Core system integration (2 departments of client's choice)
+      - Data migration and validation
+      - 6 months post-implementation support
+      - Standard security protocols
+
+      ## Tier 2: Professional
+      **Price:** $180,000
+      - Full integration across all departments
+      - Complete data migration and validation
+      - 12 months post-implementation support
+      - Staff training program included (3 sessions)
+      - Advanced security and compliance protocols
+      - Quarterly system health checks
+
+      ## Tier 3: Enterprise
+      **Price:** Custom (typically $220,000+)
+      - Everything in Professional tier
+      - Dedicated customer success manager
+      - Quarterly optimization reviews
+      - Priority support with 4-hour response time
+      - Custom reporting dashboards
+      - Annual strategic planning session
+
+  - type: assistant
+    content: "Good point. Let me revise the opening to lead with our track record and expand the pricing section to show all three tier options clearly."
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "proposal-draft.md"
+      content: |
+        # Healthcare Data Integration Proposal
+        ## For Acme Healthcare
+
+        ### Why We're the Right Partner
+
+        Over the past 3 years, we've specialized in healthcare data integration,
+        successfully implementing unified data systems for 12 organizations
+        including hospitals, clinics, and regional networks like yours.
+
+        Our clients report an average 40% reduction in duplicate data entry,
+        faster billing cycles, and improved care coordination. We maintain a
+        zero security incident record across all implementations.
+
+        ### Your Challenge
+
+        Acme Healthcare's siloed data across clinical, billing, and administrative
+        departments creates delays in patient care, billing errors, and forces
+        your 800-person staff to duplicate data entry work. This is exactly the
+        problem we solve.
+
+        ### Our Approach
+
+        Our proven methodology includes:
+        - Comprehensive system assessment and integration planning
+        - Secure data migration with validation protocols
+        - Staff training and change management support
+        - Ongoing technical support post-implementation
+
+        ### Technical Implementation
+
+        We will implement industry-standard integration protocols to connect
+        your existing systems. Our approach ensures data security, compliance
+        with healthcare regulations, and minimal disruption to operations.
+
+        Key technical components:
+        - API-based integration architecture
+        - Real-time data synchronization
+        - Role-based access controls
+        - Comprehensive audit logging
+
+        ### Investment Options
+
+        We offer three tiers to match your needs and budget:
+
+        **Tier 1: Essential — $120,000**
+        - Core system integration (2 departments of your choice)
+        - Data migration and validation
+        - 6 months post-implementation support
+        - Standard security protocols
+
+        **Tier 2: Professional — $180,000** (Recommended)
+        - Full integration across all departments
+        - Complete data migration and validation
+        - 12 months post-implementation support
+        - Staff training program included (3 sessions)
+        - Advanced security and compliance protocols
+        - Quarterly system health checks
+
+        **Tier 3: Enterprise — Custom pricing (typically $220,000+)**
+        - Everything in Professional tier
+        - Dedicated customer success manager
+        - Quarterly optimization reviews
+        - Priority support with 4-hour response time
+        - Custom reporting dashboards
+        - Annual strategic planning session
+
+        For your requirements and budget range ($150-200k), we recommend the
+        Professional tier. It provides full integration across all departments,
+        comprehensive training, and a full year of support.
+
+        ### Timeline
+
+        We can begin implementation in Q2 2026 as requested, with a typical
+        project timeline of 12-14 weeks from kickoff to full deployment.
+
+        ### Next Steps
+
+        We would welcome the opportunity to discuss this proposal in detail
+        and answer any questions from your CTO and CFO.
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to proposal-draft.md (73 lines)"
+
+  - type: assistant
+    content: "Revised. The opening now leads with our 3-year healthcare specialization and track record. The pricing section shows all three tiers with clear differences, and recommends Professional tier for their budget."
+
+  - type: note
+    text: "Much better. Now the content is specific. But does the tone match our style?"
+
+  - type: user
+    content: "Good progress. Final pass: match the tone and format from our previous proposal — short paragraphs, bullet points for key details, and add concrete Q2 2026 timeline milestones."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "reference/previous-proposal.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Previous Proposal Example — TechCorp Integration
+
+      ## Why We're the Right Partner
+
+      You're dealing with disconnected systems that slow your team down.
+      We've solved this exact problem for 12 organizations over the past 3 years.
+
+      **Our track record:**
+      • 3-year focus on healthcare data integration
+      • 12 successful implementations (hospitals, clinics, regional networks)
+      • Average 40% reduction in duplicate data entry
+      • Zero security incidents across all clients
+
+      ## What We'll Do
+
+      We don't just connect systems — we redesign your data workflow.
+
+      **Phase 1: Discovery** (Weeks 1-2)
+      Map existing systems, identify integration points, define success metrics
+
+      **Phase 2: Architecture** (Weeks 3-4)
+      Design integration architecture, security protocols, data validation rules
+
+      **Phase 3: Implementation** (Weeks 5-10)
+      Build integrations, migrate data, test thoroughly
+
+      **Phase 4: Training & Launch** (Weeks 11-12)
+      Train your team, go live with support, monitor closely
+
+      ## Timeline
+
+      Start: April 1, 2026
+      Go-live: June 15, 2026
+      Full deployment: June 30, 2026
+
+      12-week implementation from kickoff to full deployment.
+
+  - type: assistant
+    content: "Got it. Let me revise to match that tone — conversational but professional, shorter paragraphs, bullets for scanability, and concrete Q2 milestones."
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "proposal-draft.md"
+      content: |
+        # Healthcare Data Integration Proposal
+        ## For Acme Healthcare
+
+        ### Why We're the Right Partner
+
+        You're dealing with siloed data that slows your team down and creates
+        errors. We've solved this exact problem for 12 healthcare organizations
+        over the past 3 years.
+
+        **Our track record:**
+        • 3-year focus on healthcare data integration
+        • 12 successful implementations (hospitals, clinics, regional networks)
+        • Average 40% reduction in duplicate data entry
+        • Zero security incidents across all clients
+
+        ### Your Challenge
+
+        Data trapped in departmental silos. Clinical can't see billing. Billing
+        can't see admin. Your 800-person staff wastes hours on duplicate entry.
+        Patient care gets delayed. Errors slip through.
+
+        We don't just connect systems — we redesign your data workflow.
+
+        ### What We'll Do
+
+        **Phase 1: Discovery** (Weeks 1-2)
+        Map your existing systems, identify integration points, define success metrics
+
+        **Phase 2: Architecture** (Weeks 3-4)
+        Design integration architecture, security protocols, data validation rules
+
+        **Phase 3: Implementation** (Weeks 5-10)
+        Build integrations, migrate data, test thoroughly across all three facilities
+
+        **Phase 4: Training & Launch** (Weeks 11-12)
+        Train your team (3 sessions), go live with support, monitor closely
+
+        ### Investment Options
+
+        **Tier 1: Essential — $120,000**
+        • Core integration (2 departments)
+        • Data migration and validation
+        • 6 months support
+        • Standard security
+
+        **Tier 2: Professional — $180,000** (Recommended for your needs)
+        • Full integration (all departments, all facilities)
+        • Complete data migration and validation
+        • 12 months support
+        • 3 staff training sessions included
+        • Advanced security and compliance
+        • Quarterly system health checks
+
+        **Tier 3: Enterprise — Custom ($220k+)**
+        • Everything in Professional
+        • Dedicated customer success manager
+        • Quarterly optimization reviews
+        • Priority 4-hour response support
+        • Custom dashboards
+
+        We recommend Professional tier. Fits your $150-200k budget, covers all
+        departments across your three facilities, and includes comprehensive
+        training and a full year of support.
+
+        ### Timeline
+
+        **Start:** April 1, 2026
+        **Go-live:** June 15, 2026
+        **Full deployment:** June 30, 2026
+
+        12-week implementation from kickoff to full deployment. On schedule for
+        your Q2 2026 requirement.
+
+        ### Next Steps
+
+        Let's schedule a call with your CTO and CFO to discuss technical details
+        and ROI projections. We're ready to start April 1.
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to proposal-draft.md (68 lines)"
+
+  - type: assistant
+    content: "Final revision complete. The proposal now matches your established style — conversational tone, short paragraphs, bullets for key info, and concrete Q2 2026 milestones (April 1 start, June 15 go-live, June 30 full deployment)."
+
+  - type: note
+    text: "Three iterations, three specific improvements. Each round of feedback referenced exact parts and stated clear changes. This is how experts use AI."
+```

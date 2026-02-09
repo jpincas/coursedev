@@ -23,11 +23,15 @@ Faster. More thorough. More consistent.
 
 This isn't a prediction about the future. This is now.
 
-The question isn't whether to use AI. It's how to use it effectively.
+**But there's a critical caveat.**
+
+Research has shown surprising results: one study found developers were actually 19% slower with AI, despite believing they were 20% faster. We'll explore this data in detail in the Risks module.
+
+The question isn't whether to use AI. It's how to use it effectively — with judgment intact.
 
 ## Two Mental Models
 
-![Two Mental Models: AI as Search Engine vs AI as Worker](/content/module-delegation/images/mindset-shift.svg)
+![Two Mental Models: AI as Search Engine vs AI as Worker](/content/module-delegation/images/mental-model-shift.svg)
 
 **AI as Search Engine**
 Ask questions, get answers, copy-paste, repeat. You're doing all the assembly work.

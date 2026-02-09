@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500"
+     style="max-width: 600px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title { font-size: 18px; font-weight: 600; fill: #fafafa; }
+    .desc { font-size: 14px; fill: #a1a1aa; }
+    .num { font-size: 20px; font-weight: 700; fill: #18181b; }
+    .step-box { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .num-circle { fill: #00d9c0; stroke: #00d9c0; stroke-width: 2; }
+  </style>
+
+  <!-- Step 1 -->
+  <rect x="100" y="60" width="400" height="80" rx="8" class="step-box" />
+  <circle cx="140" cy="100" r="20" class="num-circle" />
+  <text x="140" y="107" text-anchor="middle" class="num">1</text>
+  <text x="180" y="90" class="title">Spot-Check Facts</text>
+  <text x="180" y="115" class="desc">Verify 3-5 specific claims</text>
+
+  <!-- Step 2 -->
+  <rect x="100" y="160" width="400" height="80" rx="8" class="step-box" />
+  <circle cx="140" cy="200" r="20" class="num-circle" />
+  <text x="140" y="207" text-anchor="middle" class="num">2</text>
+  <text x="180" y="190" class="title">Check for Coherence</text>
+  <text x="180" y="215" class="desc">Does it make internal sense?</text>
+
+  <!-- Step 3 -->
+  <rect x="100" y="260" width="400" height="80" rx="8" class="step-box" />
+  <circle cx="140" cy="300" r="20" class="num-circle" />
+  <text x="140" y="307" text-anchor="middle" class="num">3</text>
+  <text x="180" y="290" class="title">Validate Structure</text>
+  <text x="180" y="315" class="desc">All required sections present?</text>
+
+  <!-- Step 4 -->
+  <rect x="100" y="360" width="400" height="80" rx="8" class="step-box" />
+  <circle cx="140" cy="400" r="20" class="num-circle" />
+  <text x="140" y="407" text-anchor="middle" class="num">4</text>
+  <text x="180" y="390" class="title">Test Against Purpose</text>
+  <text x="180" y="415" class="desc">Fit for purpose?</text>
+</svg>

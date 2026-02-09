@@ -1,0 +1,293 @@
+id: desktop-cleanup-demo
+title: "Tidying a Messy Desktop"
+model_label: "Claude"
+
+system: |
+  You are a file organization assistant. You help users organize their files
+  into clean, logical folder structures. Explain your reasoning as you work.
+
+scratchpad:
+  "Q4-report-FINAL.docx": |
+    Q4 Financial Report — Final Version
+    Revenue: $2.4M (+12% YoY)
+    Expenses: $1.8M
+    Net profit: $600K
+  "IMG_4021.jpg": |
+    [Photo: Team offsite — November 2025]
+  "meeting-notes-dec.txt": |
+    Product sync — 12 Dec
+    - Launch date confirmed: 15 Jan
+    - Marketing needs assets by 5 Jan
+    - Dev freeze starts 8 Jan
+  "budget_2026_v3.xlsx": |
+    Department,Q1,Q2,Q3,Q4
+    Engineering,£420K,£430K,£440K,£450K
+    Marketing,£180K,£200K,£195K,£210K
+    Sales,£150K,£160K,£165K,£175K
+  "Screenshot 2025-11-14.png": |
+    [Screenshot: Error message from deployment pipeline]
+  "todo.txt": |
+    - Book flights for conference
+    - Review Sarah's proposal
+    - Update team wiki
+    - Send invoice to Acme Corp
+  "presentation-draft.pptx": |
+    Slide 1: Q4 Results Overview
+    Slide 2: Revenue by Segment
+    Slide 3: Key Wins
+    Slide 4: 2026 Roadmap
+  "invoice-acme-dec.pdf": |
+    INVOICE #2025-0847
+    To: Acme Corporation
+    Amount: £12,500
+    Due: 31 December 2025
+  "random-notes.md": |
+    Ideas for the rebrand:
+    - Simplify the logo
+    - Update colour palette to blues/greens
+    - New tagline options: "Built for teams" / "Work, simplified"
+  "old-contract-draft.docx": |
+    DRAFT — Service Agreement
+    Between: Us and TechCorp
+    Status: SUPERSEDED — see final version in SharePoint
+  "team-photo-christmas.jpg": |
+    [Photo: Team Christmas party 2025]
+  "competitor-analysis.xlsx": |
+    Company,Market Share,Growth,Threat Level
+    Nexus Inc,15.9%,+8%,High
+    DataFlow,11.2%,+12%,Medium
+    SimpliWork,8.4%,+22%,Rising
+
+tools:
+  - list_files
+  - create_folder
+  - move_file
+  - scratchpad_read
+  - delete_file
+
+visibility:
+  system_prompt: hidden
+  tool_calls: visible
+  full_context: hidden
+
+sidebar:
+  width: "45%"
+  start_open: true
+
+script:
+  - type: note
+    text: "12 files scattered on a desktop with no organisation. Watch how the AI analyses the files, creates a folder structure, and moves everything into place — the kind of task that would take you 10 minutes of dragging and dropping."
+
+  - type: user
+    content: "My desktop is a mess. Can you organise these files into a sensible folder structure? Delete anything that's obviously outdated or superseded."
+
+  - type: tool_call
+    tool: list_files
+    args:
+      path: "."
+
+  - type: tool_result
+    tool: list_files
+    content: |
+      12 files found:
+      - IMG_4021.jpg
+      - Q4-report-FINAL.docx
+      - Screenshot 2025-11-14.png
+      - budget_2026_v3.xlsx
+      - competitor-analysis.xlsx
+      - invoice-acme-dec.pdf
+      - meeting-notes-dec.txt
+      - old-contract-draft.docx
+      - presentation-draft.pptx
+      - random-notes.md
+      - team-photo-christmas.jpg
+      - todo.txt
+
+  - type: assistant
+    content: |
+      I can see 12 files with no folder structure. Let me read a couple to understand what we're working with, then I'll create an organised structure.
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "old-contract-draft.docx"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      DRAFT — Service Agreement
+      Between: Us and TechCorp
+      Status: SUPERSEDED — see final version in SharePoint
+
+  - type: assistant
+    content: |
+      That contract draft is explicitly superseded — I'll delete it. Now let me set up a clean folder structure and start moving files.
+
+  - type: tool_call
+    tool: delete_file
+    args:
+      filename: "old-contract-draft.docx"
+
+  - type: tool_result
+    tool: delete_file
+    content: "Deleted old-contract-draft.docx"
+
+  - type: tool_call
+    tool: create_folder
+    args:
+      path: "Finance"
+
+  - type: tool_result
+    tool: create_folder
+    content: "Created folder: Finance"
+
+  - type: tool_call
+    tool: create_folder
+    args:
+      path: "Projects"
+
+  - type: tool_result
+    tool: create_folder
+    content: "Created folder: Projects"
+
+  - type: tool_call
+    tool: create_folder
+    args:
+      path: "Photos"
+
+  - type: tool_result
+    tool: create_folder
+    content: "Created folder: Photos"
+
+  - type: note
+    text: "Three folders created in the explorer. Now watch the files move into them."
+
+  - type: user
+    content: "Looking good. Go ahead and move everything into the right folders."
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "Q4-report-FINAL.docx"
+      destination: "Finance/Q4-report-FINAL.docx"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved Q4-report-FINAL.docx → Finance/Q4-report-FINAL.docx"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "budget_2026_v3.xlsx"
+      destination: "Finance/budget_2026_v3.xlsx"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved budget_2026_v3.xlsx → Finance/budget_2026_v3.xlsx"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "invoice-acme-dec.pdf"
+      destination: "Finance/invoice-acme-dec.pdf"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved invoice-acme-dec.pdf → Finance/invoice-acme-dec.pdf"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "competitor-analysis.xlsx"
+      destination: "Finance/competitor-analysis.xlsx"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved competitor-analysis.xlsx → Finance/competitor-analysis.xlsx"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "presentation-draft.pptx"
+      destination: "Projects/presentation-draft.pptx"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved presentation-draft.pptx → Projects/presentation-draft.pptx"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "meeting-notes-dec.txt"
+      destination: "Projects/meeting-notes-dec.txt"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved meeting-notes-dec.txt → Projects/meeting-notes-dec.txt"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "random-notes.md"
+      destination: "Projects/random-notes.md"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved random-notes.md → Projects/random-notes.md"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "todo.txt"
+      destination: "Projects/todo.txt"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved todo.txt → Projects/todo.txt"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "IMG_4021.jpg"
+      destination: "Photos/IMG_4021.jpg"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved IMG_4021.jpg → Photos/IMG_4021.jpg"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "team-photo-christmas.jpg"
+      destination: "Photos/team-photo-christmas.jpg"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved team-photo-christmas.jpg → Photos/team-photo-christmas.jpg"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "Screenshot 2025-11-14.png"
+      destination: "Photos/Screenshot 2025-11-14.png"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved Screenshot 2025-11-14.png → Photos/Screenshot 2025-11-14.png"
+
+  - type: assistant
+    content: |
+      Done. Here's what I did:
+
+      **Deleted:** `old-contract-draft.docx` (marked as superseded)
+
+      **Organised into 3 folders:**
+
+      **Finance/** — Q4 report, 2026 budget, Acme invoice, competitor analysis
+      **Projects/** — presentation draft, meeting notes, rebrand ideas, todo list
+      **Photos/** — team offsite, Christmas party, deployment screenshot
+
+      11 files organised, 1 deleted. Desktop is clean.
+
+  - type: note
+    text: "12 scattered files became a clean 3-folder structure in seconds. The AI read the superseded contract and deleted it without being told exactly which file to remove. This is AI working with your actual file system — not describing what it would do, but doing it."

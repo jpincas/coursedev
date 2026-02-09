@@ -195,6 +195,34 @@ Use `tester.NewSession(t, &Model{})` for integration tests that exercise the ful
 - **Quiz answer payloads:** Quiz answers include both `blockIndex` (position on the page) and `answer` (chosen option index). Both are needed because multiple quizzes can appear on one page.
 - **Component namespacing:** If the same block type appears twice on a page with interactive elements, their messages will collide unless you use `gt.ComponentID`. Each block instance should get a unique component ID derived from its block ID.
 
+## Subagents for Content Authoring
+
+Two subagent instruction files live in `.claude/agents/`. These are NOT skills — they are launched as independent agents via the Task tool.
+
+### course-director
+
+`.claude/agents/course-director.md` — The course architect. Designs overall course structure, researches AI trends and skills gaps, writes module briefs, and launches module-builder subagents. Use for course-level decisions.
+
+Launch: `Task(subagent_type="general-purpose", prompt="Read .claude/agents/course-director.md and follow its instructions.\n\n[TASK]")`
+
+### module-builder
+
+`.claude/agents/module-builder.md` — Builds and maintains individual modules. Creates directory structure, `_module.yaml`, markdown pages, callouts, diagrams. Uses `/quiz`, `/agent-demo`, `/mermaid`, `/excalidraw`, and `/image-generator` skills for interactive blocks and visuals. Directed by the course-director or the user.
+
+Launch: `Task(subagent_type="general-purpose", prompt="Read .claude/agents/module-builder.md and follow its instructions.\n\n[MODULE BRIEF]")`
+
+### Hierarchy
+
+```
+course-director (subagent)
+  └── module-builder (subagent, one per module, can run in parallel)
+        ├── /quiz (skill, for quiz blocks)
+        ├── /agent-demo (skill, for agent demo blocks)
+        ├── /mermaid (skill, for structured diagrams — flowcharts, sequences, timelines)
+        ├── /excalidraw (skill, for freeform drawings — sketches, concept maps, visual metaphors)
+        └── /image-generator (skill, for infographic-style visuals — conceptual graphics, process visuals)
+```
+
 ## Reference
 
 - **Gotea docs:** Use the `/gotea` skill for the complete API reference, architecture guidance, and code review. It loads the full Gotea documentation automatically.

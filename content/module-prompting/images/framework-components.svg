@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" style="max-width: 900px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .label { fill: #fafafa; font-size: 18px; font-weight: 500; }
+    .prompt-text { fill: #00d9c0; font-size: 20px; font-weight: 600; }
+    .circle { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .box-accent { fill: #27272a; stroke: #00d9c0; stroke-width: 3; }
+    .connector { stroke: #a1a1aa; stroke-width: 2; fill: none; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#a1a1aa" />
+    </marker>
+  </defs>
+
+  <!-- Top row circles -->
+  <ellipse cx="150" cy="110" rx="70" ry="70" class="circle" />
+  <text x="150" y="118" text-anchor="middle" class="label">Role</text>
+
+  <ellipse cx="350" cy="110" rx="70" ry="70" class="circle" />
+  <text x="350" y="118" text-anchor="middle" class="label">Task</text>
+
+  <ellipse cx="550" cy="110" rx="70" ry="70" class="circle" />
+  <text x="550" y="118" text-anchor="middle" class="label">Context</text>
+
+  <!-- Bottom row circles -->
+  <ellipse cx="250" cy="290" rx="70" ry="70" class="circle" />
+  <text x="250" y="298" text-anchor="middle" class="label">Format</text>
+
+  <ellipse cx="450" cy="290" rx="70" ry="70" class="circle" />
+  <text x="450" y="298" text-anchor="middle" class="label">Constraints</text>
+
+  <!-- Central prompt box -->
+  <rect x="680" y="140" width="180" height="100" rx="8" ry="8" class="box-accent" />
+  <text x="770" y="180" text-anchor="middle" class="prompt-text">Effective</text>
+  <text x="770" y="210" text-anchor="middle" class="prompt-text">Prompt</text>
+
+  <!-- Arrows from circles to prompt box -->
+  <line x1="220" y1="110" x2="680" y2="180" class="connector" marker-end="url(#arrowhead)" />
+  <line x1="420" y1="110" x2="680" y2="180" class="connector" marker-end="url(#arrowhead)" />
+  <line x1="620" y1="110" x2="680" y2="180" class="connector" marker-end="url(#arrowhead)" />
+  <line x1="320" y1="290" x2="680" y2="220" class="connector" marker-end="url(#arrowhead)" />
+  <line x1="520" y1="290" x2="680" y2="220" class="connector" marker-end="url(#arrowhead)" />
+</svg>

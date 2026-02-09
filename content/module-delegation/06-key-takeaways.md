@@ -73,4 +73,4 @@ explanation: "Effective delegation starts with a clear outcome definition. When 
 
 ## Up Next
 
-Now let's explore **Advanced Patterns** — skills, persistent instructions, and how the most effective users work with AI.
+Next we'll explore **Risks and Limitations** — the hidden costs of AI use, security concerns, and how to maintain your skills in an AI-augmented world.

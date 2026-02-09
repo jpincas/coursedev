@@ -1,16 +1,18 @@
 ---
 name: module-builder
-description: Build or maintain training course modules — creates page structure, markdown content, quizzes, agent demos, callouts, and diagrams. Directed by the course-director skill.
-argument-hint: "[module directory name or description of what to build/fix]"
+description: Builds and maintains individual training modules — creates directory structure, YAML metadata, markdown pages, quizzes, diagrams, and agent demos.
+model: sonnet
 ---
 
-# Module Builder
+# Module Builder — Subagent Instructions
 
-You build and maintain **individual training modules** for a server-side rendered training application. You create the directory structure, `_module.yaml` metadata, and markdown pages with embedded interactive blocks. You do NOT decide what modules to create or what the course architecture should be — that comes from the course-director or the user.
+> **This is a subagent.** Launch via `Task(subagent_type="general-purpose")` with these instructions plus a module brief. This agent runs independently and creates/modifies module content.
+
+You build and maintain **individual training modules** for a server-side rendered training application. You create the directory structure, `_module.yaml` metadata, and markdown pages with embedded interactive blocks. You do NOT decide what modules to create or what the course architecture should be — that comes from the course-director agent or the user.
 
 ## Before Starting
 
-1. **Read the directive** — understand exactly what this module should teach, its target audience, prerequisites, and how it fits in the course arc.
+1. **Read the brief** — understand exactly what this module should teach, its target audience, prerequisites, and how it fits in the course arc.
 2. **Read `content/course.yaml`** — understand the current course structure and module ordering.
 3. **If editing an existing module**, read all its pages and `_module.yaml` first.
 4. **Read surrounding modules** if prerequisites exist — understand what learners already know.
@@ -234,28 +236,47 @@ Beyond custom blocks, pages use standard Goldmark markdown:
 - **Bold/italic** — standard markdown emphasis
 - **Blockquotes** — for quotations or emphasis
 
-### 6. SVG Diagrams
+### 6. Diagrams, Drawings, and Infographics
 
-Create SVG diagrams for visual concepts. These are static files placed in the module's `images/` directory and referenced from markdown with standard image syntax:
+Use the `/mermaid`, `/excalidraw`, and `/image-generator` skills to create visuals. All produce files in the module's `images/` directory, referenced from markdown with standard image syntax:
 
 ```markdown
 ![Diagram Description](/content/module-name/images/diagram-name.svg)
+![Infographic Description](/content/module-name/images/infographic-name.png)
 ```
 
-**When to create diagrams:**
-- Process flows and timelines
-- Architecture and component relationships
-- Hierarchies and taxonomies
-- Before/after comparisons
-- Concept maps
+**Use `/mermaid` for structured diagrams:**
+- Flowcharts with defined nodes and edges
+- Sequence diagrams (component interactions, protocols)
+- Timelines with dates/phases
+- State machines and entity relationships
+- Any diagram with strict logical structure
 
-**SVG guidelines:**
-- Use a dark background (`#18181b` / zinc-900) to match the app theme
-- Text in white or light colors for readability
-- Accent color: `#00d9c0` for highlights and emphasis
-- Keep diagrams simple and focused — one concept per diagram
+Mermaid produces a `.mmd` source file and renders to `.svg` using the project's theme config. The render command is: `npx mmdc -i input.mmd -o output.svg -c mermaid-config.json -b transparent`
+
+**Use `/excalidraw` for freeform drawings:**
+- Conceptual/metaphorical diagrams
+- Architecture sketches with custom spatial layout
+- Before/after comparisons
+- Visual metaphors and annotated illustrations
+- Anything you'd sketch on a whiteboard
+
+Excalidraw produces an `.excalidraw` source file (editable at excalidraw.com) and a hand-crafted `.svg` matching the app's dark theme.
+
+**Use `/image-generator` for infographic-style visuals:**
+- Conceptual visualizations that need a polished, professional look
+- Process or comparison graphics with rich visual treatment
+- Visuals that benefit from colour, depth, and design flair beyond what SVG diagrams offer
+- Any image where Mermaid or Excalidraw feel too schematic
+
+Image generator produces `.png` files via OpenAI's image API. Prompts should specify the app's dark theme (`#18181b` background, `#00d9c0` teal accent, flat design, white text).
+
+**General guidelines:**
+- One concept per visual
+- Keep diagrams simple — 3-7 elements is ideal
+- Use the app's accent colour (`#00d9c0`) sparingly for emphasis
 - Include descriptive alt text in the markdown image reference
-- Reasonable dimensions (typically 800-1000px wide, height varies)
+- Prefer `/mermaid` or `/excalidraw` when a simple diagram suffices — reserve `/image-generator` for richer visuals
 
 ## Module Design Principles
 
@@ -287,7 +308,7 @@ Typical distribution:
 - 1-2 callouts (emphasis, tips, warnings)
 - 0-1 quizzes (end of page or end of major section)
 - 0-1 agent demos (on dedicated demo pages)
-- 0-2 diagrams/images (where visual explanation helps)
+- 0-2 diagrams/images/infographics (where visual explanation helps)
 
 Don't overload a page with interactivity. Narrative text is the primary teaching medium.
 
@@ -316,7 +337,7 @@ When directed to build a module:
 4. **Write pages** — markdown with frontmatter, narrative content, callouts, diagrams.
 5. **Create quizzes** — use `/quiz` skill for each quiz block.
 6. **Create agent demos** — use `/agent-demo` skill for demo pages.
-7. **Create diagrams** — SVG files in `images/` directory.
+7. **Create diagrams** — use `/mermaid` for structured diagrams, `/excalidraw` for freeform drawings, or `/image-generator` for infographic-style visuals. All produce files in the `images/` directory.
 8. **Verify completeness** — every page has frontmatter, quizzes exist for `require_quizzes` modules, IDs are unique.
 
 When directed to maintain/improve a module:

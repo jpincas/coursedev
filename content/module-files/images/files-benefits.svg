@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" style="max-width: 920px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title { fill: #fafafa; font-size: 28px; font-weight: 700; }
+    .card-title { fill: #00d9c0; font-size: 18px; font-weight: 600; }
+    .card-desc { fill: #a1a1aa; font-size: 14px; }
+    .card { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .icon { fill: none; stroke: #00d9c0; stroke-width: 3; }
+  </style>
+
+  <!-- Main Title -->
+  <text x="460" y="50" text-anchor="middle" class="title">Why Files Matter</text>
+
+  <!-- Row 1 -->
+  <!-- Card 1: Persistence -->
+  <rect x="60" y="100" width="240" height="160" rx="8" ry="8" class="card" />
+  <circle cx="180" cy="140" r="20" class="icon" />
+  <text x="180" y="185" text-anchor="middle" class="card-title">Persistence</text>
+  <text x="180" y="220" text-anchor="middle" class="card-desc">Files stay,</text>
+  <text x="180" y="238" text-anchor="middle" class="card-desc">chat disappears</text>
+
+  <!-- Card 2: Shareability -->
+  <rect x="340" y="100" width="240" height="160" rx="8" ry="8" class="card" />
+  <circle cx="460" cy="140" r="20" class="icon" />
+  <text x="460" y="185" text-anchor="middle" class="card-title">Shareability</text>
+  <text x="460" y="220" text-anchor="middle" class="card-desc">Send files,</text>
+  <text x="460" y="238" text-anchor="middle" class="card-desc">not transcripts</text>
+
+  <!-- Card 3: Functionality -->
+  <rect x="620" y="100" width="240" height="160" rx="8" ry="8" class="card" />
+  <circle cx="740" cy="140" r="20" class="icon" />
+  <text x="740" y="185" text-anchor="middle" class="card-title">Functionality</text>
+  <text x="740" y="220" text-anchor="middle" class="card-desc">Formulas work,</text>
+  <text x="740" y="238" text-anchor="middle" class="card-desc">code runs</text>
+
+  <!-- Row 2 -->
+  <!-- Card 4: Iteration -->
+  <rect x="60" y="300" width="240" height="160" rx="8" ry="8" class="card" />
+  <circle cx="180" cy="340" r="20" class="icon" />
+  <text x="180" y="385" text-anchor="middle" class="card-title">Iteration</text>
+  <text x="180" y="420" text-anchor="middle" class="card-desc">Edit actual</text>
+  <text x="180" y="438" text-anchor="middle" class="card-desc">deliverables</text>
+
+  <!-- Card 5: Professionalism -->
+  <rect x="340" y="300" width="240" height="160" rx="8" ry="8" class="card" />
+  <circle cx="460" cy="340" r="20" class="icon" />
+  <text x="460" y="385" text-anchor="middle" class="card-title">Professionalism</text>
+  <text x="460" y="420" text-anchor="middle" class="card-desc">Proper</text>
+  <text x="460" y="438" text-anchor="middle" class="card-desc">formatting</text>
+
+  <!-- Card 6: Completeness -->
+  <rect x="620" y="300" width="240" height="160" rx="8" ry="8" class="card" />
+  <circle cx="740" cy="340" r="20" class="icon" />
+  <text x="740" y="385" text-anchor="middle" class="card-title">Completeness</text>
+  <text x="740" y="420" text-anchor="middle" class="card-desc">Whole documents,</text>
+  <text x="740" y="438" text-anchor="middle" class="card-desc">not snippets</text>
+</svg>

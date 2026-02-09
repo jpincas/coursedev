@@ -4,11 +4,9 @@ duration: "5m"
 tags: [summary, takeaways]
 ---
 
-# Key Takeaways
+# Key Takeaways: Prompting
 
-Let's summarize what we've learned about effective prompting.
-
-## 1. Outcomes Over Process
+## Outcomes Over Process
 
 Describe what done looks like, not how to get there.
 
@@ -23,13 +21,29 @@ Before any task, ask:
 
 Answer these three and you've got a solid specification.
 
-## 3. Meta-Prompting Is Powerful
+## The Techniques That Deliver Results
+
+From highest to lowest leverage:
+- **Be specific and direct** — Always applicable. Highest impact.
+- **Use examples (multishot prompting)** — 2-5 examples teach the pattern you want
+- **Structure with XML tags** — Separate instructions, context, examples, constraints
+- **Enable thinking** — For hard reasoning tasks, let the model think deeply
+- **Chain prompts** — Break multi-step work into sequential subtasks
+
+## Iteration Is How Experts Work
+
+The first output is the rough draft. Give specific, targeted feedback referencing exact parts.
+
+"Make this better" → AI guesses
+"Paragraph 2 is too technical — simplify it" → AI knows exactly what to change
+
+## Meta-Prompting Is Powerful
 
 Let AI help you write better prompts. Ask it to ask you clarifying questions.
 
 The AI's questions reveal what's needed. Your answers build the prompt.
 
-## 4. Complete Information Beats Clever Wording
+## Complete Information Beats Clever Wording
 
 It's not about magic words or secret phrases.
 
@@ -50,6 +64,8 @@ Before your next AI task, run through this:
 - [ ] Have I specified format and length?
 - [ ] Have I mentioned any constraints or exclusions?
 - [ ] Would a capable human have enough to complete this task?
+- [ ] Have I provided 2-3 examples if format/style matters?
+- [ ] Am I prepared to iterate with specific feedback?
 
 If you answer "no" to any of these, your request probably needs more detail.
 

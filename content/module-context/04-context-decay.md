@@ -10,6 +10,8 @@ Here's a common frustration: AI seems to get worse the longer you talk to it. Th
 
 ## The Degradation Pattern
 
+![Context Decay Over Conversation Turns](/content/module-context/images/context-decay.svg)
+
 **Turns 1-10: Fresh and Clear**
 - Context is fresh
 - Instructions are clear and uncontradicted
@@ -60,9 +62,30 @@ When you're shifting to a different task or topic, start a fresh conversation. Y
 
 ```callout
 type: tip
-title: "Think in Sessions"
-content: "Treat conversations like work sessions. One focused task per conversation. When you're done with that task, start fresh for the next one."
+title: "Scope Each Conversation"
+content: "Treat conversations like work sessions. One project or feature per conversation. Use external state files (progress notes, test results, git logs) rather than relying purely on conversation memory."
 ```
+
+## Tools for Managing Conversations
+
+Claude Code offers specific conversation management commands:
+
+**`/clear`** — Start completely fresh
+- Clears conversation history
+- Reloads CLAUDE.md (your persistent instructions remain)
+- Use when switching to unrelated work
+
+**`/compact`** — Summarise and continue
+- Compresses conversation history into a summary
+- You specify what to keep focus on
+- Use when context is cluttered but you need continuity
+
+**`/rewind`** — Selectively roll back
+- Remove recent messages
+- Restore to an earlier state
+- Use when the conversation went off-track
+
+**Principle:** Scope each conversation to one project or feature so context stays relevant.
 
 ## When to Preserve Context
 
@@ -73,24 +96,99 @@ Sometimes you do want conversation continuity:
 
 In these cases, keep going. But be aware that quality may degrade over very long sessions.
 
-## Markdown: The Universal Language
+## Watching Context Decay (and the Fix)
 
-One tool that helps combat context decay is structured formatting. Markdown is the universal language of AI context.
+This demo simulates a long conversation that degrades, then shows the compaction technique that fixes it.
 
-**Why Markdown?**
-- Most AI training data uses it
-- Provides clear structure the model understands well
-- Easy for humans to read and write too
+```agent
+id: context-decay-demo
+title: "Decay and Recovery"
+model_label: "Claude"
 
-**The pattern:** Structure your inputs in Markdown. Get structured outputs back.
+system: |
+  You are a writing assistant helping with a company blog post.
+  Follow the user's style preferences exactly.
 
-Use:
-- `# Headings` for hierarchy
-- `- Bullets` for lists
-- `**Bold**` for emphasis
-- ` ``` ` for code blocks
+scratchpad:
+  "brand-voice.txt": |
+    Pinnacle Consulting — Brand Voice Guide
+    Tone: Authoritative but warm. Think "trusted advisor."
+    Avoid: Jargon, buzzwords, passive voice.
+    Always: Use concrete examples. Short paragraphs.
+    Audience: Senior executives, non-technical.
 
-Well-structured context remains clearer even as conversations grow.
+tools:
+  - scratchpad_read
+  - scratchpad_write
+
+visibility:
+  system_prompt: hidden
+  tool_calls: visible
+  full_context: toggleable
+  token_count: visible
+
+sidebar:
+  width: "45%"
+  start_open: true
+
+script:
+  - type: note
+    text: "This simulates what happens over a long conversation. We'll start with clear instructions, build up context, then see what happens when things get cluttered."
+
+  - type: user
+    content: "Read our brand voice guide, then write the opening paragraph of a blog post about AI adoption in professional services. Keep it short and punchy — no buzzwords."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "brand-voice.txt"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      Pinnacle Consulting — Brand Voice Guide
+      Tone: Authoritative but warm. Think "trusted advisor."
+      Avoid: Jargon, buzzwords, passive voice.
+      Always: Use concrete examples. Short paragraphs.
+      Audience: Senior executives, non-technical.
+
+  - type: assistant
+    content: "Most consulting firms talk about AI. Few have changed how they actually work. At Pinnacle, we started small — one partner used Claude to draft client proposals. Within three months, the entire team had adopted it. Not because we mandated it. Because the results were impossible to ignore."
+
+  - type: note
+    text: "Good output. Clear, punchy, no buzzwords, matches the brand voice. The context is clean. Now imagine 40 more messages — topic changes, contradictory edits, tangential discussions. We'll simulate what that accumulated context looks like."
+
+  - type: user
+    content: "Actually, make it more formal. Wait — no, keep it conversational but add more data. Also, can we mention the McKinsey study? And maybe reference our Q3 results? Let's make it longer. Actually shorter is better. Focus on the human angle."
+
+  - type: assistant
+    content: "The professional services industry stands at a pivotal inflection point in its digital transformation journey. According to a recent McKinsey study, firms that strategically leverage AI-powered solutions are seeing unprecedented efficiency gains across their operational workflows. At Pinnacle Consulting, our Q3 results demonstrate the tangible ROI of embracing cutting-edge AI capabilities, with our human-centered approach driving meaningful synergies between technology adoption and workforce empowerment."
+
+  - type: note
+    text: "Look what happened. The contradictory instructions ('more formal' / 'conversational' / 'add data' / 'shorter' / 'longer' / 'human angle') confused everything. The output is full of the exact buzzwords the brand guide prohibits: 'inflection point,' 'digital transformation,' 'leverage,' 'synergies,' 'empowerment.' The original clear instructions got buried under accumulated noise."
+
+  - type: note
+    text: "This is context decay. Now watch the fix — we compact the context, keeping only what matters."
+
+  - type: compaction
+    summary: |
+      [Earlier: User asked for a blog post opening about AI adoption in professional services.
+       Brand voice guide loaded: authoritative but warm, no jargon, short paragraphs, concrete examples.
+       First draft was good but user gave contradictory revision instructions that degraded quality.
+       Current need: restart the paragraph with clean, focused instructions.]
+
+  - type: note
+    text: "Context was just compacted. All the contradictory back-and-forth is gone — replaced with a clean summary of what matters. The token counter dropped. Now watch the difference."
+
+  - type: user
+    content: "Let's try again. Write the opening paragraph. Follow the brand voice guide: short, punchy, concrete examples, no buzzwords. Authoritative but warm."
+
+  - type: assistant
+    content: "Last year, 73% of consulting firms said they were 'exploring AI.' This year, the ones who actually adopted it are pulling ahead. We've seen it firsthand at Pinnacle — teams that use AI for first-draft proposals, research synthesis, and client analysis are delivering work 40% faster. Not because the technology is magic. Because it handles the tedious parts, so consultants can focus on what they're actually good at: judgment, relationships, and strategy."
+
+  - type: note
+    text: "Night and day. Compaction cleared the noise, and clean instructions restored quality. This is exactly what /compact does in Claude Code — it summarises the conversation history so you can continue with fresh context without starting completely over."
+```
 
 ```quiz
 id: context-decay-solution

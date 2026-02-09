@@ -23,6 +23,9 @@ The realisation that information matters more than clever wording. Providing the
 **2025: Delegation**
 Specifying outcomes and letting AI figure out the how. Treating AI as a capable worker, not a text generator.
 
+**2026: Agentic Orchestration**
+Designing multi-step workflows where AI plans and executes autonomously. Gartner formally defined context engineering as a discipline. Every major AI company adopted the framing.
+
 ```callout
 type: info
 title: "Where We Are Now"

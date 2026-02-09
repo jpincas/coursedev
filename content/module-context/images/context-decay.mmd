@@ -1,0 +1,17 @@
+flowchart TB
+    A["Fresh (turns 1-10)<br/><small>Clear instructions • High quality output</small>"]
+    B["Blurring (turns 20-30)<br/><small>Context filling up • Occasional confusion</small>"]
+    C["Saturated (turns 50+)<br/><small>Cluttered context • Quality drops</small>"]
+
+    S1["/clear<br/><small>Start fresh</small>"]
+    S2["/compact<br/><small>Summarise & continue</small>"]
+    S3["/rewind<br/><small>Roll back</small>"]
+    S4["/clear<br/><small>Start fresh</small>"]
+
+    A --> B
+    B --> C
+
+    A -.->|Preventive| S1
+    B -.->|Solution| S2
+    C -.->|Solution| S3
+    C -.->|Solution| S4

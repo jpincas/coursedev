@@ -1,0 +1,140 @@
+id: catching-mistakes
+title: "Catching AI's Mistakes"
+model_label: "Claude"
+
+system: |
+  You are a business analyst assistant. You help professionals extract insights
+  from business data and create clear summaries. Be thorough and analytical.
+
+scratchpad:
+  "market-research-q4.md": |
+    # Q4 Market Research Summary
+
+    ## Revenue Performance
+    Total Q4 revenue reached $42.3 million, a 15.4% increase year-over-year.
+    Enterprise segment contributed $28.7 million (67.8% of total).
+    SMB segment contributed $13.6 million (32.2% of total).
+
+    ## Customer Metrics
+    Net Promoter Score improved to 72 (up from 64 in Q3).
+    Customer retention rate held steady at 94.2%.
+    Average contract value increased 8.3% to $127,000.
+
+    ## Market Position
+    Market share grew to 23.1% (from 21.8% in Q3).
+    Primary competitor Nexus Inc holds 15.9% market share.
+    Three new enterprise clients signed in Q4 (FinCorp, HealthNet, EduTech Global).
+
+    ## Product Development
+    Released v3.2 with AI-powered analytics dashboard.
+    Beta testing of mobile platform began with 200 enterprise users.
+    Patent filed for predictive workflow engine.
+
+tools:
+  - scratchpad_read
+
+visibility:
+  system_prompt: toggleable
+  tool_calls: visible
+  full_context: hidden
+
+sidebar:
+  width: "45%"
+  start_open: true
+
+script:
+  - type: note
+    text: "Watch how asking AI to verify its own work catches a fabricated claim."
+
+  - type: user
+    content: "Summarise the key findings from this Q4 market research report, including the most important data points."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "market-research-q4.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Q4 Market Research Summary
+
+      ## Revenue Performance
+      Total Q4 revenue reached $42.3 million, a 15.4% increase year-over-year.
+      Enterprise segment contributed $28.7 million (67.8% of total).
+      SMB segment contributed $13.6 million (32.2% of total).
+
+      ## Customer Metrics
+      Net Promoter Score improved to 72 (up from 64 in Q3).
+      Customer retention rate held steady at 94.2%.
+      Average contract value increased 8.3% to $127,000.
+
+      ## Market Position
+      Market share grew to 23.1% (from 21.8% in Q3).
+      Primary competitor Nexus Inc holds 15.9% market share.
+      Three new enterprise clients signed in Q4 (FinCorp, HealthNet, EduTech Global).
+
+      ## Product Development
+      Released v3.2 with AI-powered analytics dashboard.
+      Beta testing of mobile platform began with 200 enterprise users.
+      Patent filed for predictive workflow engine.
+
+  - type: assistant
+    content: |
+      Here are the key Q4 findings:
+
+      1. **Revenue grew 15.4% YoY** to $42.3M, driven by enterprise segment ($28.7M, 67.8%)
+      2. **Customer satisfaction surged** — NPS improved to 72, retention at 94.2%
+      3. **Market share expanded** to 23.1% from 21.8%, widening the gap over Nexus Inc (15.9%)
+      4. **Average contract value up 8.3%** to $127,000
+      5. **Customer churn rate fell to 3.2%**, the lowest in company history
+
+      The quarter shows strong momentum across all key metrics.
+
+  - type: user
+    content: "Before I use this summary, please verify each of those 5 claims against the source document. Quote the specific passage that supports each one."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "market-research-q4.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Q4 Market Research Summary
+
+      ## Revenue Performance
+      Total Q4 revenue reached $42.3 million, a 15.4% increase year-over-year.
+      Enterprise segment contributed $28.7 million (67.8% of total).
+      SMB segment contributed $13.6 million (32.2% of total).
+
+      ## Customer Metrics
+      Net Promoter Score improved to 72 (up from 64 in Q3).
+      Customer retention rate held steady at 94.2%.
+      Average contract value increased 8.3% to $127,000.
+
+      ## Market Position
+      Market share grew to 23.1% (from 21.8% in Q3).
+      Primary competitor Nexus Inc holds 15.9% market share.
+      Three new enterprise clients signed in Q4 (FinCorp, HealthNet, EduTech Global).
+
+      ## Product Development
+      Released v3.2 with AI-powered analytics dashboard.
+      Beta testing of mobile platform began with 200 enterprise users.
+      Patent filed for predictive workflow engine.
+
+  - type: assistant
+    content: |
+      Let me verify each claim:
+
+      1. ✅ Revenue 15.4% YoY to $42.3M — Source: "Total Q4 revenue reached $42.3 million, a 15.4% increase year-over-year"
+      2. ✅ NPS 72, retention 94.2% — Source: "Net Promoter Score improved to 72" and "Customer retention rate held steady at 94.2%"
+      3. ✅ Market share 23.1% vs Nexus 15.9% — Source: "Market share grew to 23.1%" and "Nexus Inc holds 15.9%"
+      4. ✅ ACV up 8.3% to $127K — Source: "Average contract value increased 8.3% to $127,000"
+      5. ❌ **Churn rate of 3.2% — I CANNOT find this in the source document.** The report mentions a 94.2% retention rate but does not state a specific churn figure. While one might infer ~5.8% churn from retention, the "3.2%" and "lowest in company history" were not in the source.
+
+      **Corrected summary point 5:** Customer retention remained strong at 94.2%, supporting continued revenue growth.
+
+  - type: note
+    text: "The AI confidently invented a specific churn rate that wasn't in the data. Self-verification caught it. This technique should be standard practice for any high-stakes output."

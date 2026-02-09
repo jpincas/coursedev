@@ -123,6 +123,24 @@ func (m *Model) handleAgentViewFile(msg gt.Message, s gt.State) gt.Response {
 	return gt.Respond()
 }
 
+func (m *Model) handleAgentToggleFolder(msg gt.Message, s gt.State) gt.Response {
+	mdl := model(s)
+	if mdl.Agent == nil {
+		return gt.Respond()
+	}
+	folderPath := msg.ArgsToString()
+	if mdl.Agent.ExpandedFolders == nil {
+		mdl.Agent.ExpandedFolders = make(map[string]bool)
+	}
+	if mdl.Agent.ExpandedFolders[folderPath] {
+		delete(mdl.Agent.ExpandedFolders, folderPath)
+	} else {
+		mdl.Agent.ExpandedFolders[folderPath] = true
+	}
+	broadcastAgentIfPresenting(mdl)
+	return gt.Respond()
+}
+
 func (m *Model) handleAgentOpenWorkspace(msg gt.Message, s gt.State) gt.Response {
 	mdl := model(s)
 	if mdl.Agent != nil {

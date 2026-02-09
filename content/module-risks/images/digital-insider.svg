@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" style="max-width: 800px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .label { fill: #fafafa; font-size: 15px; font-weight: 500; }
+    .center { fill: #00d9c0; font-size: 20px; font-weight: 600; }
+    .subtitle { fill: #a1a1aa; font-size: 18px; }
+    .shape { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .center-shape { fill: #27272a; stroke: #00d9c0; stroke-width: 3; }
+    .connector { stroke: #00d9c0; stroke-width: 2; fill: none; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00d9c0" />
+    </marker>
+  </defs>
+
+  <!-- Central AI agent -->
+  <ellipse cx="400" cy="250" rx="50" ry="50" class="center-shape" />
+  <text x="400" y="260" text-anchor="middle" class="center">AI</text>
+
+  <!-- Email -->
+  <rect x="150" y="80" width="90" height="60" rx="8" ry="8" class="shape" />
+  <text x="195" y="115" text-anchor="middle" class="label">Email</text>
+  <line x1="240" y1="120" x2="350" y2="220" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Files -->
+  <rect x="560" y="80" width="90" height="60" rx="8" ry="8" class="shape" />
+  <text x="605" y="115" text-anchor="middle" class="label">Files</text>
+  <line x1="560" y1="120" x2="450" y2="220" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Database -->
+  <ellipse cx="195" cy="390" rx="45" ry="30" class="shape" />
+  <text x="195" y="395" text-anchor="middle" class="label">Database</text>
+  <line x1="240" y1="380" x2="350" y2="280" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- CRM -->
+  <rect x="560" y="360" width="90" height="60" rx="8" ry="8" class="shape" />
+  <text x="605" y="395" text-anchor="middle" class="label">CRM</text>
+  <line x1="560" y1="380" x2="450" y2="280" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Calendar -->
+  <rect x="350" y="50" width="100" height="50" rx="8" ry="8" class="shape" />
+  <text x="400" y="80" text-anchor="middle" class="label">Calendar</text>
+  <line x1="400" y1="100" x2="400" y2="200" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Chat -->
+  <rect x="350" y="400" width="100" height="50" rx="8" ry="8" class="shape" />
+  <text x="400" y="430" text-anchor="middle" class="label">Chat</text>
+  <line x1="400" y1="300" x2="400" y2="400" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Subtitle -->
+  <text x="400" y="490" text-anchor="middle" class="subtitle">AI agents access everything you do</text>
+</svg>

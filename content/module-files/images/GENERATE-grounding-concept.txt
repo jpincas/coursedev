@@ -1,0 +1,9 @@
+To generate the grounding-concept.png image, run:
+
+python .claude/skills/image-generator/scripts/generate_image.py \
+  "Clean infographic on dark background (#18181b, zinc-900) showing the grounding transformation process. Split composition in three sections: LEFT SECTION labeled 'Generic Output' shows bland, grey text blocks representing generic AI responses. CENTER SECTION labeled 'Grounding' shows materials being fed in: style guides icon in teal (#00d9c0), example documents icon in teal, data files icon in teal - arranged vertically with arrows pointing right. RIGHT SECTION labeled 'Grounded Output' shows vibrant, teal-accented (#00d9c0) text blocks representing tailored, context-specific responses. Use flat design, clean arrows showing left-to-right transformation, minimal text labels in white, modern data visualization aesthetic. The teal accent should clearly highlight the grounding materials and the improved output on the right." \
+  --output content/module-files/images/grounding-concept.png \
+  --size 1536x1024 \
+  --quality high
+
+This image illustrates the concept on page 05-grounding.md

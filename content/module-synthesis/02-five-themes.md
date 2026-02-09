@@ -26,11 +26,23 @@ When output is poor, the first question is always: What was the context?
 
 ## 3. AI-First, Human-Verified
 
-**Let AI draft. You review and refine.**
+**Let AI draft. You review and refine. You own the result.**
 
 Default to delegating. Default to letting AI produce the first version. Then verify, iterate, and approve.
 
-Don't do work AI could do. But do verify work AI has done.
+**Verification techniques that matter:**
+- Spot-check 3-5 specific facts (don't check everything, sample strategically)
+- Cross-reference with source documents (did AI accurately use provided context?)
+- Test logical coherence (does the argument hold together internally?)
+- Multi-model validation (run critical outputs through a second AI for comparison)
+
+Don't do work AI could do. But **always** verify work AI has done.
+
+```callout
+type: warning
+title: "Verification Is Non-Negotiable"
+content: "As we've seen throughout this course, knowledge workers invest significant time in verification — and 47% of enterprise AI users have made at least one major business decision based on hallucinated content. You own the output, regardless of who produced it."
+```
 
 ## 4. Preparation Is the New Execution
 

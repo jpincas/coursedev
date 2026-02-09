@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"sort"
 	"strings"
@@ -8,6 +9,7 @@ import (
 	gt "github.com/jpincas/go-tea"
 	a "github.com/jpincas/go-tea/attributes"
 	h "github.com/jpincas/go-tea/html"
+	"github.com/yuin/goldmark"
 )
 
 // renderAgentSidebar renders the complete agent conversation sidebar
@@ -32,12 +34,11 @@ func renderAgentSidebar(state *AgentState, isFollowing bool) h.Element {
 		renderAgentTitleBar(state),
 	}
 
-	// Chat messages
-	children = append(children, renderAgentChatMessages(state))
-
-	// Full context panel
-	if state.Config.Visibility.FullContext != "hidden" {
-		children = append(children, renderFullContextPanel(state))
+	// Main area: either chat messages or full context view
+	if state.ShowFullContext {
+		children = append(children, renderFullContextView(state))
+	} else {
+		children = append(children, renderAgentChatMessages(state))
 	}
 
 	// Tool calls toggle
@@ -69,6 +70,21 @@ func renderAgentSidebar(state *AgentState, isFollowing bool) h.Element {
 
 func renderAgentTitleBar(state *AgentState) h.Element {
 	rightButtons := []h.Element{}
+
+	// Context view toggle (always available)
+	contextIconColor := "text-stone-400 hover:text-blue-500"
+	if state.ShowFullContext {
+		contextIconColor = "text-blue-500 hover:text-blue-600"
+	}
+	rightButtons = append(rightButtons,
+		h.Button(a.Attrs(
+			a.Class(contextIconColor+" cursor-pointer border-none bg-transparent transition-colors duration-150"),
+			a.OnClick(gt.SendBasicMessageNoArgs("AGENT_TOGGLE_CONTEXT")),
+			a.Custom("title", "Full context"),
+		),
+			h.UnsafeRaw(`<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6.75 4.5L3 9l3.75 4.5M11.25 4.5L15 9l-3.75 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`),
+		),
+	)
 
 	// System prompt icon (if not hidden)
 	if state.Config.Visibility.SystemPrompt != "hidden" && state.Config.System != "" {
@@ -170,13 +186,14 @@ func renderUserBubble(m ChatMessage) h.Element {
 
 func renderAssistantBubble(m ChatMessage) h.Element {
 	animStyle := chatAnimStyle(m.GroupIdx)
+	rendered := renderChatMarkdown(m.Content)
 	return h.Div(a.Attrs(
 		a.Class("flex items-end justify-start gap-2"),
 		a.Custom("style", animStyle),
 	),
 		renderChatAvatar("\u2728", "bg-purple-50"),
-		h.Div(a.Attrs(a.Class("max-w-[80%] py-2.5 px-3.5 rounded-2xl rounded-bl-sm bg-stone-100 text-stone-700 text-sm leading-relaxed")),
-			h.Text(m.Content),
+		h.Div(a.Attrs(a.Class("max-w-[80%] py-2.5 px-3.5 rounded-2xl rounded-bl-sm bg-stone-100 text-stone-700 text-sm leading-relaxed agent-chat-md")),
+			h.UnsafeRaw(rendered),
 		),
 	)
 }
@@ -264,6 +281,14 @@ func displayToolName(name string) string {
 		return "read_file"
 	case "scratchpad_write":
 		return "write_file"
+	case "list_files":
+		return "list_files"
+	case "move_file":
+		return "move_file"
+	case "create_folder":
+		return "create_folder"
+	case "delete_file":
+		return "delete_file"
 	case "web_search":
 		return "web_search"
 	case "fetch_url":
@@ -282,6 +307,18 @@ func toolCallIcon(toolName string) string {
 	case "fetch_url":
 		// Globe
 		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fbbf24" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" stroke="#fbbf24" stroke-width="1.2"/><path d="M2 8h12M3 4.5h10M3 11.5h10" stroke="#fbbf24" stroke-width="1"/></svg>`
+	case "list_files":
+		// List/directory icon
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h8" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round"/></svg>`
+	case "move_file":
+		// Arrow moving right
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+	case "create_folder":
+		// Folder with plus
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M1.5 3A1.5 1.5 0 013 1.5h3.293a1 1 0 01.707.293L8.414 3.207a1 1 0 00.707.293H13A1.5 1.5 0 0114.5 5v8a1.5 1.5 0 01-1.5 1.5H3A1.5 1.5 0 011.5 13V3z" fill="#fbbf24" fill-opacity="0.3" stroke="#fbbf24" stroke-width="0.8"/><path d="M8 7v4M6 9h4" stroke="#fbbf24" stroke-width="1.2" stroke-linecap="round"/></svg>`
+	case "delete_file":
+		// Trash/X
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M5.5 2h5M2 4h12M4 4l1 10h6l1-10M6.5 7v4M9.5 7v4" stroke="#fbbf24" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 	default:
 		// Wrench (existing)
 		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M14.25 6.14L13.07 5l.41-1.66a.38.38 0 00-.11-.36.37.37 0 00-.36-.1L11.35 3.3 10.2 2.11a.37.37 0 00-.53 0L8.54 3.24 7.47 2.87a.38.38 0 00-.42.09L1.17 8.84a.38.38 0 000 .53l2.12 2.12-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 2.12 2.12a.38.38 0 00.53 0l5.88-5.88a.38.38 0 00.09-.42l-.37-1.07 1.13-1.13a.37.37 0 000-.53z" fill="#fbbf24"/></svg>`
@@ -297,6 +334,18 @@ func toolResultIcon(toolName string) string {
 	case "fetch_url":
 		// Globe (muted)
 		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#d6d3d1" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" stroke="#d6d3d1" stroke-width="1.2"/><path d="M2 8h12M3 4.5h10M3 11.5h10" stroke="#d6d3d1" stroke-width="1"/></svg>`
+	case "list_files":
+		// List (muted)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h8" stroke="#d6d3d1" stroke-width="1.5" stroke-linecap="round"/></svg>`
+	case "move_file":
+		// Arrow (muted)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#d6d3d1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+	case "create_folder":
+		// Folder (muted)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M1.5 3A1.5 1.5 0 013 1.5h3.293a1 1 0 01.707.293L8.414 3.207a1 1 0 00.707.293H13A1.5 1.5 0 0114.5 5v8a1.5 1.5 0 01-1.5 1.5H3A1.5 1.5 0 011.5 13V3z" fill="#d6d3d1" fill-opacity="0.2" stroke="#d6d3d1" stroke-width="0.8"/></svg>`
+	case "delete_file":
+		// Trash (muted)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M5.5 2h5M2 4h12M4 4l1 10h6l1-10M6.5 7v4M9.5 7v4" stroke="#d6d3d1" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 	default:
 		// File (existing)
 		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M14 4.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1h6.5L14 4.5z" fill="#d6d3d1" fill-opacity="0.3" stroke="#d6d3d1" stroke-width="1"/><path d="M9.5 1v4H14" stroke="#d6d3d1" stroke-width="1" fill="none"/></svg>`
@@ -323,45 +372,8 @@ func renderClearDivider(note string) h.Element {
 	)
 }
 
-func renderFullContextPanel(state *AgentState) h.Element {
-	isToggleable := state.Config.Visibility.FullContext == "toggleable"
-	isOpen := !isToggleable || state.ShowFullContext
-
-	if isToggleable {
-		icon := "\u25B8"
-		if isOpen {
-			icon = "\u25BE"
-		}
-
-		headerChildren := []h.Element{
-			h.Div(a.Attrs(a.Class("flex items-center justify-between px-3 py-2 cursor-pointer")),
-				h.Span(a.Attrs(a.Class("text-xs font-semibold text-stone-500 uppercase tracking-wider")), h.Text("Full Context")),
-				h.Span(a.Attrs(a.Class("text-xs text-stone-400")), h.Text(icon)),
-			),
-		}
-
-		if isOpen {
-			headerChildren = append(headerChildren, renderFullContextEntries(state))
-		}
-
-		return h.Div(a.Attrs(
-			a.Class("mx-3 my-2 rounded-lg border border-stone-200 bg-stone-50 shrink-0"),
-			a.OnClick(gt.SendBasicMessageNoArgs("AGENT_TOGGLE_CONTEXT")),
-		),
-			headerChildren...,
-		)
-	}
-
-	// Always-visible
-	return h.Div(a.Attrs(a.Class("mx-3 my-2 rounded-lg border border-stone-200 bg-stone-50 shrink-0")),
-		h.Div(a.Attrs(a.Class("flex items-center justify-between px-3 py-2 border-b border-stone-200")),
-			h.Span(a.Attrs(a.Class("text-xs font-semibold text-stone-500 uppercase tracking-wider")), h.Text("Full Context")),
-		),
-		renderFullContextEntries(state),
-	)
-}
-
-func renderFullContextEntries(state *AgentState) h.Element {
+// renderFullContextView renders the full context as the main scrollable area (replaces chat messages when toggled)
+func renderFullContextView(state *AgentState) h.Element {
 	var entries []h.Element
 
 	for _, cm := range state.ContextMessages {
@@ -388,17 +400,28 @@ func renderFullContextEntries(state *AgentState) h.Element {
 			content = content[:500] + "\n..."
 		}
 
+		// Use raw HTML for pre to avoid go-tea pretty-printer adding phantom indentation
+		preHTML := `<pre style="font-size:11px;line-height:1.5;color:#78716c;font-family:var(--font-mono);white-space:pre-wrap;margin:0;padding:0;background:transparent;border:none">` + htmlEscape(content) + `</pre>`
+
 		entries = append(entries,
-			h.Div(a.Attrs(a.Class("py-1.5 border-b border-stone-200/50 last:border-b-0")),
-				h.Div(a.Attrs(a.Class("text-xs font-medium mb-0.5 "+roleColor)),
+			h.Div(a.Attrs(a.Class("py-2 border-b border-stone-200/50 last:border-b-0")),
+				h.Div(a.Attrs(a.Class("text-xs font-medium mb-1 "+roleColor)),
 					h.Text(cm.Role)),
-				h.Pre(a.Attrs(a.Class("text-xs text-stone-500 font-mono whitespace-pre-wrap m-0 bg-transparent border-none p-0 max-h-32 overflow-y-auto")),
-					h.Text(content)),
+				h.UnsafeRaw(preHTML),
 			),
 		)
 	}
 
-	return h.Div(a.Attrs(a.Class("px-3 py-2 max-h-48 overflow-y-auto border-t border-stone-200")),
+	if len(entries) == 0 {
+		entries = append(entries, h.Div(a.Attrs(a.Class("flex items-center justify-center h-full text-stone-400 text-sm")),
+			h.Text("No context yet"),
+		))
+	}
+
+	return h.Div(a.Attrs(
+		a.Id("agent-context"),
+		a.Class("flex-1 overflow-y-auto px-4 py-3 bg-stone-50/50"),
+	),
 		entries...,
 	)
 }
@@ -533,7 +556,7 @@ func renderChatInputArea(state *AgentState) h.Element {
 				h.Button(a.Attrs(
 					a.Class("py-1.5 px-3 text-sm rounded-lg bg-stone-200 text-stone-600 font-medium cursor-pointer transition-all duration-150 hover:bg-stone-300 border-none"),
 					a.OnClick(gt.SendBasicMessageNoArgs("AGENT_RESET")),
-				), h.Text("Restart")),
+				), h.Text("Done")),
 			),
 		)
 		return h.Div(a.Attrs(a.Class("px-3 py-3 border-t border-stone-200 shrink-0")),
@@ -701,6 +724,15 @@ func containsTool(tools []string, name string) bool {
 	return false
 }
 
+// renderChatMarkdown converts markdown text to HTML for chat bubbles
+func renderChatMarkdown(text string) string {
+	var buf bytes.Buffer
+	if err := goldmark.Convert([]byte(text), &buf); err != nil {
+		return htmlEscape(text)
+	}
+	return buf.String()
+}
+
 // chatAnimStyle returns an inline style for staggered animation
 func chatAnimStyle(groupIdx int) string {
 	if groupIdx < 0 {
@@ -767,39 +799,108 @@ func renderAgentWorkspaceHeader(m *Model) h.Element {
 	)
 }
 
-// renderAgentFileExplorer renders the file list panel
-func renderAgentFileExplorer(state *AgentState) h.Element {
-	filenames := make([]string, 0, len(state.Scratchpad))
-	for f := range state.Scratchpad {
+// fileTreeNode represents a node in the file explorer tree
+type fileTreeNode struct {
+	Name     string          // Just the filename or folder name (no path)
+	FullPath string          // Full path for files, folder prefix for directories
+	IsDir    bool
+	Children []*fileTreeNode
+}
+
+// buildFileTree constructs a tree from the flat scratchpad map
+func buildFileTree(scratchpad map[string]string) []*fileTreeNode {
+	root := &fileTreeNode{IsDir: true}
+	dirNodes := map[string]*fileTreeNode{"": root}
+
+	// Ensure parent directories exist
+	getOrCreateDir := func(path string) *fileTreeNode {
+		if node, ok := dirNodes[path]; ok {
+			return node
+		}
+		parts := strings.Split(path, "/")
+		current := root
+		for i, part := range parts {
+			dirPath := strings.Join(parts[:i+1], "/")
+			if existing, ok := dirNodes[dirPath]; ok {
+				current = existing
+				continue
+			}
+			newDir := &fileTreeNode{Name: part, FullPath: dirPath, IsDir: true}
+			current.Children = append(current.Children, newDir)
+			dirNodes[dirPath] = newDir
+			current = newDir
+		}
+		return current
+	}
+
+	// Add all files
+	filenames := make([]string, 0, len(scratchpad))
+	for f := range scratchpad {
 		filenames = append(filenames, f)
 	}
 	sort.Strings(filenames)
 
-	var files []h.Element
-	for _, filename := range filenames {
-		isSelected := state.ViewingFile == filename
-		ext := getFileExt(filename)
-
-		rowClass := "flex items-center gap-2.5 px-4 py-1.5 cursor-pointer transition-colors duration-100 hover:bg-zinc-800/50"
-		textClass := "text-sm text-zinc-400 font-mono"
-		if isSelected {
-			rowClass = "flex items-center gap-2.5 px-4 py-1.5 cursor-pointer bg-zinc-800 border-l-2 border-accent"
-			textClass = "text-sm text-zinc-200 font-mono"
+	for _, path := range filenames {
+		lastSlash := strings.LastIndex(path, "/")
+		if lastSlash < 0 {
+			// Root-level file
+			root.Children = append(root.Children, &fileTreeNode{
+				Name:     path,
+				FullPath: path,
+			})
+		} else {
+			dirPath := path[:lastSlash]
+			parent := getOrCreateDir(dirPath)
+			fileName := path[lastSlash+1:]
+			parent.Children = append(parent.Children, &fileTreeNode{
+				Name:     fileName,
+				FullPath: path,
+			})
 		}
-
-		files = append(files,
-			h.Div(a.Attrs(
-				a.Class(rowClass),
-				a.OnClick(gt.SendBasicMessage("AGENT_VIEW_FILE", filename)),
-			),
-				renderFileIcon(ext),
-				h.Span(a.Attrs(a.Class(textClass)), h.Text(filename)),
-			),
-		)
 	}
 
-	if len(files) == 0 {
-		files = append(files,
+	// Sort children: folders first, then files, alphabetically within each group
+	var sortChildren func(node *fileTreeNode)
+	sortChildren = func(node *fileTreeNode) {
+		sort.Slice(node.Children, func(i, j int) bool {
+			if node.Children[i].IsDir != node.Children[j].IsDir {
+				return node.Children[i].IsDir // dirs first
+			}
+			return node.Children[i].Name < node.Children[j].Name
+		})
+		for _, child := range node.Children {
+			if child.IsDir {
+				sortChildren(child)
+			}
+		}
+	}
+	sortChildren(root)
+
+	return root.Children
+}
+
+// renderAgentFileExplorer renders the file list panel with tree view
+func renderAgentFileExplorer(state *AgentState) h.Element {
+	tree := buildFileTree(state.Scratchpad)
+
+	var items []h.Element
+	var renderNodes func(nodes []*fileTreeNode, depth int)
+	renderNodes = func(nodes []*fileTreeNode, depth int) {
+		for _, node := range nodes {
+			if node.IsDir {
+				items = append(items, renderFolderRow(state, node, depth))
+				if state.ExpandedFolders[node.FullPath] {
+					renderNodes(node.Children, depth+1)
+				}
+			} else {
+				items = append(items, renderFileRow(state, node, depth))
+			}
+		}
+	}
+	renderNodes(tree, 0)
+
+	if len(items) == 0 {
+		items = append(items,
 			h.Div(a.Attrs(a.Class("px-4 py-3 text-zinc-600 text-sm italic")),
 				h.Text("No files yet"),
 			),
@@ -811,9 +912,69 @@ func renderAgentFileExplorer(state *AgentState) h.Element {
 			h.Text(fmt.Sprintf("Explorer \u00B7 %d files", len(state.Scratchpad))),
 		),
 		h.Div(a.Attrs(a.Class("pb-2")),
-			files...,
+			items...,
 		),
 	)
+}
+
+func renderFolderRow(state *AgentState, node *fileTreeNode, depth int) h.Element {
+	isExpanded := state.ExpandedFolders[node.FullPath]
+	chevron := "\u25B8" // right-pointing triangle
+	if isExpanded {
+		chevron = "\u25BE" // down-pointing triangle
+	}
+	indent := 16 * depth
+
+	return h.Div(a.Attrs(
+		a.Class("flex items-center gap-1.5 py-1.5 cursor-pointer transition-colors duration-100 hover:bg-zinc-800/50"),
+		a.Custom("style", fmt.Sprintf("padding-left:%dpx;padding-right:16px", 16+indent)),
+		a.OnClick(gt.SendBasicMessage("AGENT_TOGGLE_FOLDER", node.FullPath)),
+	),
+		h.Span(a.Attrs(a.Class("text-[10px] text-zinc-500 w-3 text-center shrink-0")), h.Text(chevron)),
+		renderFolderIcon(isExpanded),
+		h.Span(a.Attrs(a.Class("text-sm text-zinc-300 font-mono")), h.Text(node.Name)),
+	)
+}
+
+func renderFileRow(state *AgentState, node *fileTreeNode, depth int) h.Element {
+	isSelected := state.ViewingFile == node.FullPath
+	ext := getFileExt(node.Name)
+	indent := 16 * depth
+
+	rowClass := "flex items-center gap-2.5 py-1.5 cursor-pointer transition-colors duration-100 hover:bg-zinc-800/50"
+	textClass := "text-sm text-zinc-400 font-mono"
+	borderStyle := ""
+	if isSelected {
+		rowClass = "flex items-center gap-2.5 py-1.5 cursor-pointer bg-zinc-800 border-l-2 border-accent"
+		textClass = "text-sm text-zinc-200 font-mono"
+		borderStyle = fmt.Sprintf("padding-left:%dpx;padding-right:16px", 14+indent+16) // 14 = 16 - 2px border
+	} else {
+		borderStyle = fmt.Sprintf("padding-left:%dpx;padding-right:16px", 16+indent+16) // extra 16 for chevron space
+	}
+
+	return h.Div(a.Attrs(
+		a.Class(rowClass),
+		a.Custom("style", borderStyle),
+		a.OnClick(gt.SendBasicMessage("AGENT_VIEW_FILE", node.FullPath)),
+	),
+		renderFileIcon(ext),
+		h.Span(a.Attrs(a.Class(textClass)), h.Text(node.Name)),
+	)
+}
+
+// renderFolderIcon returns an SVG folder icon
+func renderFolderIcon(isOpen bool) h.Element {
+	if isOpen {
+		return h.UnsafeRaw(
+			`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0">` +
+				`<path d="M1.5 3A1.5 1.5 0 013 1.5h3.293a1 1 0 01.707.293L8.414 3.207a1 1 0 00.707.293H13A1.5 1.5 0 0114.5 5v1H1.5V3z" fill="#fbbf24" fill-opacity="0.3" stroke="#fbbf24" stroke-width="0.8"/>` +
+				`<path d="M1 6.5h14l-1.5 8H2.5L1 6.5z" fill="#fbbf24" fill-opacity="0.25" stroke="#fbbf24" stroke-width="0.8"/>` +
+				`</svg>`)
+	}
+	return h.UnsafeRaw(
+		`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0">` +
+			`<path d="M1.5 3A1.5 1.5 0 013 1.5h3.293a1 1 0 01.707.293L8.414 3.207a1 1 0 00.707.293H13A1.5 1.5 0 0114.5 5v8a1.5 1.5 0 01-1.5 1.5H3A1.5 1.5 0 011.5 13V3z" fill="#fbbf24" fill-opacity="0.25" stroke="#fbbf24" stroke-width="0.8"/>` +
+			`</svg>`)
 }
 
 // renderAgentFilePreview renders the file content viewer
@@ -863,6 +1024,23 @@ func renderEditorWindow(filename, ext string, contentHTML string) h.Element {
 
 // renderEditorTitleBar renders a macOS-style window title bar
 func renderEditorTitleBar(filename, ext string) h.Element {
+	// Show just the basename in the title, full path if it differs
+	displayName := filename
+	if idx := strings.LastIndex(filename, "/"); idx >= 0 {
+		displayName = filename[idx+1:]
+	}
+
+	titleElems := []h.Element{
+		renderFileIcon(ext),
+		h.Span(a.Attrs(a.Class("text-sm text-zinc-600 font-mono")), h.Text(displayName)),
+	}
+	// Show full path as subdued text if file is in a folder
+	if displayName != filename {
+		titleElems = append(titleElems,
+			h.Span(a.Attrs(a.Class("text-xs text-zinc-400 font-mono ml-1")), h.Text(filename)),
+		)
+	}
+
 	return h.Div(a.Attrs(a.Class("flex items-center px-4 py-2 bg-zinc-200 border-b border-zinc-300 shrink-0")),
 		// Traffic lights
 		h.Div(a.Attrs(a.Class("flex items-center gap-2 mr-4")),
@@ -872,8 +1050,7 @@ func renderEditorTitleBar(filename, ext string) h.Element {
 		),
 		// Filename
 		h.Div(a.Attrs(a.Class("flex items-center gap-2")),
-			renderFileIcon(ext),
-			h.Span(a.Attrs(a.Class("text-sm text-zinc-600 font-mono")), h.Text(filename)),
+			titleElems...,
 		),
 	)
 }

@@ -249,7 +249,7 @@ func ParsePage(path string) (*Page, error) {
 	}
 
 	// Parse markdown with custom extensions
-	result, err := ParseMarkdown(markdown)
+	result, err := ParseMarkdown(markdown, filepath.Dir(path))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse markdown: %w", err)
 	}

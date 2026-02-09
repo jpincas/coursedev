@@ -6,8 +6,6 @@ tags: [summary, takeaways]
 
 # Key Takeaways
 
-Let's summarize what we've learned about context.
-
 ## 1. Everything Is Context
 
 The model only knows what's in the context window. If it's not there, it doesn't exist. Your inputs, files, conversation history, and system prompts — that's everything the model sees.

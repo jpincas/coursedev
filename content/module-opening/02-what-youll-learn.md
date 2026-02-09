@@ -23,23 +23,8 @@ Here's what you'll be able to do by the end of today. Not just "understand AI" i
 ```callout
 type: tip
 title: "Demonstration First"
-content: "Before any theory, we'll show you what's possible. Watch a messy folder of files become an organised summary report — that's what we'll teach you to do today."
+content: "Before any theory, we'll show you what's possible. The next page demonstrates AI turning a messy folder of files into an organised summary report — that's what we'll teach you to do today."
 ```
-
-## The Demo: From Chaos to Report
-
-Imagine a disorganised folder with mixed file types — PDFs, spreadsheets, notes, emails — the kind of chaos that accumulates on real projects.
-
-With one delegation instruction, AI can:
-- Plan and execute the task autonomously
-- Process multiple file types
-- Deliver a polished, finished document
-
-Notice: No step-by-step instructions. Just describing the outcome you want. AI figures out how to get there.
-
-That's not magic. It's not special prompts or secret techniques. It's understanding how these systems work and setting them up to succeed.
-
-**That's learnable. That's what today is about.**
 
 ```quiz
 id: opening-paradigm-shift
@@ -47,15 +32,15 @@ type: multiple-choice
 question: "What is the fundamental shift in AI we're discussing in this training?"
 options:
   - "From chatbots that answer questions to workers that complete tasks"
-  - "From slow AI to fast AI"
-  - "From expensive AI to cheap AI"
-  - "From text AI to image AI"
+  - "From single-turn Q&A to multi-step autonomous execution"
+  - "From text-only interaction to multimodal understanding"
+  - "From human-in-the-loop to fully automated workflows"
 answer: 0
-explanation: "The key shift is from AI as a Q&A assistant to AI as a capable worker that can plan, execute, and deliver complete work products."
+explanation: "The key shift is from AI as a Q&A assistant to AI as a capable worker that can plan, execute, and deliver complete work products. While the other options describe real capabilities, the fundamental paradigm shift is about the change in relationship: from assistant to worker."
 ```
 
 ## What's Next
 
-But first — a demo. On the next page, you'll see exactly what we mean by "AI that does work."
+On the next page, you'll see a live demonstration of AI doing real work — turning chaos into a finished report with one instruction.
 
-Then we'll dive into **how these systems actually work** — the mechanism that makes this possible, when it succeeds, when it struggles, and how to set it up for success.
+After that, we'll dive into **how these systems actually work** — the mechanism that makes this possible, when it succeeds, when it struggles, and how to set it up for success.

@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480"
+     style="max-width: 800px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title { font-size: 22px; font-weight: 600; }
+    .label { font-size: 14px; }
+    .subtitle { font-size: 16px; }
+    .dim { fill: #a1a1aa; }
+    .very-dim { fill: #71717a; }
+    .bright { fill: #fafafa; }
+    .accent { fill: #00d9c0; }
+    .shape-dim { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .shape-accent { fill: #27272a; stroke: #00d9c0; stroke-width: 2; }
+    .connector-dim { stroke: #a1a1aa; stroke-width: 2; fill: none; }
+    .connector-accent { stroke: #00d9c0; stroke-width: 2; fill: none; }
+    .puzzle { fill: #3f3f46; stroke: #71717a; stroke-width: 2; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead-dim" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#a1a1aa" />
+    </marker>
+    <marker id="arrowhead-accent" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00d9c0" />
+    </marker>
+  </defs>
+
+  <!-- Left Panel: Search Engine Mode -->
+  <rect x="40" y="60" width="340" height="380" rx="8" class="shape-dim" />
+  <text x="210" y="95" text-anchor="middle" class="title dim">AI as Search Engine</text>
+
+  <!-- Person (left) -->
+  <circle cx="110" cy="160" r="20" fill="#3f3f46" stroke="#a1a1aa" stroke-width="2" />
+  <line x1="110" y1="180" x2="110" y2="220" class="connector-dim" />
+
+  <!-- AI box (left) -->
+  <rect x="260" y="140" width="80" height="80" rx="6" fill="#3f3f46" stroke="#a1a1aa" stroke-width="2" />
+  <text x="300" y="190" text-anchor="middle" class="label dim">AI</text>
+
+  <!-- Multiple arrows back and forth -->
+  <line x1="135" y1="155" x2="245" y2="150" class="connector-dim" marker-end="url(#arrowhead-dim)" />
+  <text x="180" y="145" text-anchor="middle" class="label very-dim">ask</text>
+
+  <line x1="245" y1="170" x2="135" y2="175" class="connector-dim" marker-end="url(#arrowhead-dim)" />
+  <text x="180" y="185" text-anchor="middle" class="label very-dim">answer</text>
+
+  <line x1="135" y1="195" x2="245" y2="200" class="connector-dim" marker-end="url(#arrowhead-dim)" />
+  <text x="180" y="205" text-anchor="middle" class="label very-dim">ask</text>
+
+  <line x1="245" y1="210" x2="135" y2="205" class="connector-dim" marker-end="url(#arrowhead-dim)" />
+  <text x="180" y="225" text-anchor="middle" class="label very-dim">answer</text>
+
+  <!-- Puzzle pieces area -->
+  <text x="210" y="265" text-anchor="middle" class="subtitle very-dim">you assemble</text>
+  <rect x="80" y="280" width="260" height="130" rx="6" fill="#18181b" stroke="#52525b" stroke-width="1" />
+
+  <!-- Scattered puzzle pieces -->
+  <rect x="100" y="300" width="50" height="40" class="puzzle" transform="rotate(5 125 320)" />
+  <rect x="170" y="305" width="50" height="40" class="puzzle" transform="rotate(-8 195 325)" />
+  <rect x="240" y="295" width="50" height="40" class="puzzle" transform="rotate(12 265 315)" />
+  <rect x="130" y="355" width="50" height="40" class="puzzle" transform="rotate(-5 155 375)" />
+  <rect x="210" y="350" width="50" height="40" class="puzzle" transform="rotate(8 235 370)" />
+
+  <!-- Right Panel: Worker Mode -->
+  <rect x="420" y="60" width="340" height="380" rx="8" class="shape-accent" />
+  <text x="590" y="95" text-anchor="middle" class="title bright">AI as Worker</text>
+
+  <!-- Person (right) -->
+  <circle cx="490" cy="160" r="20" fill="#3f3f46" stroke="#fafafa" stroke-width="2" />
+  <line x1="490" y1="180" x2="490" y2="220" stroke="#fafafa" stroke-width="2" />
+
+  <!-- AI box (right) with gears -->
+  <rect x="640" y="140" width="80" height="80" rx="6" fill="#3f3f46" stroke="#00d9c0" stroke-width="2" />
+  <text x="680" y="175" text-anchor="middle" class="label accent">AI</text>
+  <circle cx="665" cy="195" r="10" fill="none" stroke="#00d9c0" stroke-width="1" />
+  <circle cx="695" cy="195" r="10" fill="none" stroke="#00d9c0" stroke-width="1" />
+
+  <!-- Single arrow TO AI -->
+  <line x1="520" y1="165" x2="630" y2="170" class="connector-accent" marker-end="url(#arrowhead-accent)" />
+  <text x="570" y="155" text-anchor="middle" class="label accent">delegate</text>
+
+  <!-- Single arrow FROM AI -->
+  <line x1="630" y1="195" x2="520" y2="190" class="connector-accent" marker-end="url(#arrowhead-accent)" />
+  <text x="570" y="210" text-anchor="middle" class="label accent">finished work</text>
+
+  <!-- Completed document -->
+  <text x="600" y="275" text-anchor="middle" class="subtitle accent">complete work</text>
+  <rect x="520" y="290" width="160" height="120" rx="6" fill="#18181b" stroke="#00d9c0" stroke-width="2" />
+
+  <!-- Document lines -->
+  <line x1="540" y1="310" x2="660" y2="310" class="connector-accent" />
+  <line x1="540" y1="330" x2="660" y2="330" class="connector-accent" />
+  <line x1="540" y1="350" x2="660" y2="350" class="connector-accent" />
+  <line x1="540" y1="370" x2="630" y2="370" class="connector-accent" />
+</svg>

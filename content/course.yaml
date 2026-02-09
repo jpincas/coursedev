@@ -6,6 +6,8 @@ modules:
   - module-context
   - module-prompting
   - module-files
+  - module-writing
   - module-delegation
+  - module-risks
   - module-advanced
   - module-synthesis
