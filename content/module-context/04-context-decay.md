@@ -66,21 +66,41 @@ title: "Scope Each Conversation"
 content: "Treat conversations like work sessions. One project or feature per conversation. Use external state files (progress notes, test results, git logs) rather than relying purely on conversation memory."
 ```
 
-## Tools for Managing Conversations
+## Compaction: What Actually Happens
+
+When context gets too long, the system can **compact** the conversation -- replacing the full history with a condensed summary.
+
+Here is what happens mechanically:
+
+1. The system takes your entire conversation history (potentially hundreds of messages)
+2. It generates a summary capturing the key decisions, context, and current state
+3. The full history is replaced with this summary as a single message at the top
+4. Your persistent instructions (CLAUDE.md, project knowledge) are preserved -- they reload fresh
+5. The conversation continues with clean context but essential knowledge retained
+
+The effect: you get the benefits of a fresh start (clean attention, no contradictions) while keeping the critical context from your previous work.
+
+```callout
+type: info
+title: "Automatic vs Manual Compaction"
+content: "Claude Cowork auto-compacts when conversations get long -- you may never notice it happening. Claude Code gives you manual control with the /compact command, where you can specify what to preserve. Both achieve the same thing: fresh context with key information retained."
+```
+
+## Conversation Management Tools
 
 Claude Code offers specific conversation management commands:
 
-**`/clear`** — Start completely fresh
+**`/clear`** -- Start completely fresh
 - Clears conversation history
 - Reloads CLAUDE.md (your persistent instructions remain)
 - Use when switching to unrelated work
 
-**`/compact`** — Summarise and continue
+**`/compact`** -- Summarise and continue
 - Compresses conversation history into a summary
 - You specify what to keep focus on
 - Use when context is cluttered but you need continuity
 
-**`/rewind`** — Selectively roll back
+**`/rewind`** -- Selectively roll back
 - Remove recent messages
 - Restore to an earlier state
 - Use when the conversation went off-track
@@ -193,12 +213,11 @@ script:
 ```quiz
 id: context-decay-solution
 type: multiple-choice
-question: "What's the recommended approach when you notice AI output quality degrading in a long conversation?"
+question: "After 30 messages, AI starts contradicting its earlier analysis. You still need continuity for this task. What is the best approach?"
 options:
-  - "Add more detailed instructions to fix it"
-  - "Start a fresh conversation for your next task"
-  - "Ask the AI to remember your earlier instructions"
-  - "Use shorter messages to save context space"
+  - "Repeat your original instructions in a new message to override the contradictions"
+  - "Compact the conversation to preserve key context while clearing the accumulated noise"
+  - "Start a completely fresh conversation and re-provide all the necessary context"
 answer: 1
-explanation: "Context decay is natural and hard to fight. The most effective solution is to start fresh conversations for new tasks, giving you clean context and full attention on current instructions."
+explanation: "When you need continuity but context has decayed, compaction is the best tool. It preserves the essential context while clearing contradictions and noise. Starting fresh loses valuable context. Repeating instructions adds to the clutter without removing the contradictions."
 ```

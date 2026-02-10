@@ -48,14 +48,13 @@ content: "When output is bad, always ask: What was the context? What did the mod
 ```quiz
 id: context-takeaway
 type: multiple-choice
-question: "What should be your first diagnostic question when AI output is poor?"
+question: "AI produces a generic, surface-level analysis of your company's data. You used a good prompt framework. What is the most productive next step?"
 options:
-  - "Is the model smart enough for this task?"
-  - "Should I use a different AI model?"
-  - "What was the context the model was working with?"
-  - "Did I ask politely enough?"
-answer: 2
-explanation: "When output is poor, the first question should always be about context. What did the model see? What was missing? What might have been contradictory? Context problems explain most quality issues."
+  - "Rewrite the prompt with more specific instructions about depth and detail"
+  - "Provide grounding context: your company's strategy document, past analyses, and relevant industry data"
+  - "Switch to a more capable AI model that can produce deeper analysis"
+answer: 1
+explanation: "A good prompt with poor context produces generic output. The model has no company-specific knowledge to draw on. Providing grounding materials -- strategy documents, past analyses, industry data -- gives it the specific context needed for substantive, tailored analysis. Better prompts cannot compensate for missing context."
 ```
 
 ## Up Next

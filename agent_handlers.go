@@ -47,6 +47,12 @@ func (m *Model) handleAgentAdvance(msg gt.Message, s gt.State) gt.Response {
 		agent.CurrentNote = ""
 		processClear(agent, event)
 		agent.ScriptIndex++
+
+	case "tool_call", "tool_result", "assistant":
+		// Resume processing mid-group events (e.g. after a note that
+		// splits an event group). processEventGroup handles these types.
+		agent.CurrentNote = ""
+		agent.ScriptIndex = processEventGroup(agent, agent.ScriptIndex)
 	}
 
 	broadcastAgentIfPresenting(mdl)

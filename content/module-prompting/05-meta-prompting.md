@@ -68,6 +68,40 @@ AI is capable of figuring out the process. That's its job. Your job is defining 
 
 This is the shift from prompting to delegation.
 
+## Interactive Speccing
+
+Meta-prompting taken to its logical conclusion for complex deliverables is **interactive speccing** -- using AI to help you spec out a project or document through iterative conversation before executing.
+
+**The pattern:**
+
+1. Describe what you want at a high level: "I need a training curriculum for new managers"
+2. AI asks clarifying questions about scope, audience, constraints
+3. You answer, adding detail and refining
+4. AI proposes a structured spec or outline based on your answers
+5. You review and adjust the spec: "Move section 3 before section 2, add a module on difficult conversations"
+6. Once the spec is agreed, you ask AI to execute against it
+
+**Why this works:** For complex deliverables, jumping straight to execution produces mediocre results because requirements were underspecified. Interactive speccing forces you to think through the requirements before any work happens. AI's questions surface aspects you would not have considered.
+
+**Example flow:**
+```
+You: I need a 30-page client proposal for a digital transformation project.
+AI: What industry? What's the client's current state? Budget range? Timeline?
+You: Financial services, legacy systems, ~$2M, 18 months.
+AI: Here's a proposed structure: [10 sections with descriptions]
+You: Good, but add a section on regulatory compliance and remove the generic 'about us.'
+AI: Updated structure: [revised]. Shall I draft the full proposal against this spec?
+You: Yes, go ahead.
+```
+
+The spec becomes a contract between you and the AI. The result is dramatically better than a single monolithic prompt.
+
+```callout
+type: tip
+title: "When to Spec vs When to Just Ask"
+content: "Use interactive speccing for anything that would take more than a page: proposals, reports, curricula, project plans. For quick tasks (emails, summaries, short analyses), just ask directly -- speccing would be overkill."
+```
+
 ## Meta-Prompting Live
 
 Instead of just describing meta-prompting, watch it happen. The user doesn't know exactly what they need — so they ask the AI to help figure it out.
@@ -119,12 +153,23 @@ script:
 ```quiz
 id: meta-prompting-purpose
 type: multiple-choice
-question: "What's the main benefit of meta-prompting?"
+question: "When is meta-prompting most valuable?"
 options:
-  - "It makes the AI faster"
-  - "It helps you discover what information the AI needs"
-  - "It reduces the cost of API calls"
-  - "It makes prompts shorter"
+  - "When you know exactly what you want but cannot articulate it concisely"
+  - "When you have a vague goal and are unsure what specificity the AI needs to produce good output"
+  - "When you need to produce multiple variations of the same document"
 answer: 1
-explanation: "Meta-prompting helps you discover what information and specificity the AI needs to produce good output. The AI's questions reveal gaps in your initial request, and your answers build a more complete prompt."
+explanation: "Meta-prompting is most valuable when you are unsure about scope or requirements. The AI's clarifying questions surface what information and specificity is needed, turning a vague goal into a precise specification. If you already know exactly what you want, just ask directly."
+```
+
+```quiz
+id: interactive-speccing-when
+type: multiple-choice
+question: "You need to create a 20-page annual report for your company. What approach will produce the best result?"
+options:
+  - "Write a detailed single prompt specifying every section, format, and data point"
+  - "Ask AI to draft it, then iterate through 5-6 rounds of feedback"
+  - "Spec it out interactively first -- agree on structure and requirements, then execute against the agreed spec"
+answer: 2
+explanation: "For complex deliverables, interactive speccing produces better results than either a monolithic prompt (which inevitably misses requirements) or pure iteration (which lacks a clear target). The spec becomes a contract that ensures both you and the AI are aligned on what 'done' looks like before any work begins."
 ```

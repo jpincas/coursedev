@@ -166,12 +166,11 @@ script:
 ```quiz
 id: framework-elements
 type: multiple-choice
-question: "Which element of the framework tells the AI what expertise to bring?"
+question: "Your prompt says 'Analyse this data' and you attach a CSV. AI gives a superficial overview. What is the most impactful element to add?"
 options:
-  - "Task"
-  - "Context"
-  - "Role"
-  - "Constraints"
-answer: 2
-explanation: "The Role element defines who the AI should be and what expertise it should apply. 'You are a senior financial analyst' or 'Act as a technical writer' sets the frame for how the AI approaches the task."
+  - "Role: 'You are a senior data analyst' so it brings deeper analytical expertise"
+  - "Format: 'Present as a table with trend arrows' so the output is more structured"
+  - "Constraints: 'Maximum 500 words' so it focuses on what matters"
+answer: 0
+explanation: "Setting a role changes the depth and approach of analysis. A 'senior data analyst' brings expertise-level pattern recognition and identifies insights that a generic assistant misses. Format and constraints improve presentation but do not change analytical depth."
 ```

@@ -1,5 +1,25 @@
 # Claude.md
 
+This project has two distinct concerns. Read the right section for what you're doing:
+
+1. **[Application Code](#part-1-application-code)** — The Go/Gotea platform that powers the training app (rendering, state, handlers, parsing, styling, build pipeline)
+2. **[Course Content](#part-2-course-content)** — The markdown-based training material in `content/` (modules, pages, quizzes, diagrams, agent demos)
+
+Each work cycle should go like this:
+
+1. Check that there are no uncommitted changes
+2. Complete work
+3. Restart the server with ./restart.sh
+4. Go through any iterations with user, always remembering to ./restart.sh after any changes are made to either code or content
+5. Confirm finalisation of block of work with user
+6. Commit
+
+---
+
+# Part 1: Application Code
+
+Everything below this line is about the **Go application, Gotea framework, rendering, parsing, styling, and build pipeline**. If you're editing `.go` files, `css/`, `js/`, or working on features/bugs in the platform, this is the relevant section.
+
 ## Project Overview
 
 This is a server-side rendered training/learning application built in Go using the **Gotea (go-tea)** framework. Training content is authored as markdown files with custom fenced code blocks for interactive elements (quizzes, diagrams, annotated images, etc.). The server parses all content at startup, manages learner state, and renders HTML over WebSocket using the TEA (The Elm Architecture) pattern.
@@ -54,7 +74,7 @@ The key architectural decision: **Goldmark does not render interactive blocks to
 - **Shared (read-only at runtime):** `CourseGraph`, `Modules` map, parsed `Page` data. Loaded once at startup, referenced by all sessions.
 - **Per-session (mutable):** `CurrentModule`, `CurrentPage`, `Progress`, `ActiveQuiz`, `Preferences`. Each WebSocket connection gets its own `Model` instance via `Init()`.
 
-## Key Directories
+## Key Directories (Application Code)
 
 ```
 main.go                    — Entry point, content loading, server start
@@ -68,7 +88,6 @@ parsing/                   — Goldmark extensions and content parsing
   parser.go                — Directory walker, orchestrates parsing
   frontmatter.go           — YAML frontmatter extraction
   goldmark_extensions.go   — Custom fenced block extensions
-content/                   — Markdown training content (THE source of truth)
 css/main.css               — Tailwind v4 source CSS (theme, plugins, minimal overrides) — NOT the output
 static/                    — Built output and vendored assets (do NOT edit files here directly)
   css/main.css             — Built Tailwind output
@@ -114,14 +133,7 @@ All styling uses **Tailwind utility classes applied directly in Go render code**
 - **Custom utilities:** `font-small`, `font-medium`, `font-large` and `animate-pulse-soft` are defined as `@utility` in the CSS source.
 - **No semantic CSS classes.** All styling is Tailwind utilities in Go code. If you need a new style, use Tailwind classes. Only add to `css/main.css` if Tailwind genuinely cannot express it.
 
-### Content Authoring
-
-- Custom blocks are YAML inside fenced code blocks (e.g., ` ```quiz `).
-- Every quiz block must have a unique `id` field.
-- Block IDs should be kebab-case and scoped to their module: `tcp-handshake-q1`.
-- Frontmatter is optional on pages, required in `_module.yaml`.
-
-## Common Tasks
+## Common Tasks (Application Code)
 
 ### Adding a New Block Type
 
@@ -138,10 +150,6 @@ All styling uses **Tailwind utility classes applied directly in Go render code**
 2. Register it in `Update()` in `model.go`.
 3. Trigger it from a render function using `gt.SendBasicMessage("MESSAGE_NAME", args)`.
 4. Test with `tester.NewSession` — dispatch the message and assert state changes.
-
-### Modifying the Course Structure
-
-Course structure is driven entirely by the `content/` directory and `_module.yaml` files. To add a module, create a new directory with a `_module.yaml` and markdown files. To change prerequisites, edit the `prerequisites` field in `_module.yaml`. The course graph is rebuilt at startup.
 
 ## Development
 
@@ -195,6 +203,68 @@ Use `tester.NewSession(t, &Model{})` for integration tests that exercise the ful
 - **Quiz answer payloads:** Quiz answers include both `blockIndex` (position on the page) and `answer` (chosen option index). Both are needed because multiple quizzes can appear on one page.
 - **Component namespacing:** If the same block type appears twice on a page with interactive elements, their messages will collide unless you use `gt.ComponentID`. Each block instance should get a unique component ID derived from its block ID.
 
+## Reference (Application Code)
+
+- **Gotea docs:** Use the `/gotea` skill for the complete API reference, architecture guidance, and code review. It loads the full Gotea documentation automatically.
+- **Goldmark:** https://github.com/yuin/goldmark
+- **KaTeX:** https://katex.org/
+
+---
+
+# Part 2: Course Content
+
+Everything below this line is about **authoring and editing the training course content** — the markdown files, module structure, quizzes, diagrams, and agent demos that live under `content/`. If you're working on lesson text, adding quizzes, creating diagrams, or restructuring modules, this is the relevant section.
+
+## Module Map
+
+The course has 10 modules delivered in order. **When the user refers to a module by number, use this map.** The directory name is the key used in code and file paths.
+
+| # | Directory | Title |
+|---|-----------|-------|
+| 1 | `module-opening` | Opening: The February 2026 Moment |
+| 2 | `module-llms` | How LLMs Actually Work |
+| 3 | `module-context` | Context — The Most Important Concept |
+| 4 | `module-prompting` | The Art of Prompting |
+| 5 | `module-files` | Files — The Unit of Work |
+| 6 | `module-writing` | Document Creation and Data Analysis |
+| 7 | `module-advanced` | Advanced Patterns |
+| 8 | `module-delegation` | Delegation & The AI-First Philosophy |
+| 9 | `module-risks` | Risks, Responsibility, and Realistic Expectations |
+| 10 | `module-synthesis` | Putting It Together |
+
+The module order is defined in `content/course.yaml`. Prerequisites follow the same linear sequence.
+
+## Content Directory Structure
+
+```
+content/
+  course.yaml              — Module order and course metadata
+  module-opening/          — Module 1
+    _module.yaml           — Module metadata (title, prerequisites)
+    01-welcome.md          — Pages numbered sequentially
+    02-what-youll-learn.md
+    03-demo.md
+    images/                — Module-specific images and diagrams
+  module-llms/             — Module 2
+    _module.yaml
+    01-prediction-engines.md
+    ...
+  (same pattern for all modules)
+```
+
+Pages within a module are ordered by their numeric filename prefix (01-, 02-, etc.).
+
+## Content Authoring Conventions
+
+- Custom blocks are YAML inside fenced code blocks (e.g., ` ```quiz `).
+- Every quiz block must have a unique `id` field.
+- Block IDs should be kebab-case and scoped to their module: `tcp-handshake-q1`.
+- Frontmatter is optional on pages, required in `_module.yaml`.
+
+## Modifying the Course Structure
+
+Course structure is driven entirely by the `content/` directory and `_module.yaml` files. To add a module, create a new directory with a `_module.yaml` and markdown files. To change prerequisites, edit the `prerequisites` field in `_module.yaml`. The course graph is rebuilt at startup.
+
 ## Subagents for Content Authoring
 
 Two subagent instruction files live in `.claude/agents/`. These are NOT skills — they are launched as independent agents via the Task tool.
@@ -223,10 +293,7 @@ course-director (subagent)
         └── /image-generator (skill, for infographic-style visuals — conceptual graphics, process visuals)
 ```
 
-## Reference
+## Reference (Course Content)
 
-- **Gotea docs:** Use the `/gotea` skill for the complete API reference, architecture guidance, and code review. It loads the full Gotea documentation automatically.
 - **Course materials reference:** I've placed the materials for the course I wish to implement in the folder `ai-course`
 - **Plan:** See `plan.md` for the full architecture plan, phasing, and design decisions.
-- **Goldmark:** https://github.com/yuin/goldmark
-- **KaTeX:** https://katex.org/

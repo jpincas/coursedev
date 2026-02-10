@@ -1,5 +1,21 @@
-flowchart LR
-    A[Pre-training] --> B[Fine-tuning] --> C[RLHF]
-    A1["Trillions of words"] --> A
-    B1["Specific tasks"] --> B
-    C1["Human feedback"] --> C
+flowchart TD
+    subgraph P1["Phase 1: Pre-training"]
+        A1["Ingests trillions of words<br/>from internet, books, code"]
+        A2["Learns patterns of language<br/>and what text about topics looks like"]
+    end
+
+    subgraph P2["Phase 2: Fine-tuning"]
+        B1["Trained on instruction-following<br/>question-answer pairs"]
+        B2["Learns to be helpful<br/>rather than just completing text"]
+    end
+
+    subgraph P3["Phase 3: RLHF"]
+        C1["Humans rate responses<br/>for helpfulness and accuracy"]
+        C2["Learns what 'good' responses<br/>look like to humans"]
+    end
+
+    P1 --> P2 --> P3
+
+    style P1 fill:#1c1c20,stroke:#00d9c0,color:#fafafa
+    style P2 fill:#1c1c20,stroke:#00d9c0,color:#fafafa
+    style P3 fill:#1c1c20,stroke:#00d9c0,color:#fafafa

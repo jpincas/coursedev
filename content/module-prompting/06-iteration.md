@@ -118,6 +118,47 @@ Watch the iteration pattern improve a real proposal through three rounds of spec
 path: /content/module-prompting/agent-iteration-demo.yaml
 ```
 
+## Two Power Moves for Iteration
+
+Beyond specific feedback, two techniques consistently improve iteration results.
+
+### "What Do You Think?"
+
+End your prompts or follow-ups with **"What do you think?"** or **"Does this look right to you?"**
+
+This triggers the AI to critically evaluate its own work. Instead of just delivering output, it reviews what it produced and flags potential issues -- gaps it noticed, assumptions it made, areas where it is less confident.
+
+```callout
+type: tip
+title: "Practical Example"
+content: "Instead of: 'Write a project proposal for the new feature.' Try: 'Write a project proposal for the new feature. Then tell me -- what do you think? What's missing or weak?' The AI will often catch issues that would otherwise require your review to find."
+```
+
+This works because models are better at evaluating text than generating it from scratch. Asking for self-evaluation leverages this asymmetry.
+
+### "Make It Promise"
+
+When AI keeps ignoring a specific instruction -- it uses bullet points when you asked for paragraphs, or it keeps being formal when you asked for casual -- **make it explicitly acknowledge the constraint before proceeding.**
+
+**The technique:**
+```
+Before you write the next version, confirm that you understand
+these rules:
+1. No bullet points -- paragraphs only
+2. Casual tone, as if writing to a friend
+3. Under 200 words
+
+What are the rules you will follow?
+```
+
+Getting the AI to restate the constraint in its own words dramatically improves compliance. It is the equivalent of asking a colleague "Can you repeat back what I just asked for?" -- it forces attention to the specific instruction.
+
+```callout
+type: tip
+title: "When to Use This"
+content: "Reserve 'Make It Promise' for persistent issues where the AI keeps ignoring a specific instruction despite clear feedback. For most tasks, specific feedback is enough. This is the escalation technique."
+```
+
 ## When to Stop Iterating
 
 Stop when:
@@ -160,12 +201,11 @@ This division of labour is where AI productivity comes from.
 ```quiz
 id: iteration-feedback
 type: multiple-choice
-question: "What makes feedback most effective in the iteration pattern?"
+question: "You reviewed AI's first draft and it needs improvement. Which feedback will produce the best second draft?"
 options:
-  - "Using technical terminology to sound professional"
-  - "Being polite and encouraging to the AI"
-  - "Providing specific, targeted corrections referencing exact parts"
-  - "Asking the AI what it thinks needs improvement"
-answer: 2
-explanation: "Specific, targeted feedback that references exact parts of the output is most effective. Generic feedback like 'make this better' forces the AI to guess. Precise corrections like 'paragraph 2 is too technical — simplify it' give clear direction."
+  - "'The tone needs work' -- giving the AI freedom to interpret what you mean"
+  - "'Paragraph 3 uses jargon our clients won't understand. Replace technical terms with plain language and add a concrete example after the first sentence.'"
+  - "'Make it better and more professional' -- keeping the feedback broad so the AI can improve everything"
+answer: 1
+explanation: "Surgical precision beats broad direction. Referencing exact paragraphs, quoting specific text, and providing concrete instructions gives the AI exactly what to change. Vague feedback forces guessing, which often makes some things better and others worse."
 ```

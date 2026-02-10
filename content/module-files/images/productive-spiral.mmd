@@ -1,0 +1,13 @@
+flowchart LR
+    A["<b>Input Files</b><br/>Source data, documents,<br/>reference materials"]
+    B["<b>AI Processing</b><br/>Analysis, synthesis,<br/>document creation"]
+    C["<b>Output Files</b><br/>Reports, summaries,<br/>deliverables"]
+    D["<b>Next Round</b><br/>Outputs become inputs<br/>for the next task"]
+
+    A --> B --> C --> D
+    D -.->|"Quality compounds<br/>with each cycle"| A
+
+    style A fill:#27272a,stroke:#00d9c0,color:#fafafa
+    style B fill:#00d9c0,stroke:#00d9c0,color:#18181b
+    style C fill:#27272a,stroke:#00d9c0,color:#fafafa
+    style D fill:#27272a,stroke:#3f3f46,color:#fafafa

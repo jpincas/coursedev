@@ -289,6 +289,8 @@ func displayToolName(name string) string {
 		return "create_folder"
 	case "delete_file":
 		return "delete_file"
+	case "run_code":
+		return "run_code"
 	case "web_search":
 		return "web_search"
 	case "fetch_url":
@@ -319,6 +321,9 @@ func toolCallIcon(toolName string) string {
 	case "delete_file":
 		// Trash/X
 		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M5.5 2h5M2 4h12M4 4l1 10h6l1-10M6.5 7v4M9.5 7v4" stroke="#fbbf24" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+	case "run_code":
+		// Terminal with prompt
+		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="12" rx="1.5" stroke="#fbbf24" stroke-width="1.2"/><path d="M4 6l3 2-3 2" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 10h3" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round"/></svg>`
 	default:
 		// Wrench (existing)
 		return `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M14.25 6.14L13.07 5l.41-1.66a.38.38 0 00-.11-.36.37.37 0 00-.36-.1L11.35 3.3 10.2 2.11a.37.37 0 00-.53 0L8.54 3.24 7.47 2.87a.38.38 0 00-.42.09L1.17 8.84a.38.38 0 000 .53l2.12 2.12-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 2.12 2.12a.38.38 0 00.53 0l5.88-5.88a.38.38 0 00.09-.42l-.37-1.07 1.13-1.13a.37.37 0 000-.53z" fill="#fbbf24"/></svg>`
@@ -346,6 +351,9 @@ func toolResultIcon(toolName string) string {
 	case "delete_file":
 		// Trash (muted)
 		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M5.5 2h5M2 4h12M4 4l1 10h6l1-10M6.5 7v4M9.5 7v4" stroke="#d6d3d1" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+	case "run_code":
+		// Terminal (muted)
+		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="12" rx="1.5" stroke="#d6d3d1" stroke-width="1.2"/><path d="M4 6l3 2-3 2" stroke="#d6d3d1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 10h3" stroke="#d6d3d1" stroke-width="1.5" stroke-linecap="round"/></svg>`
 	default:
 		// File (existing)
 		return `<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M14 4.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1h6.5L14 4.5z" fill="#d6d3d1" fill-opacity="0.3" stroke="#d6d3d1" stroke-width="1"/><path d="M9.5 1v4H14" stroke="#d6d3d1" stroke-width="1" fill="none"/></svg>`

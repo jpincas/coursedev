@@ -224,12 +224,11 @@ script:
 ```quiz
 id: three-questions-test
 type: multiple-choice
-question: "Which question helps you define success criteria for an AI task?"
+question: "You ask AI to 'help with the quarterly presentation.' It produces something mediocre. Which of the Three Questions did you most likely skip?"
 options:
-  - "What context does it need?"
-  - "What are the boundaries?"
-  - "What does 'done' look like?"
-  - "What role should AI play?"
-answer: 2
-explanation: "The question 'What does done look like?' forces you to define the end state clearly. If you can describe what correct completion looks like, you've defined success criteria."
+  - "'What does done look like?' -- you did not specify the deliverable, audience, or format"
+  - "'What context does it need?' -- you did not provide the Q4 data, slides template, or brand guide"
+  - "'What are the boundaries?' -- you did not set constraints on length, tone, or topics to cover"
+answer: 0
+explanation: "'Help with' is not a defined outcome. Without knowing what 'done' looks like -- 10 slides? Executive summary? Talking points? -- the AI cannot produce the right deliverable. The other questions matter too, but 'done' is the foundation that makes context and boundaries meaningful."
 ```

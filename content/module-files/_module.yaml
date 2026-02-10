@@ -3,7 +3,7 @@ description: "From chat messages to deliverables. The paradigm shift to file-bas
 prerequisites:
   - module-prompting
 difficulty: intermediate
-estimated_duration: "60m"
+estimated_duration: "75m"
 completion:
   require_all_pages: true
   require_quizzes: true

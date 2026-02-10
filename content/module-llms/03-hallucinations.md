@@ -83,6 +83,16 @@ You can reduce (but not eliminate) hallucinations:
 
 **Provide grounding context:** Upload source documents, provide specific data. Don't rely purely on the model's training data.
 
+**Deep research changes the picture entirely.** When models have access to web search and can verify claims against current sources, accuracy improves dramatically. GPT-4o achieved **90% accuracy** on factual queries when it could search for verification. Claude with web search, Perplexity, and Google's AI Overviews all use this approach — grounding predictions in retrieved facts rather than relying purely on training data.
+
+This is the key practical insight: **factual accuracy is the weak point of pure LLMs, but grounding through research is the solution.** When you need accurate facts, start with a research phase using web search. When you need to work with specific data, provide the source documents. The combination of prediction capability plus grounding context transforms reliability.
+
+```callout
+type: tip
+title: "The Research-First Pattern"
+content: "For any task where factual accuracy matters, start with research. Use AI with web search to build a grounded context, then proceed with the actual task. This single habit eliminates most hallucination risk in professional work."
+```
+
 These techniques help, but never eliminate the risk. Verification remains essential for anything consequential.
 
 ```agent
@@ -205,15 +215,19 @@ script:
     text: "Key lesson: The AI sounded equally confident when citing the fake study and the real ones. You can't tell from tone alone. Always verify against source documents for anything consequential."
 ```
 
+## The Bottom Line
+
+Factual accuracy is where LLMs are weakest. But this weakness has a powerful remedy: grounding through research and source documents transforms reliability. The professionals who get the best results are not the ones who trust AI blindly or avoid it entirely. They are the ones who provide grounding context and verify what matters.
+
 ```quiz
 id: llms-hallucinations
 type: multiple-choice
-question: "Why do LLMs sometimes generate false but plausible-sounding information?"
+question: "An AI confidently cites a study you have not heard of. What should you conclude?"
 options:
-  - "Because they're programmed to lie"
-  - "Because they optimize for plausibility, not truth"
-  - "Because they only have access to false information"
-  - "Because they run out of memory"
+  - "The citation is likely accurate because the AI was trained on academic papers"
+  - "You cannot tell from confidence alone — verify the citation against source documents"
+  - "The citation is probably hallucinated because AI struggles with academic references"
 answer: 1
-explanation: "LLMs optimize for what sounds plausible based on training patterns, not for what is factually true. They can't verify their own claims against external reality."
+explanation: "AI sounds equally confident whether a citation is real or fabricated. Confidence is not a signal of accuracy. The only reliable approach is to verify claims against source documents, especially for anything consequential."
 ```
+

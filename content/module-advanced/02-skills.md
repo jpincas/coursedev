@@ -14,8 +14,15 @@ A skill bundles together everything needed to do a task your way:
 - Instructions (how to do it)
 - Templates (what format to use)
 - Examples (what good output looks like)
+- Code (scripts that fetch data, call APIs, or automate preparation)
 
 When you ask AI to do something, it looks at your available skills. If there's a relevant one, it follows those procedures automatically.
+
+```callout
+type: info
+title: "A Note on Naming"
+content: "\"Skills\" is currently Claude's name for this concept — a structured folder of instructions and resources that the AI loads on demand. But the underlying pattern is universal. Every major AI platform is converging on similar ideas: reusable, user-defined procedures that customise AI behaviour for specific tasks. Whatever your tool calls them, the principles in this section apply."
+```
 
 ## Skill Structure
 
@@ -24,17 +31,19 @@ A typical skills folder might look like:
 ```
 Skills/
 ├── weekly-report/
-│   ├── instructions.md
-│   └── template.docx
+│   ├── SKILL.md
+│   ├── example-report.md
+│   └── fetch_metrics.py
 ├── expense-summary/
-│   ├── instructions.md
-│   └── format.xlsx
+│   ├── SKILL.md
+│   └── format-template.xlsx
 └── client-proposal/
-    ├── instructions.md
-    └── template.pptx
+    ├── SKILL.md
+    ├── template.pptx
+    └── lookup_client.py
 ```
 
-Each skill is a folder containing its instructions and supporting files.
+Each skill is a folder containing its instructions (`SKILL.md`), reference material, and optionally **code** — small scripts that connect to APIs, fetch data, or automate preparation steps. The AI reads the instructions and uses the supporting files to execute the task.
 
 ## Anatomy of a Skill
 
@@ -54,6 +63,20 @@ A skill's instructions typically include:
 
 **Output** — What exactly should be delivered?
 "1-page Word document following the template."
+
+## Skills Can Include Code
+
+Skills aren't limited to instructions and templates. You can include scripts that extend what the AI can do:
+
+**API connections** — A Python script that pulls metrics from your internal dashboard, so the AI has fresh data to work with.
+
+**Data processing** — A script that cleans and formats a CSV export before the AI analyses it.
+
+**Image generation** — Code that calls an image API to create charts or graphics as part of a reporting workflow.
+
+**System integration** — Scripts that post results to Slack, update a spreadsheet, or trigger a deployment.
+
+The AI reads the code, understands what it does, and can run it as part of executing the skill. You don't need to be a developer — describe what you need and let the AI write the code for you.
 
 ## Why Skills Matter
 
@@ -117,7 +140,9 @@ content: "Your first custom tool might save 10 minutes per week. Your tenth migh
 
 ## Creating a Skill
 
-Watch the process of turning a repeating task into a reusable skill. This is the meta-tooling pattern: using AI to create the tool you'll use repeatedly.
+You don't need to build skills by hand. Describe what you need and let AI create the entire skill for you — folder structure, instructions, reference material, even the code.
+
+Watch the process of turning a repeating task into a complete, reusable skill folder.
 
 ```agent
 id: skill-creation-demo
@@ -127,6 +152,7 @@ model_label: "Claude"
 system: |
   You are a productivity consultant helping create reusable AI skills.
   Skills should be clear, complete, and actionable.
+  When creating skill folders, use the convention: Skills/<skill-name>/SKILL.md for instructions.
 
 scratchpad:
   "weekly-report-example.md": |
@@ -160,6 +186,8 @@ scratchpad:
 tools:
   - scratchpad_read
   - scratchpad_write
+  - create_folder
+  - move_file
 
 visibility:
   system_prompt: hidden
@@ -172,10 +200,10 @@ sidebar:
 
 script:
   - type: note
-    text: "This person writes a weekly leadership report every Friday. It takes 45 minutes. They want to turn it into a skill so AI can draft it in 5 minutes. Watch the skill creation process."
+    text: "This person writes a weekly leadership report every Friday. It takes 45 minutes. They want to turn it into a proper skill — a folder with instructions, reference material, and a script to pull metrics automatically. Watch how AI builds the entire skill for them."
 
   - type: user
-    content: "I write this leadership report every Friday and it takes forever. Read my example report, then create a skill file — a reusable instruction document that I can use every week so AI produces this format automatically."
+    content: "I write this leadership report every Friday and it takes forever. I've got an example report here. Can you build me a proper skill folder for this? I need clear instructions, my example as reference, and a Python script that pulls our engineering metrics from the internal dashboard API so I don't have to copy numbers manually each week."
 
   - type: tool_call
     tool: scratchpad_read
@@ -213,9 +241,27 @@ script:
       3. Prepare Feb milestone review deck
 
   - type: tool_call
+    tool: create_folder
+    args:
+      path: "Skills"
+
+  - type: tool_result
+    tool: create_folder
+    content: "Created folder: Skills"
+
+  - type: tool_call
+    tool: create_folder
+    args:
+      path: "Skills/weekly-report"
+
+  - type: tool_result
+    tool: create_folder
+    content: "Created folder: Skills/weekly-report"
+
+  - type: tool_call
     tool: scratchpad_write
     args:
-      filename: "skill-weekly-report.md"
+      filename: "Skills/weekly-report/SKILL.md"
       content: |
         # Skill: Weekly Leadership Report
 
@@ -223,24 +269,26 @@ script:
         Generate the Friday leadership update for the engineering team.
 
         ## When to Use
-        Every Friday afternoon. Takes raw inputs and produces a formatted report.
+        Every Friday afternoon. Run fetch_metrics.py first to get fresh data, then provide any additional context.
 
-        ## Required Inputs
-        Before running this skill, gather:
+        ## Preparation (AI does this automatically)
+        1. Run `python fetch_metrics.py` to pull fresh dashboard data
+        2. Use the metrics output alongside any additional context provided
+
+        ## Required Inputs (from the user)
         - This week's completed work (from Jira/Linear or standup notes)
         - Current in-progress items with % completion
         - Any blockers or risks identified this week
-        - Key metrics from the dashboard (velocity, bug rate, deploy count)
         - Next week's top 3 priorities
 
         ## Output Format
         Markdown document with these exact sections:
 
         1. **Summary** — 1-2 sentences. Overall tone of the week. Lead with the headline.
-        2. **Shipped This Week** — Bullet list. Each item: feature name, project duration, schedule status.
-        3. **In Progress** — Bullet list. Each item: feature name, % complete, expected completion date.
-        4. **Blockers & Risks** — Bullet list. Each item: issue, impact, mitigation if known.
-        5. **Key Metrics** — Bullet list. Each metric: name, value, target, ✓ or ✗.
+        2. **Shipped This Week** — Bullet list. Each: feature name, duration, schedule status.
+        3. **In Progress** — Bullet list. Each: feature name, % complete, expected date.
+        4. **Blockers & Risks** — Bullet list. Each: issue, impact, mitigation if known.
+        5. **Key Metrics** — Bullet list. Each: name, value, target, pass/fail.
         6. **Next Week Priorities** — Numbered list. Top 3 only. Actionable items.
 
         ## Tone & Style
@@ -248,10 +296,10 @@ script:
         - Confident but honest about risks.
         - Use specific numbers, not "improved" or "growing."
         - Bullet points, not paragraphs.
-        - Title format: "Leadership Update — Week of [date]"
+        - Title: "Leadership Update — Week of [date]"
 
-        ## Example
-        See weekly-report-example.md for the reference format.
+        ## Reference
+        See example-report.md for the format and tone to match.
 
         ## Quality Checks
         - Every "In Progress" item has a percentage and date
@@ -261,16 +309,92 @@ script:
 
   - type: tool_result
     tool: scratchpad_write
-    content: "Written to skill-weekly-report.md (42 lines)"
+    content: "Written to Skills/weekly-report/SKILL.md (48 lines)"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "weekly-report-example.md"
+      destination: "Skills/weekly-report/example-report.md"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved weekly-report-example.md → Skills/weekly-report/example-report.md"
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "Skills/weekly-report/fetch_metrics.py"
+      content: |
+        #!/usr/bin/env python3
+        """Fetch weekly engineering metrics from the dashboard API.
+
+        Run before generating the weekly report:
+            python fetch_metrics.py > metrics.md
+
+        Requires DASHBOARD_API_KEY environment variable.
+        """
+
+        import os
+        import requests
+        from datetime import datetime, timedelta
+
+        API = "https://dashboard.internal.company.com/api/v1"
+        KEY = os.environ["DASHBOARD_API_KEY"]
+        HEADERS = {"Authorization": f"Bearer {KEY}"}
+
+
+        def get_sprint():
+            r = requests.get(f"{API}/sprints/current", headers=HEADERS)
+            r.raise_for_status()
+            return r.json()
+
+
+        def get_deploys():
+            since = (datetime.now() - timedelta(days=7)).isoformat()
+            r = requests.get(
+                f"{API}/deploys",
+                params={"since": since},
+                headers=HEADERS,
+            )
+            r.raise_for_status()
+            return r.json()["deploys"]
+
+
+        def get_quality():
+            r = requests.get(f"{API}/quality/summary", headers=HEADERS)
+            r.raise_for_status()
+            return r.json()
+
+
+        if __name__ == "__main__":
+            sprint = get_sprint()
+            deploys = get_deploys()
+            quality = get_quality()
+
+            print("# This Week's Metrics\n")
+            print(f"- Sprint velocity: {sprint['velocity']} pts "
+                  f"(target: {sprint['target']})")
+            print(f"- Deploys this week: {len(deploys)}")
+            print(f"- Bug escape rate: {quality['escape_rate']}% "
+                  f"(target: under {quality['target_rate']}%)")
+            print(f"- QA queue depth: {quality['queue_depth']} tickets")
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to Skills/weekly-report/fetch_metrics.py (42 lines)"
 
   - type: assistant
-    content: "Created skill-weekly-report.md. This is your reusable skill file. Every Friday, just provide the raw data and reference this skill. AI will produce a report matching your exact format, tone, and quality standards.\n\nUsage: 'Using the weekly-report skill, generate this week's leadership update. Here are the inputs: [paste raw data]'\n\nThe skill captures: your section structure, your tone preferences, your metric format, and your quality checks. Write it once, use it every week."
+    content: "Built your complete skill folder. Here's what you have now:\n\n**Skills/weekly-report/**\n- `SKILL.md` — Full instructions: purpose, inputs, output format, tone, quality checks\n- `example-report.md` — Your reference report, so AI matches your style\n- `fetch_metrics.py` — Pulls sprint velocity, deploy count, bug rate, and QA queue from your dashboard API\n\n**How to use it:**\nJust say *'Generate this week's leadership update'* and provide your notes. The skill tells AI to run the metrics script automatically, pull the fresh numbers, and produce the report in your exact format. You never touch the script yourself.\n\nWrite it once, use it every Friday."
 
   - type: note
-    text: "45 minutes of writing became a 5-minute task. The skill file captures not just the format but the thinking behind it: what inputs are needed, what tone to use, what quality checks to apply. This is institutional knowledge in a reusable form."
+    text: "Notice the folder structure: Skills/weekly-report/ contains everything — instructions, reference material, and code. This is a self-contained, portable skill. You could share it with a colleague and they'd have everything they need."
 
   - type: note
-    text: "The compound effect: this person will use this skill 50+ times a year. Each use saves 40 minutes. That's 33+ hours saved from a 10-minute investment in creating the skill. And the quality is consistent every single time."
+    text: "Key insight: you didn't write any of this by hand. You described what you needed and AI built the entire skill — instructions, file organisation, even the Python script. That's the meta-tooling pattern: use AI to build the tools you'll use with AI."
+
+  - type: note
+    text: "The compound effect: this skill will be used 50+ times a year. Each use saves 40 minutes. That's 33+ hours saved from a single conversation. And the quality is consistent every time."
 ```
 
 ```quiz

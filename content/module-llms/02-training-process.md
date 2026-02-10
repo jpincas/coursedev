@@ -52,6 +52,24 @@ title: "Tools Extend Beyond Training Data"
 content: "Many modern models now have web search tools that extend beyond their training cutoff. Claude can search for current information. ChatGPT has web browsing. Gemini integrates with Google Search. But the core mechanism is still pattern-based prediction."
 ```
 
+## The Transformer Architecture
+
+All modern LLMs share a common foundation: the **transformer** architecture, introduced in the landmark 2017 paper "Attention Is All You Need" by researchers at Google.
+
+The key innovation is the **attention mechanism**. When predicting the next token, a transformer can weigh which parts of the input are most relevant to the current prediction. It does not just look at the immediately preceding words -- it can attend to context from anywhere in the window.
+
+Think of it like reading a long document. You do not give equal attention to every word. When answering a question about page 5, your brain attends more to relevant paragraphs and less to irrelevant ones. Transformers do this computationally, at massive scale.
+
+**GPT** stands for **Generative Pre-trained Transformer** -- OpenAI's approach to applying this architecture. When ChatGPT launched in November 2022, it brought transformer-based language models to the mainstream.
+
+**Claude** (Anthropic), **Gemini** (Google), and **GPT** (OpenAI) all build on this same transformer foundation. They differ in training data, fine-tuning approaches, safety techniques, and specialised capabilities -- but the core architecture is shared.
+
+```callout
+type: note
+title: "You Don't Need the Technical Details"
+content: "Understanding transformers at this level is enough for professional use. The practical takeaway: these models can attend to relevant context across very large windows, which is why context engineering is so powerful."
+```
+
 ## The Current Model Landscape
 
 The pace of LLM development has been remarkable. From GPT-3 in 2020 to today's frontier models, the field has evolved rapidly.
@@ -142,12 +160,11 @@ script:
 ```quiz
 id: llms-training-phases
 type: multiple-choice
-question: "What is the purpose of RLHF (Reinforcement Learning from Human Feedback) in LLM training?"
+question: "A customer service chatbot always recommends its own company's products, even when asked for unbiased advice. Which training concept explains this?"
 options:
-  - "To make the model faster"
-  - "To teach the model to write code"
-  - "To align the model's responses with human preferences for helpfulness"
-  - "To reduce the model's memory usage"
-answer: 2
-explanation: "RLHF is the phase where humans rate responses, teaching the model what humans find helpful, accurate, and appropriate. It aligns the model's behavior with human preferences."
+  - "The model's RLHF phase taught it to always be helpful, which it interprets as recommending products"
+  - "The system prompt instructs it to recommend the company's products, and fine-tuning taught it to follow instructions"
+  - "The model was pre-trained exclusively on the company's marketing materials"
+answer: 1
+explanation: "Fine-tuning (Phase 2) teaches models to follow instructions. System prompts leverage this by providing specific behavioural rules. A system prompt saying 'recommend our products' is followed because the model was fine-tuned to be instruction-following."
 ```

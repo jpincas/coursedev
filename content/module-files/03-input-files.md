@@ -8,6 +8,24 @@ tags: [input, data, context]
 
 Input files are the data you give to AI. Instead of describing your information, you provide it directly.
 
+## File Preparation Matters
+
+Before you give files to AI, the state of those files matters enormously. Badly named files scattered across your desktop waste context and confuse the model. Clean files in a logical structure produce better results.
+
+**Good file preparation:**
+- **Descriptive names:** `q4-2025-sales-data.csv` not `data (3).xlsx`
+- **Logical folders:** Group related files together
+- **Consistent formats:** Pick CSV for data, Markdown for documents, and stick with them
+- **Remove clutter:** Delete or archive files that are not relevant to the current task
+
+Think of it this way: every file you give AI consumes context window space. Irrelevant files dilute attention from the files that matter. A curated set of 5 relevant files beats a dump of 50 unsorted ones.
+
+```callout
+type: tip
+title: "The Foundation Principle"
+content: "An organised file system is not just tidy -- it is a library of context for every future AI task. Every file you clean and name properly is an investment in better AI output."
+```
+
 ## What AI Can Process
 
 Modern AI systems can handle a wide variety of file types:
@@ -280,12 +298,11 @@ script:
 ```quiz
 id: input-files-insight
 type: multiple-choice
-question: "Why is uploading actual files better than describing your data to AI?"
+question: "You have a folder with 50 project files. You need AI to find patterns in 5 specific data files. What approach gives the best results?"
 options:
-  - "It's faster for AI to process files"
-  - "AI can only work with files, not descriptions"
-  - "AI works with actual information, not your summary of it"
-  - "Files use less of the context window"
-answer: 2
-explanation: "When you describe data, you're creating a summary that may miss details or introduce errors. When you upload the actual file, AI works with the real information — all of it, exactly as it exists."
+  - "Upload all 50 files so AI has complete context about the project"
+  - "Upload only the 5 relevant data files to keep context focused and avoid diluting attention"
+  - "Describe the 5 files in text and ask AI to work from your descriptions"
+answer: 1
+explanation: "More files means more context consumed, and attention gets diluted across irrelevant content. Uploading only the relevant files keeps context focused. The 'lost in the middle' effect means that burying key data among 45 irrelevant files can actually reduce quality."
 ```

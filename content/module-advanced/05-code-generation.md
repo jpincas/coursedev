@@ -1,190 +1,175 @@
 ---
 title: "Code Generation for Non-Coders"
-duration: "15m"
-tags: [code, automation, tools, vibe-coding]
+duration: "20m"
+tags: [code, automation, scripts, apis, json, vibe-coding]
 ---
 
 # Code Generation for Non-Coders
 
-You don't need to be a programmer. But AI can write code for you.
+You don't need to become a programmer. But understanding what scripts, APIs, and data formats actually are — even at a high level — turns you from someone who asks for help into someone who can direct AI to build real tools. This page gives you that understanding.
 
-## The Vibe Coding Revolution
+## Scripts: Your New Power Tool
 
-**"Vibe coding"** — coined by Andrej Karpathy in February 2025 — describes building software by describing what you want in natural language and letting AI implement it.
+When we say AI can "write code for you," we usually mean it writes **scripts**. But what is a script?
 
-The term entered Merriam-Webster within a month. Searches jumped **6,700%** in spring 2025. Collins Dictionary named it **Word of the Year**.
+A **script** is a small, self-contained set of instructions that tells a computer to do something specific. Read these files. Calculate these totals. Rename these documents. Fetch this data. Scripts are the simplest kind of code — they run from top to bottom, do their job, and stop.
 
-Y Combinator reported **25% of startups** in its Winter 2025 batch had codebases that were **95% AI-generated**.
+This is different from a full **program** or **application** — like Microsoft Word, or your company's CRM system, or a mobile app. Programs are large, complex, and take teams of developers months or years to build. They have user interfaces, databases, error handling for thousands of edge cases, and ongoing maintenance.
 
-## The Concept
+A script, by contrast, might be twenty lines long and solve one specific problem. That is what makes them so well-suited to AI generation.
 
-Describe what you need in plain English. AI writes the code. AI runs the code. You get the result.
+**How scripts run: interpretation vs compilation**
 
-You've become a programmer without learning to code.
+There are two ways computers execute code. **Compiled** languages (like C or Java) require a separate step to translate the human-readable code into machine code before it can run. This is how most major software is built — it is faster but more complex.
 
-## The Market Movement
+**Interpreted** languages run directly — the computer reads the script line by line and executes it on the spot. No build step. No compilation. You write it, you run it.
 
-**Forrester:** Citizen developers will deliver 30% of genAI-infused automation apps in 2025.
+This matters because almost all AI-generated code is in **interpreted scripting languages**, particularly **Python**. Python reads like English, has enormous libraries of pre-built tools, and AI models generate it more reliably than any other language. When you ask ChatGPT or Claude to "write a script," Python is almost always what you get.
 
-**Gartner:** **75% of all apps** will be built with low-code tools by 2026.
+```callout
+type: tip
+title: "Why Python?"
+content: "Python was designed to be readable. A line like for file in folder: process(file) is close to plain English. This is also why AI models are so good at writing it — the gap between natural language and Python is smaller than for any other language. You do not need to learn Python. But when you see it in AI output, you will find you can often follow what it is doing."
+```
 
-**Citrix VP:** Enterprises will run 4,500-6,000 AI-generated apps in 2026, with **66% undiscovered** by security teams.
+## Data Formats: How Machines Read Data
 
-A Citrix VP described building a competitive analysis dashboard in **twelve minutes** using Claude — no coding knowledge.
+Scripts need to read and write data. But computers cannot just read a Word document or a PDF the way you do — they need data in **structured formats** where every piece of information has a predictable place.
 
-## Practical Applications
+You already know one: **CSV** (comma-separated values). A CSV file is just rows of data separated by commas. Simple, flat, tabular — perfect for spreadsheet-style data.
 
-**Data processing**
-"Write a script that cleans this CSV, removes duplicates, and exports the top 100 rows by revenue."
+But the format that dominates modern scripting and automation is **JSON** (JavaScript Object Notation, pronounced "jason"). JSON is how most software systems store and exchange structured data. Here is what it looks like:
 
-**File automation**
-"Create a script that renames all files in this folder with today's date as a prefix."
+```json
+{
+  "client": "Müller GmbH",
+  "currency": "EUR",
+  "amount": 4200.00,
+  "items": [
+    { "description": "Q4 consulting", "hours": 40 },
+    { "description": "Travel expenses", "hours": 0 }
+  ]
+}
+```
 
-**Data visualisation**
-"Generate a chart showing monthly trends from this spreadsheet."
+The rules are simple:
 
-**Format conversion**
-"Convert all the Word documents in this folder to PDF."
+- **Curly braces** `{ }` hold an **object** — a collection of named fields
+- **Square brackets** `[ ]` hold a **list** — multiple items of the same kind
+- Every field has a **name** (in quotes) and a **value** (text, number, true/false, another object, or a list)
+- Objects can contain other objects, and lists can contain other lists — data nests naturally
 
-**Analysis automation**
-"Calculate the average, median, and standard deviation for each column in this data."
-
-## How It Works
-
-1. You describe the task in plain language
-2. AI writes appropriate code (Python, JavaScript, etc.)
-3. AI executes the code
-4. You receive the result
-
-You never see the code unless you want to. You just describe what you want and get the output.
+You do not need to memorise the syntax. But recognising JSON when you see it is genuinely useful. When AI shows you what it is doing — reading an API response, processing a configuration file, handling structured data — you will see JSON everywhere. Understanding its shape means you can check whether the AI is reading your data correctly.
 
 ```callout
 type: info
-title: "The Limitation"
-content: "This works for well-defined tasks with clear inputs and outputs. For complex software development, you still need engineering expertise. But for data tasks, automation, and one-off scripts? Natural language is enough."
+title: "JSON Is Everywhere"
+content: "Nearly every web service, every app on your phone, and every cloud platform uses JSON behind the scenes. When you fill in a web form and click submit, your data is almost certainly converted to JSON before it is sent to the server. When an app shows you a weather forecast, that data arrived as JSON. It is the common language of modern software."
 ```
 
-## Real Examples
+## APIs: How Software Talks to Software
 
-**Before:**
-Manually sorting through 500 feedback entries to find common themes.
+An **API** (Application Programming Interface) is a structured way for one piece of software to request something from another. Think of it as a service counter: you go to the window, ask a specific question in a specific format, and get a structured answer back.
 
-**After:**
-"Analyse this feedback CSV. Group by theme. Count occurrences. Show top 10."
+Every API has **endpoints** — specific addresses for specific things. An exchange rate service might have:
 
----
+- `/latest` — get today's rates
+- `/convert?from=EUR&to=GBP&amount=4200` — convert a specific amount
+- `/history?date=2025-01-15` — get rates for a past date
 
-**Before:**
-Opening 50 files one by one to extract a specific field.
+You make a **request** to an endpoint. The API sends back a **response** — almost always as JSON.
 
-**After:**
-"Extract the 'total' field from all invoice PDFs in this folder. Create a summary spreadsheet."
+For example, asking an exchange rate API for today's rates might return:
 
----
+```json
+{
+  "base": "GBP",
+  "date": "2026-01-15",
+  "rates": {
+    "EUR": 1.18,
+    "USD": 1.27,
+    "JPY": 189.42
+  }
+}
+```
 
-**Before:**
-Reformatting dates in a spreadsheet by hand.
+Structured, predictable, machine-readable. A script can fetch this, extract the numbers it needs, and use them in calculations — all automatically.
 
-**After:**
-"Convert all dates in column A from MM/DD/YYYY to DD-MMM-YYYY format."
-
-## What Works (and What Doesn't)
-
-**Python is the recommended language** for AI-assisted non-developer coding. Models generate and debug it most effectively.
-
-**What's realistic:**
-- Personal automation scripts (file processing, data transformation, report generation)
-- Departmental dashboards
-- Web scraping tools
-- API integrations for connecting services
-- Internal helper bots
-
-**What has limitations:**
-Production software. Anything customer-facing. Anything requiring security hardening or scale.
-
-## The Realism Check
-
-A Stack Overflow writer tested vibe coding by building a Reddit app using Bolt.
-
-**The experience:** "The foundation was created in ten minutes, but almost immediately, error messages popped up. No matter how much I tried, I couldn't upload a review."
-
-Vibe coding works for **personal throwaway projects** and **prototypes**. It has real limitations for production use.
-
-One practitioner used Claude plus screenshots of HTML to build a CSV export tool with zero coding knowledge. Another built five Python scripts replacing ClickUp for task management.
-
-The common pattern: **clear inputs, clear outputs, limited edge cases.**
+**Why this matters for you:** Thousands of services offer APIs. Your company's CRM, your helpdesk, your project management tools, government data portals, financial data providers, weather services — all of them have APIs that scripts can talk to. When you ask AI to "pull data from our ticketing system" or "check today's exchange rates," this is what is happening under the hood: a script calling an API, receiving JSON, and processing the result.
 
 ```callout
 type: info
-title: "The Scale Paradox"
-content: "Building one automation script takes minutes. Building ten takes an hour. Building a hundred that are maintainable, documented, and don't break? That still requires engineering expertise."
+title: "The Pattern"
+content: "Script makes request → API returns JSON → Script reads JSON → Script produces output. This is the fundamental loop of modern automation. AI handles the technical details, but understanding this pattern means you can describe what you want with precision."
 ```
 
-## What Makes This Possible
+## Bringing It Together
 
-AI models now:
-- Understand programming deeply
-- Can write correct code from natural language descriptions
-- Have execution environments to run the code
-- Can iterate if something doesn't work
+A script is a small set of instructions. JSON is the data format. APIs are how software fetches data from other systems. Put them together and you have the building blocks of automation:
 
-The technical barrier has collapsed for well-scoped tasks. Intent is enough.
+1. **You** describe what you want in plain English
+2. **AI** writes a Python script
+3. **The script** calls an API, reads the JSON response, processes the data
+4. **You** get the result — a report, a spreadsheet, a summary
 
-## The Broader Context
+This is what people mean by "vibe coding." The term was coined by Andrej Karpathy in February 2025 to describe building software by stating your intent and letting AI handle the implementation. It became Collins Dictionary's Word of the Year that same year. Y Combinator reported 25% of startups in its Winter 2025 batch had codebases that were 95% AI-generated.
 
-**Cursor:** $500M ARR in June 2025, up from $1M twelve months earlier. An AI-native IDE that makes professional developers dramatically more productive.
+But for non-developers, the real revolution is not building startups. It is the fact that **scripts are no longer out of reach.** A thirty-line Python script that connects to an API, processes JSON, and produces a report used to require a developer. Now it requires a clear description of what you want.
 
-The same technology that makes professionals faster also enables non-developers to automate tasks that previously required hiring a developer.
+## Scripts, APIs, and JSON in Action
 
-## Vibe Coding in Action
-
-Watch a non-programmer describe what they need in plain English and get working code. No programming knowledge required.
+Watch all three concepts come together. A non-programmer needs to convert overseas invoices to pounds using live exchange rates. No coding knowledge — just a clear description of the outcome.
 
 ```agent
-id: vibe-coding-demo
-title: "Natural Language to Working Code"
+id: api-scripting-demo
+title: "Scripts, APIs, and JSON in Action"
 model_label: "Claude"
 
 system: |
   You are a coding assistant helping non-programmers automate tasks.
-  Write Python code that is simple, well-commented, and does exactly
-  what the user asks. Explain what the code does in plain English.
+  Write Python scripts that are simple and well-commented. Explain
+  what you are doing in plain English at each step.
 
 scratchpad:
-  "invoices/invoice-001.txt": |
-    Invoice #001
-    Client: Meridian Corp
-    Date: 2025-11-15
-    Amount: £2,400
-    Status: Paid
-  "invoices/invoice-002.txt": |
-    Invoice #002
-    Client: TekLogic Ltd
-    Date: 2025-11-22
-    Amount: £5,100
-    Status: Overdue
-  "invoices/invoice-003.txt": |
-    Invoice #003
-    Client: Apex Digital
-    Date: 2025-12-01
-    Amount: £1,800
-    Status: Paid
-  "invoices/invoice-004.txt": |
-    Invoice #004
-    Client: FinServ Capital
-    Date: 2025-12-10
-    Amount: £8,200
-    Status: Pending
-  "invoices/invoice-005.txt": |
-    Invoice #005
-    Client: GreenPath Energy
-    Date: 2025-12-18
-    Amount: £3,600
-    Status: Overdue
+  "overseas-invoices.json": |
+    {
+      "invoices": [
+        {
+          "id": "INV-2024-089",
+          "client": "Müller GmbH",
+          "currency": "EUR",
+          "amount": 4200.00,
+          "description": "Q4 consulting"
+        },
+        {
+          "id": "INV-2024-091",
+          "client": "Tanaka Industries",
+          "currency": "JPY",
+          "amount": 850000,
+          "description": "Software licence"
+        },
+        {
+          "id": "INV-2024-093",
+          "client": "Brightline Inc",
+          "currency": "USD",
+          "amount": 7500.00,
+          "description": "Annual support contract"
+        },
+        {
+          "id": "INV-2024-094",
+          "client": "Dubois & Associés",
+          "currency": "EUR",
+          "amount": 3100.00,
+          "description": "Training delivery"
+        }
+      ]
+    }
 
 tools:
+  - list_files
   - scratchpad_read
   - scratchpad_write
+  - run_code
 
 visibility:
   system_prompt: hidden
@@ -192,149 +177,334 @@ visibility:
   full_context: hidden
 
 sidebar:
-  width: "45%"
+  width: "50%"
   start_open: true
 
 script:
   - type: note
-    text: "The user has five invoice files and needs a summary spreadsheet. No programming knowledge. Just plain English describing what they want."
+    text: "The user has a JSON file containing invoices in different currencies — euros, yen, and dollars. They need everything converted to GBP for their finance report. Watch how a script, an API, and JSON work together."
 
   - type: user
-    content: "I've got a folder of invoice text files. Read all of them, then create a summary showing: client name, amount, status, and which ones are overdue. I need a total at the bottom and the overdue ones highlighted somehow."
+    content: "I've got overseas invoices in a JSON file — different currencies. Can you pull today's exchange rates and convert everything to pounds for our finance report?"
 
   - type: tool_call
     tool: scratchpad_read
     args:
-      filename: "invoices/invoice-001.txt"
+      filename: "overseas-invoices.json"
 
   - type: tool_result
     tool: scratchpad_read
     content: |
-      Invoice #001
-      Client: Meridian Corp
-      Date: 2025-11-15
-      Amount: £2,400
-      Status: Paid
+      {
+        "invoices": [
+          {
+            "id": "INV-2024-089",
+            "client": "Müller GmbH",
+            "currency": "EUR",
+            "amount": 4200.00,
+            "description": "Q4 consulting"
+          },
+          {
+            "id": "INV-2024-091",
+            "client": "Tanaka Industries",
+            "currency": "JPY",
+            "amount": 850000,
+            "description": "Software licence"
+          },
+          {
+            "id": "INV-2024-093",
+            "client": "Brightline Inc",
+            "currency": "USD",
+            "amount": 7500.00,
+            "description": "Annual support contract"
+          },
+          {
+            "id": "INV-2024-094",
+            "client": "Dubois & Associés",
+            "currency": "EUR",
+            "amount": 3100.00,
+            "description": "Training delivery"
+          }
+        ]
+      }
 
-  - type: tool_call
-    tool: scratchpad_read
-    args:
-      filename: "invoices/invoice-002.txt"
-
-  - type: tool_result
-    tool: scratchpad_read
-    content: |
-      Invoice #002
-      Client: TekLogic Ltd
-      Date: 2025-11-22
-      Amount: £5,100
-      Status: Overdue
-
-  - type: tool_call
-    tool: scratchpad_read
-    args:
-      filename: "invoices/invoice-003.txt"
-
-  - type: tool_result
-    tool: scratchpad_read
-    content: |
-      Invoice #003
-      Client: Apex Digital
-      Date: 2025-12-01
-      Amount: £1,800
-      Status: Paid
-
-  - type: tool_call
-    tool: scratchpad_read
-    args:
-      filename: "invoices/invoice-004.txt"
-
-  - type: tool_result
-    tool: scratchpad_read
-    content: |
-      Invoice #004
-      Client: FinServ Capital
-      Date: 2025-12-10
-      Amount: £8,200
-      Status: Pending
-
-  - type: tool_call
-    tool: scratchpad_read
-    args:
-      filename: "invoices/invoice-005.txt"
-
-  - type: tool_result
-    tool: scratchpad_read
-    content: |
-      Invoice #005
-      Client: GreenPath Energy
-      Date: 2025-12-18
-      Amount: £3,600
-      Status: Overdue
-
-  - type: tool_call
-    tool: scratchpad_write
-    args:
-      filename: "invoice-summary.md"
-      content: |
-        # Invoice Summary Report
-        Generated: January 2026
-
-        | # | Client | Date | Amount | Status |
-        |---|--------|------|--------|--------|
-        | 001 | Meridian Corp | 15 Nov 2025 | £2,400 | Paid |
-        | 002 | **TekLogic Ltd** | **22 Nov 2025** | **£5,100** | **⚠ OVERDUE** |
-        | 003 | Apex Digital | 01 Dec 2025 | £1,800 | Paid |
-        | 004 | FinServ Capital | 10 Dec 2025 | £8,200 | Pending |
-        | 005 | **GreenPath Energy** | **18 Dec 2025** | **£3,600** | **⚠ OVERDUE** |
-
-        ---
-
-        **Total invoiced:** £21,100
-        **Paid:** £4,200 (2 invoices)
-        **Pending:** £8,200 (1 invoice)
-        **Overdue:** £8,700 (2 invoices) ⚠
-
-        ### Action Required
-        - TekLogic Ltd — £5,100 overdue since 22 Nov (52 days)
-        - GreenPath Energy — £3,600 overdue since 18 Dec (25 days)
-
-  - type: tool_result
-    tool: scratchpad_write
-    content: "Written to invoice-summary.md (22 lines)"
+  - type: note
+    text: "This is JSON — the structured data format. Notice the curly braces holding objects, square brackets holding the list, and every field clearly named. A script can read this programmatically because every piece of data has a predictable location."
 
   - type: assistant
-    content: "Created invoice-summary.md. All 5 invoices compiled into a summary table with overdue items highlighted in bold. Totals broken down by status. Two overdue invoices flagged with days outstanding.\n\nIn a real workflow, I'd write a Python script that processes any number of invoice files automatically — so next month you just run the script on the new batch. Want me to create that reusable script?"
+    content: "I can see four invoices in three different currencies: EUR, JPY, and USD. I'll write a Python script that reads this JSON, fetches today's exchange rates from an API, and converts everything to GBP."
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "convert_invoices.py"
+      content: |
+        import json
+        import urllib.request
+
+        # Step 1: Read our invoice data (JSON file)
+        with open("overseas-invoices.json") as f:
+            data = json.load(f)
+
+        # Step 2: Call the exchange rate API
+        # This fetches live rates from a public API endpoint
+        url = "https://api.exchangerate-host.com/latest?base=GBP"
+        response = urllib.request.urlopen(url)
+        rates = json.loads(response.read())
+
+        print("Exchange rates from API:")
+        print(f"  1 GBP = {rates['rates']['EUR']} EUR")
+        print(f"  1 GBP = {rates['rates']['USD']} USD")
+        print(f"  1 GBP = {rates['rates']['JPY']} JPY")
+        print()
+
+        # Step 3: Convert each invoice to GBP
+        print("Invoice Conversion Report")
+        print("=" * 55)
+        total_gbp = 0
+
+        for inv in data["invoices"]:
+            rate = rates["rates"][inv["currency"]]
+            gbp = inv["amount"] / rate
+            total_gbp += gbp
+            print(f"{inv['id']}  {inv['client']:<22} "
+                  f"{inv['currency']} {inv['amount']:>10,.0f}"
+                  f"  →  GBP {gbp:>9,.2f}")
+
+        print("=" * 55)
+        print(f"{'TOTAL':>40}  GBP {total_gbp:>9,.2f}")
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to convert_invoices.py (27 lines)"
 
   - type: note
-    text: "Five scattered files became a structured summary with calculations, status highlighting, and action items. No code written by the user. No programming knowledge needed. This is what 'describe the outcome, get the result' looks like for data tasks."
+    text: "Look at what the script does. Line by line: it reads the JSON file, calls an exchange rate API (making an HTTP request to a specific endpoint), reads the JSON that the API sends back, then loops through each invoice converting the amounts. Three concepts — script, API, JSON — working together in 27 lines."
+
+  - type: tool_call
+    tool: run_code
+    args:
+      filename: "convert_invoices.py"
+
+  - type: tool_result
+    tool: run_code
+    content: |
+      Exchange rates from API:
+        1 GBP = 1.18 EUR
+        1 GBP = 1.27 USD
+        1 GBP = 189.42 JPY
+
+      Invoice Conversion Report
+      =======================================================
+      INV-2024-089  Müller GmbH            EUR      4,200  →  GBP  3,559.32
+      INV-2024-091  Tanaka Industries      JPY    850,000  →  GBP  4,487.12
+      INV-2024-093  Brightline Inc         USD      7,500  →  GBP  5,905.51
+      INV-2024-094  Dubois & Associés      EUR      3,100  →  GBP  2,627.12
+      =======================================================
+                                         TOTAL  GBP 16,579.07
 
   - type: note
-    text: "The AI also offered to create a reusable script — that's the meta-tooling pattern from the skills page. First time: AI does the task. Second time: AI creates a tool that does the task. The compound effect is powerful."
+    text: "The script fetched live exchange rates from an API (the rates section at the top), then used those rates to convert each invoice. The API returned JSON — the script read it, extracted the rates it needed, and did the maths. All from a plain English request."
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "finance-report.md"
+      content: |
+        # Overseas Invoice Summary — January 2026
+
+        **Exchange rates** (source: exchangerate-host API, 15 Jan 2026)
+        - 1 GBP = 1.18 EUR | 1.27 USD | 189.42 JPY
+
+        ## Invoices
+
+        | Invoice | Client | Original | GBP Equivalent |
+        |---------|--------|----------|----------------|
+        | INV-2024-089 | Müller GmbH | €4,200 | £3,559.32 |
+        | INV-2024-091 | Tanaka Industries | ¥850,000 | £4,487.12 |
+        | INV-2024-093 | Brightline Inc | $7,500 | £5,905.51 |
+        | INV-2024-094 | Dubois & Associés | €3,100 | £2,627.12 |
+
+        **Total receivable: £16,579.07**
+
+        ---
+        *Rates sourced from live API at time of generation.
+        Re-run script for updated figures.*
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to finance-report.md (17 lines)"
+
+  - type: assistant
+    content: |
+      Done. Your four overseas invoices total **£16,579.07** at today's rates.
+
+      The biggest item is Brightline Inc at £5,905.51 (originally $7,500). The Japanese invoice looks large in yen but converts to £4,487.12.
+
+      I've saved a formatted report to finance-report.md. The script is reusable — next month, just run it again with updated invoices and it will fetch fresh exchange rates automatically.
+
+  - type: note
+    text: "The user described what they wanted in one sentence. The AI wrote a script that: read a JSON file, called an exchange rate API, parsed the JSON response, did the currency conversions, and produced both a console report and a formatted document. Script + API + JSON = automation."
+
+  - type: user
+    content: "This is brilliant. Can you turn this into a proper skill? I want to just say 'convert the overseas invoices' next month and have it all happen automatically."
+
+  - type: note
+    text: "Now watch the meta-tooling pattern from the Skills page in action. The user is asking AI to turn a one-off task into a reusable, self-contained skill — complete with instructions, the script, and a template for the output."
+
+  - type: tool_call
+    tool: create_folder
+    args:
+      path: "Skills"
+
+  - type: tool_result
+    tool: create_folder
+    content: "Created folder: Skills"
+
+  - type: tool_call
+    tool: create_folder
+    args:
+      path: "Skills/invoice-converter"
+
+  - type: tool_result
+    tool: create_folder
+    content: "Created folder: Skills/invoice-converter"
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "Skills/invoice-converter/SKILL.md"
+      content: |
+        # Skill: Overseas Invoice Converter
+
+        ## Purpose
+        Convert overseas invoices from multiple currencies to GBP
+        using live exchange rates. Produce a formatted finance report.
+
+        ## When to Use
+        Monthly, or whenever new overseas invoices arrive.
+
+        ## Steps
+        1. Read the invoice JSON file (user provides the path)
+        2. Run `convert_invoices.py` to fetch live exchange rates
+           from the API and compute GBP equivalents
+        3. Generate a formatted report in Markdown
+
+        ## Required Input
+        - A JSON file of invoices. Each invoice must have:
+          id, client, currency (3-letter code), amount, description
+        - See overseas-invoices.json for the exact format
+        - Supported currencies: any available on exchangerate-host
+          (EUR, USD, JPY, CHF, AUD, CAD, etc.)
+
+        ## Output
+        Markdown report following the template in example-report.md:
+        - Exchange rates with source and date
+        - Table: invoice ID, client, original amount, GBP equivalent
+        - Total receivable in GBP
+
+        ## Tone
+        Professional. Exact figures only — no rounding or estimates.
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to Skills/invoice-converter/SKILL.md (38 lines)"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "convert_invoices.py"
+      destination: "Skills/invoice-converter/convert_invoices.py"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved convert_invoices.py → Skills/invoice-converter/convert_invoices.py"
+
+  - type: tool_call
+    tool: move_file
+    args:
+      source: "finance-report.md"
+      destination: "Skills/invoice-converter/example-report.md"
+
+  - type: tool_result
+    tool: move_file
+    content: "Moved finance-report.md → Skills/invoice-converter/example-report.md"
+
+  - type: assistant
+    content: |
+      Done. Your skill folder is ready:
+
+      **Skills/invoice-converter/**
+      - `SKILL.md` — Instructions: purpose, input format, steps, output spec
+      - `convert_invoices.py` — The script that calls the exchange rate API
+      - `example-report.md` — Today's report as a reference template
+
+      Next month, just say *"Convert the overseas invoices"* and drop in your updated JSON file. AI reads the skill, runs the script, fetches fresh rates, and gives you the report. Same format, same quality, zero effort.
+
+  - type: note
+    text: "One conversation produced a working script. One follow-up question turned it into a permanent, reusable skill. This is the meta-tooling pattern: use AI to build the tools you'll use with AI. The skill folder is self-contained — instructions, code, and reference material all in one place."
+
+  - type: note
+    text: "The compound effect: this skill will be used every month. Each use saves time and produces consistent output. And if the requirements change — new currencies, different report format, a different API — just describe the change and AI updates the skill. You never touch the code yourself."
+```
+
+## What's Realistic
+
+**Python is the recommended language** for AI-assisted automation. Models generate and debug it most effectively.
+
+**What works well:**
+- Personal automation scripts — file processing, data transformation, report generation
+- Connecting services via APIs — pulling data from one system into another
+- Data analysis and visualisation
+- Format conversion and batch processing
+- Departmental dashboards and internal tools
+
+**What has limitations:**
+Production software. Anything customer-facing. Anything requiring security hardening or scale.
+
+The common pattern for success: **clear inputs, clear outputs, limited edge cases.**
+
+```callout
+type: info
+title: "The Scale Paradox"
+content: "Building one automation script takes minutes. Building ten takes an hour. Building a hundred that are maintainable, documented, and don't break? That still requires engineering expertise. Scripts are tools for solving specific problems, not a replacement for software engineering."
 ```
 
 ```quiz
-id: code-gen-benefit
+id: what-is-a-script
 type: multiple-choice
-question: "What does 'code generation for non-coders' mean practically?"
+question: "What distinguishes a script from a full application like Microsoft Word or a CRM system?"
 options:
-  - "AI teaches you to code"
-  - "You describe tasks in plain language; AI writes and runs the code"
-  - "AI generates code documentation"
-  - "You use simplified coding languages"
+  - "Scripts are always written in Python; applications use other languages"
+  - "Scripts are small, focused sets of instructions for specific tasks; applications are large, complex systems built by teams over months"
+  - "Scripts run faster than applications"
+  - "Scripts don't need a computer to run"
 answer: 1
-explanation: "AI can write code from natural language descriptions and execute it, giving you the results. You describe what you want, AI handles the programming. The technical barrier to automation has collapsed."
+explanation: "A script is a small, self-contained set of instructions — often just tens of lines — that solves a specific problem. Applications like Word or Salesforce are massive, complex systems with user interfaces, databases, and thousands of edge cases. The simplicity of scripts is exactly what makes them well-suited to AI generation."
+```
+
+```quiz
+id: json-api-pattern
+type: multiple-choice
+question: "When a script 'calls an API and processes the JSON response,' what is actually happening?"
+options:
+  - "The script is downloading a website and reading the HTML"
+  - "The script is sending a structured request to another system's endpoint, receiving structured data (JSON) back, and extracting the fields it needs"
+  - "The script is converting a PDF to a spreadsheet"
+  - "The script is running a database query on your local machine"
+answer: 1
+explanation: "An API is a structured interface that one piece of software uses to request data from another. The script sends a request to a specific endpoint (like /latest for exchange rates), receives a JSON response containing structured data, and then extracts and processes the fields it needs. This script → API → JSON pattern is the foundation of modern automation."
 ```
 
 ```quiz
 id: vibe-coding-scope
 type: multiple-choice
-question: "What's the realistic scope for vibe coding (AI-generated code from natural language)?"
+question: "What's the realistic scope for AI-generated scripts?"
 options:
   - "Full production applications for customers"
   - "Enterprise-scale systems with complex security requirements"
-  - "Personal automation, departmental dashboards, prototypes with clear inputs/outputs"
+  - "Personal automation, API integrations, data processing, and departmental tools with clear inputs and outputs"
   - "Any software project regardless of complexity"
 answer: 2
-explanation: "Vibe coding works well for personal automation, departmental tools, and prototypes with clear inputs and outputs. It has real limitations for production software, customer-facing applications, and systems requiring security hardening."
+explanation: "AI-generated scripts work well for personal automation, connecting services via APIs, data processing, and departmental tools — tasks with clear inputs and outputs. They have real limitations for production software, customer-facing applications, and systems requiring security hardening at scale."
 ```

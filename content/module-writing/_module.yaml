@@ -3,7 +3,7 @@ description: "The specific techniques for creating high-quality documents and an
 prerequisites:
   - module-files
 difficulty: intermediate
-estimated_duration: "45m"
+estimated_duration: "75m"
 completion:
   require_all_pages: true
   require_quizzes: true

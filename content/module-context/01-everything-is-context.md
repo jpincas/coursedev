@@ -210,15 +210,46 @@ script:
     text: "Same question, same model, same user—dramatically different output. The only variable was context."
 ```
 
+## Execution Is Cheap -- Context Is Everything
+
+Here is a reframe that changes how you approach every AI task.
+
+With AI, the cost of **executing** work is near zero. Writing a document, analysing data, creating a report, generating a presentation -- these are now essentially free. AI does them in seconds.
+
+What is **expensive** is the context: gathering the right information, understanding the requirements, knowing what good looks like, assembling the reference materials. That is where your time and expertise matter.
+
+**The old way:** Spend 20% of your time on context (quick brief) and 80% on execution (writing the report yourself).
+
+**The new way:** Spend 80% of your time on context (thorough research, clear requirements, good examples) and 20% on review. AI handles 100% of the execution.
+
+This means the highest-leverage thing you can do is **invest in context quality**. Research deeply before asking AI to execute. Provide comprehensive examples. Gather all relevant documents. The better your context, the better your output -- and the execution costs you nothing.
+
+```callout
+type: tip
+title: "The Research-First Workflow"
+content: "Before any significant AI task, start with a research phase. Use AI with web search to build comprehensive context. Then feed that context into the actual task. This two-step approach transforms output quality because the model has rich, accurate, current information to work with."
+```
+
 ```quiz
 id: context-core-concept
 type: multiple-choice
-question: "What determines the quality of AI output?"
+question: "You have one hour to produce a market analysis report with AI. How should you allocate your time?"
 options:
-  - "The specific AI model being used"
-  - "The quality and completeness of the context provided"
-  - "The time of day the request is made"
-  - "How politely you phrase the request"
+  - "Spend 50 minutes writing a detailed prompt and 10 minutes reviewing the output"
+  - "Spend 40 minutes on research and gathering context, then 20 minutes on prompting and review"
+  - "Spend 10 minutes on a prompt and 50 minutes editing the output yourself"
 answer: 1
-explanation: "While model choice matters, the quality of context you provide is the primary factor determining output quality. The same model produces dramatically different results with different context."
+explanation: "Execution is cheap -- AI generates the report in seconds. The bottleneck is context quality. Investing most of your time in research and gathering context (source documents, examples, data) produces dramatically better output than a detailed prompt with poor context."
+```
+
+```quiz
+id: context-execution-cheap
+type: multiple-choice
+question: "Why is 'execution is cheap' a useful mental model for AI work?"
+options:
+  - "It reminds you to delegate large volumes of work to AI rather than doing it manually"
+  - "It shifts your focus from doing the work to preparing the conditions for great work"
+  - "It means you should skip reviewing AI output since the cost of regenerating is negligible"
+answer: 1
+explanation: "When execution is cheap, the leverage point shifts. Instead of spending energy on writing, formatting, and assembling, you invest in the inputs: research, context, requirements, examples. Better inputs produce better outputs, and regeneration costs nothing."
 ```

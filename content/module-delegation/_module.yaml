@@ -1,7 +1,7 @@
 title: "Delegation & The AI-First Philosophy"
 description: "Treating AI as a capable worker, not a search engine. Outcomes over process."
 prerequisites:
-  - module-files
+  - module-advanced
 difficulty: intermediate
 estimated_duration: "60m"
 completion:

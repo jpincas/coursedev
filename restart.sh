@@ -17,13 +17,14 @@ go build -o coursedev .
 echo "Starting server..."
 ./coursedev &
 
-# Wait a moment for startup
-sleep 1
+# Wait for server to start (up to 5 seconds)
+for i in 1 2 3 4 5; do
+    if lsof -ti:8080 > /dev/null 2>&1; then
+        echo "Server running at http://localhost:8080"
+        exit 0
+    fi
+    sleep 1
+done
 
-# Check if it's running
-if lsof -ti:8080 > /dev/null 2>&1; then
-    echo "Server running at http://localhost:8080"
-else
-    echo "Failed to start server"
-    exit 1
-fi
+echo "Failed to start server"
+exit 1

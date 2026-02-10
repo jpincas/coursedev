@@ -4,7 +4,7 @@
 (function() {
   'use strict';
 
-  // Scroll to top when page changes (but not on quiz answers or hotspot toggles)
+  // Scroll to top when page or slide changes (but not on quiz answers or hotspot toggles)
   let lastPageID = null;
   function checkScrollToTop() {
     const article = document.querySelector('article[data-page-id]');
@@ -12,7 +12,9 @@
     const id = article.getAttribute('data-page-id');
     if (id && id !== lastPageID) {
       lastPageID = id;
-      window.scrollTo(0, 0);
+      // Use requestAnimationFrame to ensure layout is complete before scrolling
+      // (prevents intermittent failures on long pages)
+      requestAnimationFrame(() => window.scrollTo(0, 0));
     }
   }
 

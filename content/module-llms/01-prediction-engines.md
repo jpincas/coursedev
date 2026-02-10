@@ -170,12 +170,11 @@ script:
 ```quiz
 id: llms-core-mechanism
 type: multiple-choice
-question: "What is the core mechanism of a Large Language Model?"
+question: "An LLM writes a factually incorrect but perfectly formatted legal brief. Which explanation best accounts for this?"
 options:
-  - "Looking up answers in a database"
-  - "Predicting the next token based on patterns"
-  - "Running logical rules on input"
-  - "Searching the internet in real-time"
-answer: 1
-explanation: "LLMs work by predicting what token (word or piece of text) comes next, based on patterns learned during training. They don't look things up or search — they predict plausible continuations."
+  - "The model has seen millions of legal briefs and predicts plausible legal text, regardless of factual accuracy"
+  - "The model's legal training data was outdated, causing it to reference superseded case law"
+  - "The model lacks a specialised legal reasoning module that would catch errors"
+answer: 0
+explanation: "LLMs are prediction engines. They predict what text looks like based on patterns, not what is true. A model that has seen millions of legal briefs will produce perfectly formatted legal text -- but it has no mechanism for verifying whether the cited cases or facts are real."
 ```

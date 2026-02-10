@@ -91,12 +91,11 @@ Here's how we got here:
 ```quiz
 id: 50x-reframe-concept
 type: multiple-choice
-question: "What is the core purpose of the '50x Reframe' when working with AI?"
+question: "You need to find five podcast guests. Using the 50x Reframe, what changes about your approach?"
 options:
-  - "To make AI work 50 times faster than manual processes"
-  - "To break free from existing constraints and imagine what's possible with massive resources"
-  - "To hire 50 people instead of using AI for complex tasks"
-  - "To create 50 different versions of every output for comparison"
+  - "You ask AI to suggest five guests faster than you could research them yourself"
+  - "You evaluate 1,000 candidates systematically and present the top 20 with rationale"
+  - "You run the same search across 50 different AI tools to compare their suggestions"
 answer: 1
-explanation: "The 50x Reframe forces you to think beyond incremental improvements by asking 'What would I do if I had 50 people on this?' The goal is to stop anchoring to your existing constraints and instead imagine the scale of work that AI can actually handle — like evaluating 1,000 candidates instead of 5."
+explanation: "The 50x Reframe asks 'What would I do with 50 people on this?' The answer isn't doing the same thing faster — it's doing something fundamentally more ambitious. Instead of finding 5 guests, you evaluate 1,000 candidates at a scale only possible when execution is cheap."
 ```

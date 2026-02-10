@@ -67,6 +67,58 @@ Beyond creating individual files, AI can work with your entire file system — o
 path: /content/module-files/agent-desktop-cleanup.yaml
 ```
 
+## Code Is Just Another Output
+
+Here is something that surprises non-technical users: **code is just text files.** HTML, CSS, and JavaScript are plain text -- and AI can create them trivially.
+
+This means you can ask AI to create:
+- **Simple websites** -- landing pages, portfolio sites, project pages
+- **Data dashboards** -- interactive charts and visualisations
+- **Calculators and tools** -- mortgage calculators, unit converters, project estimators
+- **Interactive presentations** -- web-based slides with animations
+
+You do not need to be a programmer. You describe what you want, and AI creates the files. You open them in a browser and they work.
+
+**Example:**
+```
+Create a simple HTML page that displays our Q4 sales data
+as an interactive bar chart. Include the data inline.
+Make it look professional with a dark theme.
+```
+
+AI creates three files (index.html, style.css, script.js), you open index.html in a browser, and you have an interactive dashboard.
+
+```callout
+type: tip
+title: "Code as a Document Format"
+content: "Think of code not as 'programming' but as another document format. Just as AI can create a Word document or a spreadsheet, it can create a web page. The output is text files that happen to do something when opened in a browser."
+```
+
+## Format Considerations
+
+Not all output formats are equal. AI excels at some and struggles with others.
+
+**AI excels at:**
+- Markdown documents (its native output format)
+- CSV data files
+- Plain text reports
+- HTML/CSS/JS web content
+- Source code in popular languages
+- JSON and structured data
+
+**AI can produce but with limitations:**
+- Excel spreadsheets (formulas and formatting may need adjustment)
+- PowerPoint presentations (basic structure, may need design polish)
+- PDF documents (usually via conversion from another format)
+
+**AI struggles with or cannot produce:**
+- InDesign layouts
+- Figma designs
+- Specialised software formats (AutoCAD, SPSS, etc.)
+- Complex Excel macros and VBA
+
+**The practical advice:** Ask for plain text or standard formats first. If you need a specialised format, have AI create the content in a format it does well (Markdown, CSV), then convert it yourself using the appropriate tool.
+
 ## Asking for Files
 
 To receive files instead of chat text, be explicit:
@@ -96,12 +148,11 @@ You're working with real deliverables now, not chat snippets.
 ```quiz
 id: output-files-explicit
 type: multiple-choice
-question: "How should you request AI to produce an actual file instead of chat text?"
+question: "You need an interactive dashboard showing sales trends. You are not a programmer. What is the most practical approach?"
 options:
-  - "Use a special command like /file"
-  - "Files are automatically created for long responses"
-  - "Be explicit about the file format: 'Create an Excel file...'"
-  - "Files are only available in paid AI tools"
-answer: 2
-explanation: "To receive actual files, explicitly request the format you want: 'Create an Excel file', 'Generate a Word document', 'Build a PowerPoint presentation'. Be specific about the deliverable format."
+  - "Ask AI to create a PowerPoint with embedded charts, since that is a format you know how to use"
+  - "Ask AI to create HTML/CSS/JS files for an interactive web dashboard, then open it in your browser"
+  - "Ask AI to describe how to build a dashboard, then hire a developer to implement it"
+answer: 1
+explanation: "Code is just text files. AI can create a complete interactive web dashboard (HTML, CSS, JavaScript) that you open in a browser -- no programming knowledge needed. This produces a more interactive result than static PowerPoint charts, and you do not need to involve a developer."
 ```

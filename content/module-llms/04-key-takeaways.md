@@ -6,6 +6,8 @@ tags: [summary, takeaways]
 
 # Key Takeaways: How LLMs Work
 
+These three mental models will shape every interaction you have with AI for the rest of this training and beyond. They explain why AI succeeds, why it fails, and what you can do about it.
+
 ## 1. Prediction Engines, Not Knowledge Bases
 
 LLMs are prediction engines. Not knowledge bases. Not reasoners. Prediction machines.
@@ -131,14 +133,13 @@ script:
 ```quiz
 id: llms-takeaway
 type: multiple-choice
-question: "What is the most important practical implication of understanding how LLMs work?"
+question: "You ask AI to summarise a 50-page contract. The summary is well-written and plausible. What is the most appropriate next step?"
 options:
-  - "You should never use AI for anything important"
-  - "You should verify AI output and provide good context"
-  - "You should only use AI for creative tasks"
-  - "You should trust AI completely"
-answer: 1
-explanation: "Understanding that LLMs are prediction engines (not truth engines) means you should always verify important output and provide rich context to get the best results."
+  - "Verify key claims against the source document, since plausibility does not equal accuracy"
+  - "Accept the summary because AI excels at document synthesis tasks"
+  - "Run the same query through a second AI model and accept whichever summary is longer"
+answer: 0
+explanation: "Well-written and plausible does not mean accurate. The summary could contain hallucinated clauses, misattributed terms, or invented details that sound right. Verifying key claims against the source document is essential, especially for consequential work like contracts."
 ```
 
 ## Up Next

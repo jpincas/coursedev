@@ -803,7 +803,7 @@ func renderPageContentWithNav(page *Page, mod *Module, currentIdx int, quizState
 
 	pageID := ""
 	if mod != nil {
-		pageID = fmt.Sprintf("%s:%d", mod.ID, currentIdx)
+		pageID = fmt.Sprintf("%s:%d:%d", mod.ID, currentIdx, mdl.CurrentSlide)
 	}
 
 	// Build header: for sectioned pages show page title as breadcrumb and section title as H1

@@ -313,14 +313,13 @@ script:
 ```quiz
 id: techniques-multishot
 type: multiple-choice
-question: "Why is multishot prompting (providing examples) so effective?"
+question: "You need AI to categorise 500 support tickets into exactly 6 categories. You describe the categories in detail. Results are inconsistent. What would most improve consistency?"
 options:
-  - "It makes the prompt longer, which models prefer"
-  - "It teaches the model the exact pattern you want through demonstration"
-  - "It reduces the cost of API calls"
-  - "It only works for Claude, not other models"
-answer: 1
-explanation: "Examples teach the model the pattern you want through demonstration. Showing 2-5 input-output pairs is more effective than describing the pattern in words. The model learns your desired format, style, and structure."
+  - "Add 3-4 example tickets with their correct categories so the model can learn the pattern"
+  - "Use XML tags to separate the category definitions from the ticket data"
+  - "Ask the model to think step-by-step before categorising each ticket"
+answer: 0
+explanation: "Multishot prompting (providing examples) is the most effective technique for categorisation and consistency tasks. Examples teach the exact pattern through demonstration -- the model matches your examples rather than interpreting your descriptions. Descriptions are ambiguous; examples are unambiguous."
 ```
 
 ## The Hierarchy of Techniques

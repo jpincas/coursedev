@@ -243,12 +243,11 @@ script:
 ```quiz
 id: context-window-understanding
 type: multiple-choice
-question: "Why have larger context windows changed how we work with AI?"
+question: "You upload a 500-page technical manual to AI and ask a specific question. The answer is vague and generic. What is the most likely cause?"
 options:
-  - "They make the model smarter"
-  - "They shift the constraint from 'what fits' to 'what's relevant'"
-  - "They eliminate the need for good prompts"
-  - "They allow the model to access the internet"
+  - "The model could not process that many pages and silently truncated the document"
+  - "The relevant information was buried in the middle where the model's attention is weakest"
+  - "The model needs you to specify which page numbers to focus on before it can give a good answer"
 answer: 1
-explanation: "Larger context windows mean we can now include much more information, but the challenge shifts to ensuring what we include is relevant and well-organized."
+explanation: "The 'lost in the middle' effect means models struggle with information buried deep in large contexts. Even though the window is large enough to fit the document, the model's attention is strongest at the beginning and end. Placing key information strategically matters more than fitting everything in."
 ```

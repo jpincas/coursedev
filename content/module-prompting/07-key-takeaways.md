@@ -6,11 +6,13 @@ tags: [summary, takeaways]
 
 # Key Takeaways: Prompting
 
-## Outcomes Over Process
+You now have a complete toolkit for communicating with AI effectively. These techniques are not theoretical -- they are the difference between generic output and exactly what you need. Here is the essential summary.
+
+## 1. Outcomes Over Process
 
 Describe what done looks like, not how to get there.
 
-The AI figures out the process. Your job is defining the destination.
+The AI figures out the process. Your job is defining the destination. "Produce a trend analysis with the top 5 insights as bullet points" beats "First analyse the data, then identify trends, then summarise them."
 
 ## 2. The Three Questions
 
@@ -21,7 +23,7 @@ Before any task, ask:
 
 Answer these three and you've got a solid specification.
 
-## The Techniques That Deliver Results
+## 3. The Techniques That Deliver Results
 
 From highest to lowest leverage:
 - **Be specific and direct** — Always applicable. Highest impact.
@@ -30,20 +32,20 @@ From highest to lowest leverage:
 - **Enable thinking** — For hard reasoning tasks, let the model think deeply
 - **Chain prompts** — Break multi-step work into sequential subtasks
 
-## Iteration Is How Experts Work
+## 4. Iteration Is How Experts Work
 
 The first output is the rough draft. Give specific, targeted feedback referencing exact parts.
 
 "Make this better" → AI guesses
 "Paragraph 2 is too technical — simplify it" → AI knows exactly what to change
 
-## Meta-Prompting Is Powerful
+## 5. Meta-Prompting and Interactive Speccing
 
-Let AI help you write better prompts. Ask it to ask you clarifying questions.
+Let AI help you write better prompts. Ask it to ask you clarifying questions. For complex deliverables, use interactive speccing: agree on the structure and requirements before executing. The spec becomes a contract that ensures alignment.
 
-The AI's questions reveal what's needed. Your answers build the prompt.
+The AI's questions reveal what's needed. Your answers build the prompt. For significant projects, this conversation-before-execution approach transforms quality.
 
-## Complete Information Beats Clever Wording
+## 6. Complete Information Beats Clever Wording
 
 It's not about magic words or secret phrases.
 
@@ -72,14 +74,13 @@ If you answer "no" to any of these, your request probably needs more detail.
 ```quiz
 id: prompting-takeaway
 type: multiple-choice
-question: "What's the most important change in how to think about AI interactions?"
+question: "You need a competitor analysis report. You have 15 minutes. What combination of techniques will produce the best result?"
 options:
-  - "Use longer prompts for better results"
-  - "Learn special keywords that activate features"
-  - "Describe outcomes and provide complete information"
-  - "Always start with 'You are an expert...'"
-answer: 2
-explanation: "The key shift is from prompt engineering (clever wording) to clear communication (describing outcomes and providing complete context). Modern AI models respond to complete information, not magic words."
+  - "Use the three questions to define done, provide competitor data files as context, and iterate once with specific feedback"
+  - "Write a long prompt using XML tags, enable extended thinking, and chain it across three steps"
+  - "Use meta-prompting to have AI write the perfect prompt, then execute that prompt"
+answer: 0
+explanation: "The highest-leverage combination is: define what done looks like (three questions), provide complete context (data files), and iterate with precision. The other approaches are valid techniques but over-engineer a 15-minute task. Match technique complexity to task complexity."
 ```
 
 ## Up Next

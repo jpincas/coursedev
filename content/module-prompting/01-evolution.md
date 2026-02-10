@@ -44,12 +44,11 @@ These are the same questions you'd ask when delegating to a human. The only diff
 ```quiz
 id: prompting-evolution
 type: multiple-choice
-question: "What's the most important shift in how we interact with AI models?"
+question: "A colleague spends 20 minutes crafting the 'perfect prompt' with special phrases and formatting tricks. A second colleague writes a straightforward instruction with all relevant context attached. Who gets better results?"
 options:
-  - "From simple models to complex models"
-  - "From typing commands to voice input"
-  - "From crafting clever prompts to specifying clear outcomes"
-  - "From paid services to free services"
-answer: 2
-explanation: "The fundamental shift is from prompt engineering (finding magic words) to delegation (specifying outcomes and providing context). Modern models are capable enough that clear communication matters more than clever tricks."
+  - "The first colleague, because precise prompt engineering unlocks the model's full capabilities"
+  - "The second colleague, because modern models respond to clear communication and complete context, not clever wording"
+  - "Both get similar results because the model's capability is the limiting factor, not the prompt"
+answer: 1
+explanation: "Modern AI models are capable enough that clear communication and complete context matter far more than clever phrasing. The era of 'prompt tricks' is over. Straightforward instructions with relevant context consistently outperform elaborate prompt engineering."
 ```

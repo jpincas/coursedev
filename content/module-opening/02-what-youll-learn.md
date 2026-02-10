@@ -29,14 +29,13 @@ content: "Before any theory, we'll show you what's possible. The next page demon
 ```quiz
 id: opening-paradigm-shift
 type: multiple-choice
-question: "What is the fundamental shift in AI we're discussing in this training?"
+question: "You ask AI to 'help with a quarterly report'. It asks you clarifying questions. What does this tell you about your approach?"
 options:
-  - "From chatbots that answer questions to workers that complete tasks"
-  - "From single-turn Q&A to multi-step autonomous execution"
-  - "From text-only interaction to multimodal understanding"
-  - "From human-in-the-loop to fully automated workflows"
-answer: 0
-explanation: "The key shift is from AI as a Q&A assistant to AI as a capable worker that can plan, execute, and deliver complete work products. While the other options describe real capabilities, the fundamental paradigm shift is about the change in relationship: from assistant to worker."
+  - "The AI is working correctly by gathering context before executing"
+  - "You described a process instead of delegating an outcome with full context"
+  - "You should provide more examples of reports you liked"
+answer: 1
+explanation: "In the new paradigm, you delegate outcomes — not ask for help. Providing input files, specifying the deliverable, and letting AI plan the execution is delegation. If AI is asking questions, you have not yet made the shift from assistant-thinking to worker-thinking."
 ```
 
 ## What's Next

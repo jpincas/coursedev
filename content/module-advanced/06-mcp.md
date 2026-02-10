@@ -150,17 +150,8 @@ model_label: "Claude"
 
 system: |
   You are a research assistant with access to multiple tools via MCP.
-  You can search the web, read documents, query databases, and write files.
+  You can search the web, query databases, and write files.
   Use the right tool for each step.
-
-scratchpad:
-  "crm-export.csv": |
-    Company,Last_Contact,Deal_Stage,Value,Industry
-    Apex Digital,2025-08-15,Closed Won,£48K,SaaS
-    Meridian Health,2025-11-20,Negotiation,£85K,Healthcare
-    TekLogic,2025-06-01,Closed Lost,£32K,Manufacturing
-    FinServ Capital,2025-12-05,Proposal,£120K,Finance
-    GreenPath Energy,2025-09-10,Dormant,£65K,Energy
 
 tools:
   - scratchpad_read
@@ -179,37 +170,55 @@ sidebar:
 
 script:
   - type: note
-    text: "This demo simulates an AI agent with MCP connections to a CRM database and web search. Watch how it chains tools together — reading from one system, researching externally, then writing results back."
+    text: "This demo simulates an AI agent with MCP connections to a CRM database and web search. Watch how it builds up its inputs step by step — querying one system, saving results, researching externally, saving those results, then composing a final output from everything it's gathered."
 
   - type: user
     content: "Find all accounts in the CRM that haven't been contacted in over 90 days. For each one, do a quick web search to see if there's any recent news about them. Then create a re-engagement briefing."
 
+  - type: assistant
+    content: "I'll start by querying the CRM for stale accounts."
+
   - type: tool_call
-    tool: scratchpad_read
+    tool: database_query
     args:
-      filename: "crm-export.csv"
+      query: "SELECT company, last_contact, deal_stage, value, industry FROM accounts WHERE last_contact < '2025-10-01' ORDER BY last_contact ASC"
 
   - type: tool_result
-    tool: scratchpad_read
+    tool: database_query
     content: |
-      Company,Last_Contact,Deal_Stage,Value,Industry
-      Apex Digital,2025-08-15,Closed Won,£48K,SaaS
-      Meridian Health,2025-11-20,Negotiation,£85K,Healthcare
-      TekLogic,2025-06-01,Closed Lost,£32K,Manufacturing
-      FinServ Capital,2025-12-05,Proposal,£120K,Finance
-      GreenPath Energy,2025-09-10,Dormant,£65K,Energy
+      3 rows returned:
+      | Company          | Last Contact | Deal Stage  | Value | Industry      |
+      |------------------|--------------|-------------|-------|---------------|
+      | TekLogic         | 2025-06-01   | Closed Lost | £32K  | Manufacturing |
+      | Apex Digital     | 2025-08-15   | Closed Won  | £48K  | SaaS          |
+      | GreenPath Energy | 2025-09-10   | Dormant     | £65K  | Energy        |
 
   - type: assistant
-    content: "Found 3 accounts not contacted in 90+ days (as of Jan 2026):\n- **Apex Digital** — last contact Aug 15 (5 months ago), Closed Won\n- **TekLogic** — last contact Jun 1 (7 months ago), Closed Lost\n- **GreenPath Energy** — last contact Sep 10 (4 months ago), Dormant\n\nLet me search for recent news on each."
+    content: "3 accounts haven't been contacted in 90+ days. Let me save this and then research each one."
 
   - type: tool_call
-    tool: web_search
+    tool: scratchpad_write
     args:
-      query: "Apex Digital company news 2025 2026"
+      filename: "stale-accounts.md"
+      content: |
+        # Stale Accounts (90+ days since last contact)
+        Source: CRM query, January 2026
+
+        | Company          | Last Contact | Gap       | Deal Stage  | Value | Industry      |
+        |------------------|--------------|-----------|-------------|-------|---------------|
+        | TekLogic         | 2025-06-01   | 7 months  | Closed Lost | £32K  | Manufacturing |
+        | Apex Digital     | 2025-08-15   | 5 months  | Closed Won  | £48K  | SaaS          |
+        | GreenPath Energy | 2025-09-10   | 4 months  | Dormant     | £65K  | Energy        |
 
   - type: tool_result
-    tool: web_search
-    content: "Apex Digital announced a Series B funding round of $15M in December 2025, planning to expand into European markets. CEO quoted: 'We're doubling our infrastructure team.'"
+    tool: scratchpad_write
+    content: "Written to stale-accounts.md (10 lines)"
+
+  - type: note
+    text: "First input gathered: the CRM data is saved to a file. Now the agent researches each company individually, saving what it finds as it goes."
+
+  - type: assistant
+    content: "Now let me search for recent news on each company."
 
   - type: tool_call
     tool: web_search
@@ -221,6 +230,48 @@ script:
     content: "TekLogic appointed a new CTO in October 2025, signalling a digital transformation push. The company also opened a new R&D centre in Manchester."
 
   - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "research-teklogic.md"
+      content: |
+        # TekLogic — Research Notes
+        Source: web search, January 2026
+
+        - New CTO appointed October 2025 — signals digital transformation push
+        - New R&D centre opened in Manchester
+        - Leadership change means previous "Closed Lost" decision was made by different team
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to research-teklogic.md (6 lines)"
+
+  - type: tool_call
+    tool: web_search
+    args:
+      query: "Apex Digital company news 2025 2026"
+
+  - type: tool_result
+    tool: web_search
+    content: "Apex Digital announced a Series B funding round of $15M in December 2025, planning to expand into European markets. CEO quoted: 'We're doubling our infrastructure team.'"
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "research-apex.md"
+      content: |
+        # Apex Digital — Research Notes
+        Source: web search, January 2026
+
+        - Series B funding: $15M raised December 2025
+        - Expanding into European markets
+        - CEO: "We're doubling our infrastructure team"
+        - Rapid growth phase — likely need to scale existing tooling
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to research-apex.md (7 lines)"
+
+  - type: tool_call
     tool: web_search
     args:
       query: "GreenPath Energy company news 2025 2026"
@@ -228,6 +279,93 @@ script:
   - type: tool_result
     tool: web_search
     content: "GreenPath Energy won a £12M government contract for renewable energy monitoring systems in November 2025. Company expanding rapidly."
+
+  - type: tool_call
+    tool: scratchpad_write
+    args:
+      filename: "research-greenpath.md"
+      content: |
+        # GreenPath Energy — Research Notes
+        Source: web search, January 2026
+
+        - Won £12M government contract, November 2025
+        - Contract is for renewable energy monitoring systems
+        - Company expanding rapidly
+        - Government contracts typically create compliance and reporting requirements
+
+  - type: tool_result
+    tool: scratchpad_write
+    content: "Written to research-greenpath.md (7 lines)"
+
+  - type: note
+    text: "All the inputs are now gathered: CRM data in one file, research notes for each company in separate files. Watch the file explorer — four files built up step by step. Now the agent reads everything back and composes the final briefing."
+
+  - type: assistant
+    content: "Research complete for all three companies. Let me read back everything and write the briefing."
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "stale-accounts.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Stale Accounts (90+ days since last contact)
+      Source: CRM query, January 2026
+
+      | Company          | Last Contact | Gap       | Deal Stage  | Value | Industry      |
+      |------------------|--------------|-----------|-------------|-------|---------------|
+      | TekLogic         | 2025-06-01   | 7 months  | Closed Lost | £32K  | Manufacturing |
+      | Apex Digital     | 2025-08-15   | 5 months  | Closed Won  | £48K  | SaaS          |
+      | GreenPath Energy | 2025-09-10   | 4 months  | Dormant     | £65K  | Energy        |
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "research-apex.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # Apex Digital — Research Notes
+      Source: web search, January 2026
+
+      - Series B funding: $15M raised December 2025
+      - Expanding into European markets
+      - CEO: "We're doubling our infrastructure team"
+      - Rapid growth phase — likely need to scale existing tooling
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "research-teklogic.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # TekLogic — Research Notes
+      Source: web search, January 2026
+
+      - New CTO appointed October 2025 — signals digital transformation push
+      - New R&D centre opened in Manchester
+      - Leadership change means previous "Closed Lost" decision was made by different team
+
+  - type: tool_call
+    tool: scratchpad_read
+    args:
+      filename: "research-greenpath.md"
+
+  - type: tool_result
+    tool: scratchpad_read
+    content: |
+      # GreenPath Energy — Research Notes
+      Source: web search, January 2026
+
+      - Won £12M government contract, November 2025
+      - Contract is for renewable energy monitoring systems
+      - Company expanding rapidly
+      - Government contracts typically create compliance and reporting requirements
 
   - type: tool_call
     tool: scratchpad_write
@@ -262,13 +400,13 @@ script:
     content: "Written to re-engagement-briefing.md (24 lines)"
 
   - type: assistant
-    content: "Created re-engagement-briefing.md. Three accounts identified, each with recent news that creates a natural re-engagement reason. Apex Digital is the top priority — fresh funding and European expansion make them an ideal upsell candidate."
+    content: "Done. The re-engagement briefing is ready — three accounts prioritised with specific angles based on their recent news. Apex Digital is top priority given the fresh funding and expansion plans."
 
   - type: note
-    text: "Count the tool switches: CRM query, three web searches, file write. Five different tool interactions, chained together intelligently. Without MCP, this would be: open CRM, export data, open browser, search three companies, open Word, write the brief. Twenty minutes of app-switching becomes one request."
+    text: "Count what happened: CRM query → save results → three web searches → save each result → read everything back → compose the briefing. The agent built up its inputs methodically, with each intermediate result saved as a file. That's six tool switches across three different systems, all from a single request."
 
   - type: note
-    text: "Notice that the web_search and database_query tools aren't 'real' in this demo — they're simulated. But in a real MCP setup, these would connect to your actual CRM, your actual search engine, your actual file system. The workflow is identical. The tools just connect to real systems instead of this simulated environment."
+    text: "The web_search and database_query tools are simulated in this demo. In a real MCP setup, they'd connect to your actual CRM, search engine, and file system. The workflow is identical — the tools just connect to real systems instead of this simulated environment."
 ```
 
 ```quiz

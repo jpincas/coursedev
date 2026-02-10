@@ -136,12 +136,11 @@ script:
 ```quiz
 id: context-hierarchy-quiz
 type: multiple-choice
-question: "Why does the same AI model behave differently in different applications?"
+question: "You ask AI to 'use casual language' but it keeps responding formally. What is the most likely explanation?"
 options:
-  - "Different applications use different models"
-  - "The temperature setting changes the model's personality"
-  - "Different system prompts shape the model's behaviour"
-  - "Users in different applications ask different questions"
-answer: 2
-explanation: "System prompts are hidden instructions that define how the model should behave. The same model with different system prompts produces different behaviour, which is why Claude on claude.ai feels different from Claude in a specialized app."
+  - "A system prompt with higher priority is instructing the model to use formal language"
+  - "The model defaults to formal language and cannot override this without examples"
+  - "Your instruction was too vague -- you need to provide examples of casual writing"
+answer: 0
+explanation: "System prompts sit above user instructions in the context hierarchy. If a system prompt says 'always respond formally,' your request for casual language will be overridden. This is why the same model behaves differently in different applications -- the system prompt you cannot see is controlling behaviour."
 ```
