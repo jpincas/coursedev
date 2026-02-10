@@ -149,10 +149,9 @@ id: skill-atrophy-impact
 type: multiple-choice
 question: "What is the 'automation paradox' in the context of AI assistance?"
 options:
-  - "AI makes tasks easier but takes longer to complete"
+  - "AI makes tasks feel faster but completion time actually increases"
   - "The better AI performs a task, the less humans practise the skills needed to verify its work"
-  - "Automated systems require more human oversight than manual processes"
-  - "AI tools are difficult to automate despite being called automation"
+  - "Automated systems require more maintenance effort than they save in task execution"
 answer: 1
 explanation: "The automation paradox describes how increasing AI capability at a task reduces human practice of that skill, which in turn reduces the ability to catch AI mistakes. This creates a concerning dependency cycle where verification skills atrophy alongside task skills."
 ```

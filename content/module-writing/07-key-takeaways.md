@@ -32,7 +32,7 @@ content: "AI dramatically accelerates document creation and data analysis. But a
 
 ## What Connects Forward
 
-The techniques you've learned here — sectional work, style encoding, verification — apply to the delegation mindset you'll explore next.
+The techniques you've learned here — sectional work, style encoding, verification — apply to the advanced patterns you'll explore next.
 
 You delegate tasks to AI. You verify the output. You own the result.
 
@@ -67,3 +67,7 @@ options:
 answer: 1
 explanation: "The module's central insight is that AI dramatically accelerates writing and analysis, but this acceleration is only valuable when combined with verification. Unverified AI output produces confident mistakes. The practitioners who benefit most pair AI speed with human oversight."
 ```
+
+## Up Next
+
+You've mastered the core workflows. Now it's time for **Advanced Patterns** — skills, persistent memory, subagents, code generation, and tool connections that separate casual users from power users.

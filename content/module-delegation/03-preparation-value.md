@@ -18,6 +18,16 @@ When creating a report takes 5 minutes, the bottleneck shifts. The quality of th
 
 ## Where Value Lives Now
 
+![The Preparation-Delegation-Verification Cycle](/content/module-delegation/images/preparation-cycle.png)
+
+The AI-assisted workflow is a cycle: preparation → delegation → verification. But these three stages are not equal.
+
+**Preparation is where you add the most value.** This is where your domain knowledge, strategic thinking, and understanding of requirements shape what gets built.
+
+**Delegation is cheap.** AI execution is near-instant. This is the easy part.
+
+**Verification is essential.** But if preparation was thorough, verification is quick. If preparation was weak, verification becomes salvage work.
+
 ![Value Shift in AI-Assisted Work](/content/module-delegation/images/value-shift.svg)
 
 | Activity | Before AI | After AI |

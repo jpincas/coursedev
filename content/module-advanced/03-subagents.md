@@ -500,11 +500,10 @@ id: subagents-benefit
 type: multiple-choice
 question: "What's the primary benefit of AI using subagents?"
 options:
-  - "Subagents are more accurate than single agents"
   - "Complex tasks get tackled in parallel, completing faster and more thoroughly"
+  - "Subagents are more accurate than single agents"
   - "Subagents are cheaper to run"
-  - "Subagents have access to more tools"
-answer: 1
+answer: 0
 explanation: "Subagents allow parallel work — multiple aspects of a complex task being tackled simultaneously. This means faster completion and more thorough coverage than sequential single-agent work."
 ```
 
@@ -513,10 +512,9 @@ id: subagent-context-isolation
 type: multiple-choice
 question: "Why do subagents each get their own context window?"
 options:
-  - "To increase the total amount of text the system can process"
   - "Each agent stays focused on its task without irrelevant material filling its context"
-  - "It's a technical requirement of the AI platform"
+  - "To increase the total amount of text the system can process"
   - "To prevent agents from communicating with each other"
-answer: 1
+answer: 0
 explanation: "Context isolation keeps each subagent focused. A module-builder working on 'data analysis' doesn't need to see 'prompting techniques' content — that would waste context space and potentially cause confusion. Each agent gets exactly the context it needs."
 ```

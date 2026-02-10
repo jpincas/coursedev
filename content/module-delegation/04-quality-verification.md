@@ -61,6 +61,43 @@ title: "Verification Mindset"
 content: "You're not checking if AI is 'right.' You're checking if the output is useful, accurate enough for your purposes, and fit for the intended use."
 ```
 
+### 5. AI as Editor
+
+One of the most effective verification techniques: **ask AI to review its own work.**
+
+After AI produces content, don't just accept it. Commission a second pass:
+
+> "Now re-read what you just wrote from the perspective of [target audience]. What would you change?"
+
+This triggers a genuine second pass, not rubber-stamping. AI will catch:
+- Jargon the audience won't understand
+- Logic gaps in its own reasoning
+- Missing context it assumed
+- Tone mismatches
+
+**Multi-pass review:** Have AI review its work through different lenses. Ask it to read once for accuracy, once for clarity, once for completeness, once for tone. Each pass catches different issues.
+
+```callout
+type: tip
+title: "Different Lenses, Different Catches"
+content: "Accuracy catches factual errors. Clarity catches confusing explanations. Completeness catches missing sections. Tone catches inappropriate language. One review pass rarely catches all four."
+```
+
+### 6. Visual Verification
+
+For visual outputs — websites, formatted documents, presentations — **use browser tools to actually LOOK at what was produced.**
+
+Don't just trust the code. Render it and check.
+
+Common visual issues AI won't catch in code review:
+- Misaligned elements
+- Broken responsive layouts
+- Color contrast problems
+- Overflowing text
+- Missing images or broken links
+
+If AI built a webpage, open it in a browser. If AI formatted a document, export it and review the PDF. Code correctness ≠ visual quality.
+
 ## Practical Tips
 
 **Don't verify everything**
@@ -177,10 +214,9 @@ id: verification-method
 type: multiple-choice
 question: "How should you verify AI output when you're not an expert in the topic?"
 options:
-  - "Have another AI verify it"
   - "Trust that AI is generally accurate"
   - "Use a verification strategy: spot-check, coherence, structure, purpose"
   - "Only use AI for topics you're expert in"
-answer: 2
+answer: 1
 explanation: "You don't need topic expertise to verify effectively. A verification strategy — spot-checking facts, checking coherence, validating structure, testing against purpose — lets you assess quality without deep domain knowledge."
 ```

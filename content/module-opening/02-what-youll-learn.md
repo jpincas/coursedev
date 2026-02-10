@@ -33,7 +33,7 @@ question: "You ask AI to 'help with a quarterly report'. It asks you clarifying 
 options:
   - "The AI is working correctly by gathering context before executing"
   - "You described a process instead of delegating an outcome with full context"
-  - "You should provide more examples of reports you liked"
+  - "You need to use a more advanced AI model for complex tasks"
 answer: 1
 explanation: "In the new paradigm, you delegate outcomes — not ask for help. Providing input files, specifying the deliverable, and letting AI plan the execution is delegation. If AI is asking questions, you have not yet made the shift from assistant-thinking to worker-thinking."
 ```

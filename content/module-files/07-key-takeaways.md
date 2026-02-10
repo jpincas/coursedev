@@ -69,4 +69,4 @@ explanation: "The biggest cost is not finding files -- it is the lost productive
 
 ## Up Next
 
-Now we take the next step: **Delegation**. Moving from asking AI for help to giving AI autonomous tasks to complete.
+Now we apply what you've learned about files to real work: **Document Creation and Data Analysis**. You'll use sectional drafting, style transfer, and file-based workflows to produce polished documents and extract insights from data.

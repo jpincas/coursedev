@@ -164,7 +164,7 @@ question: "A customer service chatbot always recommends its own company's produc
 options:
   - "The model's RLHF phase taught it to always be helpful, which it interprets as recommending products"
   - "The system prompt instructs it to recommend the company's products, and fine-tuning taught it to follow instructions"
-  - "The model was pre-trained exclusively on the company's marketing materials"
+  - "The pre-training phase included more examples of the company's products than competitors' products"
 answer: 1
 explanation: "Fine-tuning (Phase 2) teaches models to follow instructions. System prompts leverage this by providing specific behavioural rules. A system prompt saying 'recommend our products' is followed because the model was fine-tuned to be instruction-following."
 ```

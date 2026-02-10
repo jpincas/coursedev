@@ -8,6 +8,8 @@ tags: [themes, principles, summary]
 
 These five ideas tie everything together. They should guide how you approach any AI task.
 
+![The Five Core Themes of AI-First Work](/content/module-synthesis/images/five-themes.png)
+
 ## 1. Outcomes Over Process
 
 **Always define what "done" looks like. Let AI figure out the how.**
@@ -83,10 +85,9 @@ id: five-themes
 type: multiple-choice
 question: "If AI output is poor quality, which theme should you check first?"
 options:
-  - "Outcomes over process"
-  - "Context is everything"
-  - "AI-first, human-verified"
-  - "Files, not chat"
+  - "Outcomes over process — check if you specified the outcome clearly"
+  - "Context is everything — check what context AI had to work with"
+  - "AI-first, human-verified — check if you verified the output properly"
 answer: 1
-explanation: "When output is poor, the first question is: What was the context? Theme 2 — Context is everything — tells us that quality is bounded by input. Check what context AI had to work with."
+explanation: "When output is poor, the first question is always: What was the context? Theme 2 — Context is everything — tells us that quality is bounded by input. AI can only work with what's in its context window. Check what information, examples, and instructions AI actually had access to."
 ```

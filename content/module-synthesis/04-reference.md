@@ -111,12 +111,11 @@ id: final-quiz
 type: multiple-choice
 question: "What's the fundamental nature of LLMs that explains both their capabilities and their limitations?"
 options:
-  - "They are knowledge databases"
-  - "They are prediction engines"
-  - "They are reasoning systems"
-  - "They are search tools"
+  - "They are knowledge databases that store and retrieve facts"
+  - "They are prediction engines that generate probable next tokens"
+  - "They are reasoning systems that solve problems logically"
 answer: 1
-explanation: "LLMs are prediction engines — they predict what text comes next based on patterns. This explains their strengths (excellent pattern continuation) and limitations (hallucinations, no access to ground truth). Everything you've learned today builds on this foundation."
+explanation: "LLMs are prediction engines — they predict what text comes next based on patterns learned from training data. This explains their strengths (excellent pattern continuation, natural language generation) and limitations (hallucinations, no access to ground truth, no real-time knowledge). Everything you've learned in this course builds on this foundational understanding."
 ```
 
 ---

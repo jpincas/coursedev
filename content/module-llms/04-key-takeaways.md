@@ -137,7 +137,7 @@ question: "You ask AI to summarise a 50-page contract. The summary is well-writt
 options:
   - "Verify key claims against the source document, since plausibility does not equal accuracy"
   - "Accept the summary because AI excels at document synthesis tasks"
-  - "Run the same query through a second AI model and accept whichever summary is longer"
+  - "Run the same query through multiple AI models and look for consensus across their summaries"
 answer: 0
 explanation: "Well-written and plausible does not mean accurate. The summary could contain hallucinated clauses, misattributed terms, or invented details that sound right. Verifying key claims against the source document is essential, especially for consequential work like contracts."
 ```

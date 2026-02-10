@@ -39,6 +39,28 @@ title: "The Division of Labour"
 content: "Your job: Define what done looks like. AI's job: Figure out how to get there. This is proper delegation."
 ```
 
+## When AI Fails, You Failed
+
+Here's the provocative truth: **when AI produces rubbish, that's a delegation failure, not an AI failure.**
+
+The AI did what you asked. If the output is wrong, ask yourself:
+- Did I give clear instructions?
+- Did I provide sufficient context?
+- Did I verify the output?
+- Did I specify success criteria?
+
+Most people blame the AI. "It didn't understand." "It got it wrong." "AI isn't ready yet."
+
+That's a convenient deflection. It lets you avoid the uncomfortable reality: **you delegated badly.**
+
+```callout
+type: danger
+title: "Accept Responsibility for AI Output"
+content: "If you accept this framing — that AI failures are delegation failures — you'll improve much faster than people who blame the technology. Own the outcome."
+```
+
+When AI produces low-quality output, that's feedback on your delegation skill. Treat it as such.
+
 ## Why Process Description Fails
 
 When you describe every step:
@@ -266,15 +288,34 @@ script:
 - You let AI propose an approach
 - You review the plan before execution
 
+## The Only Way to Learn This
+
+Reading about delegation is necessary. It is nowhere near sufficient.
+
+**The skill of AI delegation is like driving.** You can read the manual cover to cover. You can watch videos. You can memorize the rules. But you only get good by doing it.
+
+The muscle memory of structuring prompts, providing context, recognising when to iterate, knowing when output is good enough — that only comes through practice.
+
+Every hour of practice is worth ten hours of reading.
+
+You will fail. Your first attempts will produce garbage. You'll give vague instructions and wonder why the output is vague. You'll skip context and wonder why AI misunderstood.
+
+**That's the learning process.** Each failure teaches you something about delegation. Each iteration improves your instinct for what works.
+
+```callout
+type: tip
+title: "Start Practicing Now"
+content: "Don't wait until you've finished this course. Pick a real task today and delegate it to AI. You'll learn more from one failed attempt than from three more modules of reading."
+```
+
 ```quiz
 id: delegation-skill
 type: multiple-choice
 question: "What's the problem with giving AI step-by-step instructions?"
 options:
-  - "AI can't follow complex instructions"
-  - "It takes too long to type out steps"
+  - "AI can't follow complex instructions reliably"
   - "You're doing the intellectual work; AI just executes"
   - "Step-by-step instructions cost more tokens"
-answer: 2
+answer: 1
 explanation: "When you provide step-by-step instructions, you're doing the planning and thinking — the hard part. AI just follows your orders. Proper delegation means defining the outcome and letting AI figure out the approach."
 ```

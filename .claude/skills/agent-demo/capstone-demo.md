@@ -1,136 +1,6 @@
----
-title: "What To Do Next"
-duration: "15m"
-tags: [action, next-steps, practice]
----
+# Capstone Demo: European Market Expansion Analysis
 
-# What To Do Next
-
-The tools will keep evolving. Here's how to stay effective.
-
-![From AI Chatbot to AI Work Partner — The Transformation](/content/module-synthesis/images/transformation.png)
-
-## What Stays Constant
-
-These principles apply regardless of which tools you use:
-- Clear outcome specification
-- Rich context provision
-- Verification mindset
-- Preparation discipline
-
-Master the principles. Adapt to the tools.
-
-## The Five Quick Wins
-
-**Start here.** Research shows these tasks deliver the highest return on time invested.
-
-**1. Meeting summarisation**
-Record meetings, let AI transcribe, extract action items, and suggest follow-ups. Ten minutes of AI time replaces hours of note-taking and follow-up coordination.
-
-**2. Email drafting and triage**
-Draft responses to routine emails. Summarise long threads. Categorise incoming mail. AI handles the mechanics while you handle judgment.
-
-**3. Document summarisation**
-Drop in a 50-page report, receive a two-page executive summary. AI reads everything; you read what matters.
-
-**4. Status report generation**
-Pull data from project tools, generate weekly status updates automatically. Stop spending Friday afternoons writing what the systems already know.
-
-**5. Research acceleration**
-Multi-source synthesis: upload five articles, receive comparative analysis. AI does the reading and organising; you do the thinking.
-
-```callout
-type: info
-title: "The Data Backs This"
-content: "Daily GenAI users save 4+ hours per week and report significant productivity improvements. They also report higher job security and higher salaries compared to infrequent users. Starting matters."
-```
-
-## The Ten Mistakes Beginners Make
-
-**Avoid these and you'll skip the frustration phase.**
-
-**1. Being too vague**
-"Make this better" tells AI nothing. Specify audience, tone, format, length, purpose.
-
-**2. Overloading single prompts**
-Don't ask for a complete 20-page report in one go. Break it into sections: outline, then expand each part.
-
-**3. Skipping role assignment**
-"You are a senior UX designer explaining to developers..." sets context. Generic AI gets generic results.
-
-**4. Not iterating**
-The first output is a draft. Review it. Give specific feedback. Iterate. This is conversation, not magic.
-
-**5. Ignoring limitations**
-AI hallucinates. It doesn't know today's date. It can't browse the web unless connected. Work within reality.
-
-**6. Not providing examples**
-Show AI what "good" looks like. Two examples improve output more than 200 words of description.
-
-**7. Sharing sensitive data**
-Check your tool's data policy. Understand what gets logged. Default to excluding confidential information.
-
-**8. Using the wrong model**
-Fast models for simple tasks. Reasoning models for complex logic. General models for broad work. Match tool to task.
-
-**9. Failing to use meta-prompting**
-Ask AI to help you write better prompts. "What information would help you produce a better analysis of this data?"
-
-**10. Not verifying outputs**
-Never treat AI as source of truth. Check facts. Verify citations. Test logic. You own the result.
-
-```callout
-type: warning
-title: "These Mistakes Are Expensive"
-content: "As we discussed in the delegation module, the verification overhead is real. That time drops dramatically when you avoid these ten mistakes upfront."
-```
-
-## Your Action Plan
-
-**This Week**
-Pick ONE of the five quick wins. Do it properly. Experience the full workflow: prepare context, delegate clearly, verify output, use the result.
-
-**This Month**
-Build your first complete AI-first workflow for a recurring deliverable. Document what works. Refine what doesn't.
-
-**Ongoing**
-Each time something works well, save the prompt. Build your personal toolkit. Track what saves time.
-
-```callout
-type: warning
-title: "Practice Is the Only Path to Mastery"
-content: "You've learned the theory. Now the real learning begins. Every hour of practice with AI is worth ten hours of reading about AI. The skills you develop through doing — prompting instinct, context engineering, verification judgement — cannot be taught in a course. They come from repetition. Start today. Practice daily. There is no substitute."
-```
-
-```callout
-type: tip
-title: "Start Small"
-content: "Don't try to transform everything at once. Pick one task. Get it working. Then expand. Sustainable change beats dramatic change."
-```
-
-## Common Objections Addressed
-
-**"What about confidential data?"**
-Understand your tools' data policies. Many enterprise tools now offer data isolation. Start with non-sensitive tasks.
-
-**"My work is too specialised."**
-AI is often better at specialised tasks — if you provide the context. Your expertise combined with AI execution is powerful.
-
-**"I tried it and it was bad."**
-Likely a context problem. What did AI have to work with? The investment in setup pays off.
-
-**"My company doesn't allow it."**
-Policies are evolving rapidly. Document successful experiments. Build the case for approved tools.
-
-## The Long Game
-
-Six months from now:
-- You'll have a library of skills
-- Persistent memory will know how you work
-- Connections to your tools will be established
-- Tasks that used to take hours will take minutes
-
-This doesn't happen overnight. It compounds over time. Start building now.
+This is the complete agent demo block for module-synthesis/03-next-steps.md, replacing the meeting summarisation demo.
 
 ```agent
 id: capstone-european-expansion
@@ -142,10 +12,6 @@ system: |
   make data-driven market expansion decisions. You work methodically: plan first,
   research thoroughly, build incrementally, verify before finalising. Write in
   British English with a professional tone suitable for C-suite audiences.
-
-  Check my CLAUDE.md for house style preferences when formatting deliverables.
-  Always cross-reference key claims against multiple sources before including
-  them in final documents.
 
 scratchpad:
   "context/company-profile.md": |
@@ -245,85 +111,12 @@ scratchpad:
     - Payment infrastructure: USD only (needs multi-currency)
     - Data residency: US-based (GDPR implications)
 
-  "skills/chart-generator/SKILL.md": |
-    # Chart Generator
-
-    Generate data visualisation charts using Python + matplotlib.
-
-    ## Usage
-    Run: `python skills/chart-generator/chart.py --type grouped_bar --output path.svg`
-    Pass data as JSON via stdin or --data flag.
-
-    ## Style
-    Uses project dark theme automatically (see chart.py for colours).
-
-    ## Supported Types
-    - bar, grouped_bar, line, pie, stacked_bar
-
-  "skills/chart-generator/chart.py": |
-    #!/usr/bin/env python3
-    """Chart generator — dark theme data visualisations."""
-    import matplotlib.pyplot as plt
-    import matplotlib
-    import numpy as np
-    import json, sys, argparse
-
-    # Project theme
-    COLORS = {
-        'bg': '#18181b', 'surface': '#27272a', 'border': '#3f3f46',
-        'text': '#fafafa', 'muted': '#a1a1aa',
-        'accent': '#00d9c0', 'amber': '#f59e0b', 'red': '#ef4444',
-    }
-    PALETTE = [COLORS['accent'], COLORS['muted'], COLORS['amber'], COLORS['red']]
-
-    matplotlib.rcParams.update({
-        'figure.facecolor': COLORS['bg'],
-        'axes.facecolor': COLORS['surface'],
-        'axes.edgecolor': COLORS['border'],
-        'text.color': COLORS['text'],
-        'xtick.color': COLORS['muted'],
-        'ytick.color': COLORS['muted'],
-        'font.family': 'sans-serif',
-        'font.size': 12,
-    })
-
-    def grouped_bar(data, labels, title, ylabel='', output='chart.svg'):
-        fig, ax = plt.subplots(figsize=(10, 6))
-        x = np.arange(len(labels))
-        n = len(data)
-        width = 0.8 / n
-        for i, (name, values) in enumerate(data.items()):
-            ax.bar(x + i * width - (n-1) * width / 2, values,
-                   width, label=name, color=PALETTE[i % len(PALETTE)])
-        ax.set_xticks(x)
-        ax.set_xticklabels(labels)
-        ax.set_ylabel(ylabel)
-        ax.set_title(title, fontsize=16, fontweight='bold')
-        ax.legend()
-        ax.axhline(y=0, color=COLORS['muted'], linewidth=0.5)
-        plt.tight_layout()
-        plt.savefig(output, dpi=150, facecolor=COLORS['bg'])
-        print(f'Saved: {output}')
-
-    if __name__ == '__main__':
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--type', default='grouped_bar')
-        parser.add_argument('--data', type=str)
-        parser.add_argument('--output', default='chart.svg')
-        args = parser.parse_args()
-        config = json.loads(args.data) if args.data else json.load(sys.stdin)
-        if args.type == 'grouped_bar':
-            grouped_bar(config['data'], config['labels'],
-                        config.get('title',''), config.get('ylabel',''),
-                        args.output)
-
 tools:
   - scratchpad_read
   - scratchpad_write
   - list_files
   - create_folder
   - web_search
-  - run_python
 
 visibility:
   system_prompt: toggleable
@@ -342,9 +135,6 @@ script:
 
   - type: note
     text: "MODULE 3 CONCEPT: Rich context. Notice the file explorer — three context files are already loaded. Company profile, CEO's brief, constraints. The AI will have everything it needs to produce relevant, grounded output."
-
-  - type: note
-    text: "MODULE 9 CONCEPT: Data awareness. These context files contain company financials and strategic plans — sensitive information. In a real workflow, you'd check your organisation's AI usage policy and data classification before uploading confidential strategy documents. Know your tool's data handling before you share."
 
   - type: user
     content: "I need to prepare a competitive analysis and strategic recommendation for European market expansion. I've provided our company context, the CEO's brief, and our constraints. Start by reading the brief and creating a research plan."
@@ -565,31 +355,13 @@ script:
     text: "Notice the folder structure emerging in the file explorer: context/ has your inputs, and now there's a plan.md at the root. The workspace is organising itself naturally. This is the productive spiral starting."
 
   - type: user
-    content: "Before I approve this — what do you think? Any gaps in the plan?"
-
-  - type: note
-    text: "MODULE 4 CONCEPT: 'What do you think?' Asking AI to evaluate its own work triggers critical self-assessment. Models are better at evaluating text than generating it — use this asymmetry."
-
-  - type: assistant
-    content: "Good question. Looking at the plan critically, I see two gaps:\n\n1. **No customer validation.** We're analysing from the outside. We should interview our existing UK customers who are German subsidiaries — they can tell us what German buyers actually care about.\n\n2. **No exit criteria.** The plan says 'launch Q2' but doesn't define what makes us stop or pivot. We need clear fail-fast milestones at Month 3, 6, and 12.\n\nI'll incorporate both into the analysis."
-
-  - type: note
-    text: "The AI found real gaps in its own work — customer validation and exit criteria. This is why 'What do you think?' is one of the most powerful techniques in this course. The AI caught issues that would have become problems later."
-
-  - type: user
-    content: "Good catches. Incorporate those. Now start Phase 1 — use the web search tool to research European market data, competitors, and regulations. Focus on Germany."
-
-  - type: note
-    text: "MODULE 7 CONCEPT: Explicit tool use. The user said 'use the web search tool' rather than just 'research this.' Sometimes AI picks the right tool automatically. Sometimes you need to be explicit. When in doubt, name the tool."
+    content: "Good plan. Start Phase 1 — research the European market, competitors, and regulatory landscape. Focus on Germany as the CEO specifically mentioned it."
 
   - type: note
     text: "MODULE 5 CONCEPT: Files as units of work. The AI won't dump everything into one massive document. It will create separate research files — one for market data, one for competitors, one for regulations. Each file builds context for the next."
 
   - type: assistant
-    content: "Three independent research areas — market sizing, competitive landscape, and regulations. I'll run these in parallel using subagents rather than researching one at a time."
-
-  - type: note
-    text: "MODULE 7 CONCEPT: Subagents. The AI is splitting the work across three parallel research tasks. Each subagent researches independently and writes findings to its own file. What would take 30 minutes sequentially takes 10 minutes in parallel. This is how AI scales — not faster at one task, but multiple tasks simultaneously."
+    content: "I'll conduct comprehensive market research across European markets with specific focus on Germany. Let me start by researching market size and growth dynamics."
 
   - type: tool_call
     tool: create_folder
@@ -863,7 +635,7 @@ script:
     content: "Written to research/regulations.md (74 lines)"
 
   - type: assistant
-    content: "All three research subagents complete. Results:\n\n• **market-data.md:** Germany is the largest market (€3.2B), with realistic 3-year revenue potential of €28.8M\n• **competitors.md:** Asana and Monday.com dominate, but TechVenture's AI capabilities are a clear differentiator\n• **regulations.md:** GDPR compliance is manageable (€90K first year), EU data residency recommended\n\nReady to move to Phase 2 — strategic analysis."
+    content: "Phase 1 research complete. I've created three comprehensive research files:\n\n• **market-data.md:** Germany is the largest market (€3.2B), with realistic 3-year revenue potential of €28.8M\n• **competitors.md:** Asana and Monday.com dominate, but TechVenture's AI capabilities are a clear differentiator\n• **regulations.md:** GDPR compliance is manageable (€90K first year), EU data residency recommended\n\nReady to move to Phase 2 — strategic analysis."
 
   - type: note
     text: "Look at the file explorer — the research/ folder now contains three detailed documents. Each one grounds the next phase of work. This is the productive spiral: outputs become inputs."
@@ -976,25 +748,6 @@ script:
 
   - type: assistant
     content: "I've created a Germany-specific deep dive. Key finding: German buyers are risk-averse and trust-focused. Local competitors win on 'Made in Germany' and data sovereignty, not features. This means our Year 1 projection should be more conservative (€1.2M vs €4.8M initially estimated) until we establish local credibility. The good news: our AI capabilities are a genuine differentiator that local players can't match."
-
-  - type: note
-    text: "MODULE 3 CONCEPT: Context management. We've had a long conversation with substantial research. In a real session, this is where context decay starts — the AI's attention to early details fades as the conversation grows. Watch what happens next."
-
-  - type: compaction
-    summary: |
-      [Earlier: User provided company context (TechVenture, $24M ARR, B2B SaaS).
-       CEO requested European market expansion analysis focused on Germany.
-       AI created research plan with 4 phases. Self-review added customer validation
-       and exit criteria. Phase 1 research complete:
-       - market-data.md: Germany €3.2B market, 16.1% growth, 180K target companies
-       - competitors.md: Asana 18%, Monday.com 22%, local players 15% share
-       - regulations.md: GDPR compliance €90K, EU data residency recommended €160K
-       - germany-deep-dive.md: Conservative Year 1 target €1.2M (120 customers)
-       User iteration: More Germany-specific buyer behaviour research needed — completed.
-       Ready for Phase 2: Strategic Analysis.]
-
-  - type: note
-    text: "The conversation was just compacted — all that research context summarised into a compact block, freeing up space for the analysis phase. This is how you manage long, multi-phase projects without losing coherence. The key details are preserved; the verbosity is gone."
 
   - type: user
     content: "This is excellent context. Now move to Phase 2 — create the strategic analysis. Start with an outline, then build the competitive analysis and strategy recommendations. Don't write everything at once — build it up piece by piece."
@@ -1207,14 +960,21 @@ script:
 
         ## Competitive Positioning Map
 
+        ```
         Price/Features Matrix:
 
-        High Price (Enterprise): Asana, Wrike
-        Mid-Market: Monday.com, [TechVenture opportunity]
-        SMB/Basic: Stackfield, Factro
-
-        X-axis: Basic Features → Enterprise Features
-        Y-axis: SMB/Basic → Mid-Market → High Price/Enterprise
+        High Price │   Asana          Wrike
+        Enterprise │     ▲              ▲
+                   │
+        Mid-Market │  Monday.com    [TechVenture]
+                   │     ▲           opportunity
+                   │                    ▲
+        SMB/Basic  │  Stackfield    Factro
+                   │     ▲              ▲
+                   └─────────────────────────────
+                     Basic          Enterprise
+                        Features
+        ```
 
         **TechVenture's position:** Enterprise features at mid-market pricing,
         differentiated by AI capabilities. This is underserved — global players
@@ -1993,377 +1753,11 @@ script:
     content: "Written to final/european-market-analysis.md (312 lines)"
 
   - type: assistant
-    content: "Final analysis complete. I've created a comprehensive board-ready document that synthesises all research, competitive analysis, and strategic recommendations. The document answers the CEO's five questions: market assessment, competitive landscape, go-to-market strategy, investment requirements, and risk analysis.\n\nThe file is in final/european-market-analysis.md."
-
-  - type: user
-    content: "The board will want visuals. Use the /chart skill to generate a revenue projection chart showing the 3-year financial case."
+    content: "Final analysis complete. I've created a comprehensive 312-line board-ready document that synthesises all research, competitive analysis, and strategic recommendations. The document follows the CEO's five questions:\n\n1. ✓ Market assessment: Germany first, €3.2B market\n2. ✓ Competitive landscape: Asana/Monday dominant, AI is our edge\n3. ✓ Go-to-market: Direct sales + partners, €10K pricing, pilot program\n4. ✓ Investment: €902K Year 1, breakeven Month 18\n5. ✓ Risks: Trust deficit, competitive response, execution — all mitigated\n\nThe file is in final/european-market-analysis.md, ready for the 28 February board meeting."
 
   - type: note
-    text: "MODULE 7 CONCEPT: Skills with code. The user references a skill — a reusable procedure saved in the skills/ folder. The AI will read the skill instructions, then execute code to generate a chart. You don't need to know Python — the skill handles it. Just describe what you want."
-
-  - type: tool_call
-    tool: scratchpad_read
-    args:
-      filename: "skills/chart-generator/SKILL.md"
-
-  - type: tool_result
-    tool: scratchpad_read
-    content: |
-      # Chart Generator
-
-      Generate data visualisation charts using Python + matplotlib.
-
-      ## Usage
-      Run: python skills/chart-generator/chart.py --type grouped_bar --output path.svg
-      Pass data as JSON via stdin or --data flag.
-
-      ## Supported Types
-      - bar, grouped_bar, line, pie, stacked_bar
-
-  - type: assistant
-    content: "Found the chart skill. I'll use chart.py with our financial projections data."
-
-  - type: tool_call
-    tool: run_python
-    args:
-      code: "python skills/chart-generator/chart.py --type grouped_bar --output final/revenue-projection.svg --data '{\"data\": {\"Revenue\": [1.2, 6.0, 14.4], \"Costs\": [0.9, 1.1, 1.4], \"EBITDA\": [-0.5, -0.1, 2.8]}, \"labels\": [\"Year 1 (2026)\", \"Year 2 (2027)\", \"Year 3 (2028)\"], \"title\": \"Germany Market Entry — 3-Year Projection\", \"ylabel\": \"EUR (millions)\"}'"
-
-  - type: tool_result
-    tool: run_python
-    content: "Saved: final/revenue-projection.svg"
-
-  - type: tool_call
-    tool: scratchpad_write
-    args:
-      filename: "final/revenue-projection.svg"
-      content: |
-        [SVG chart: Germany Market Entry — 3-Year Projection]
-
-        Revenue (teal):   Year 1: €1.2M  |  Year 2: €6.0M   |  Year 3: €14.4M
-        Costs (grey):     Year 1: €0.9M  |  Year 2: €1.1M   |  Year 3: €1.4M
-        EBITDA (amber):   Year 1: -€0.5M |  Year 2: -€0.1M  |  Year 3: +€2.8M
-
-        Breakeven: Month 18 (mid-Year 2)
-
-  - type: tool_result
-    tool: scratchpad_write
-    content: "Written to final/revenue-projection.svg (8 lines)"
-
-  - type: assistant
-    content: "Revenue projection chart generated and saved to final/revenue-projection.svg. The visualisation shows the 3-year trajectory: investment year (negative EBITDA), approaching breakeven Year 2, then profitable growth in Year 3. The board can see the financial case at a glance."
-
-  - type: user
-    content: "Good. Now before I send this to the board, I need to verify key claims. That 16.1% growth rate for the German market and the €3.2B market size — cross-reference those against a second source."
+    text: "Look at the file explorer. From a CEO's email and three context files, we built a complete strategic analysis:\n\n• context/ — your inputs (company, brief, constraints)\n• research/ — market data, competitors, regulations, Germany deep-dive\n• drafts/ — plan, outline, competitive analysis, strategy\n• final/ — board-ready comprehensive analysis\n\nEvery file built on the last. This is the productive spiral at scale."
 
   - type: note
-    text: "MODULE 8/9 CONCEPT: Verification as discipline. Never trust AI's first source. The spot-check technique: pick 3-5 specific claims and verify them independently. AI hallucinates — it's structural, not a bug. Your job is to catch it before the board does."
-
-  - type: tool_call
-    tool: web_search
-    args:
-      query: "European project management software market size Germany 2025 2026 Statista Gartner IDC"
-
-  - type: tool_result
-    tool: web_search
-    content: |
-      [Second source: Statista estimates European PM software market
-       growing at 13-15% CAGR, German market €3.0-3.4B range for 2026.
-       IDC estimates slightly lower at €2.9B but with higher growth rate.]
-
-  - type: assistant
-    content: "Cross-referenced against Statista and IDC. The market size checks out — €3.0-3.4B range, consistent with our €3.2B figure. The growth rate is slightly optimistic: EU average is 13-15% CAGR, though Germany specifically trends higher.\n\nI'd recommend noting in the board document that these are estimates from multiple sources and our conservative scenario accounts for variance. The core recommendation doesn't change even at the lower end of the range."
-
-  - type: note
-    text: "MODULE 2 CONCEPT: Probability, not truth. AI doesn't 'know' the market is €3.2B — it predicted plausible numbers from training data. Cross-referencing confirmed the figures are in range but caught that our growth rate was slightly optimistic. In a board presentation, this verification is the difference between credibility and embarrassment."
-
-  - type: user
-    content: "Good — the numbers hold up. One last thing: save a note to my CLAUDE.md that for market analysis projects, I want this phased approach. And always lead with EU data residency for European markets. I want this workflow ready for next time."
-
-  - type: note
-    text: "MODULE 7 CONCEPT: Persistent memory. The user is saving this workflow as a reusable pattern. Next time they do a market analysis, the AI will already know the preferred approach. Skills and memory compound over time — this is how you build systems, not just prompts."
-
-  - type: tool_call
-    tool: scratchpad_write
-    args:
-      filename: "CLAUDE.md"
-      content: |
-        # Market Analysis Preferences
-
-        ## Standard Workflow
-        For market analysis projects, follow this phased approach:
-        1. Research phase: market data, competitors, regulations (separate files)
-        2. Strategic analysis: outline first, then expand sections incrementally
-        3. Strategy recommendations: GTM, pricing, team, timeline
-        4. Verification: cross-reference 3-5 key claims against second sources
-        5. Final document: comprehensive board-ready analysis
-
-        ## European Market Notes
-        - Always lead with EU data residency (AWS Frankfurt) for European entry
-        - German buyers are risk-averse: compliance is table stakes, not a feature
-        - Use conservative Year 1 projections (account for trust deficit)
-
-  - type: tool_result
-    tool: scratchpad_write
-    content: "Written to CLAUDE.md (16 lines)"
-
-  - type: assistant
-    content: "Done. Your market analysis workflow and European market preferences are saved to CLAUDE.md. Next time you start a market analysis, I'll follow this phased approach automatically — no need to re-explain the process."
-
-  - type: user
-    content: "Actually — I don't want to present a document. Turn the final analysis into a presentation website I can pull up on screen during the board meeting. Professional, clean, with the chart embedded."
-
-  - type: note
-    text: "MODULE 6/7 CONCEPT: Code generation. AI doesn't just write documents — it builds functional things. A complete HTML presentation with styling, navigation, and data visualisation, generated from a text analysis. You didn't need to know HTML or CSS. You just described the outcome."
-
-  - type: assistant
-    content: "Great idea — a live website is much more impactful than a static document for a board presentation. Let me read the final analysis and build a presentation site."
-
-  - type: tool_call
-    tool: scratchpad_read
-    args:
-      filename: "final/european-market-analysis.md"
-
-  - type: tool_result
-    tool: scratchpad_read
-    content: |
-      # European Market Expansion Analysis
-      **Prepared for:** Board of Directors, TechVenture Inc.
-      **Date:** 28 February 2026
-      [Full analysis content — 312 lines covering executive summary,
-       market assessment, competitive analysis, GTM strategy,
-       financial projections, risk assessment, and recommendations...]
-
-  - type: tool_call
-    tool: scratchpad_write
-    args:
-      filename: "final/presentation/index.html"
-      content: |
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>TechVenture — European Market Expansion</title>
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-                   background: #18181b; color: #fafafa; }
-            .slide { min-height: 100vh; padding: 80px 120px; display: flex;
-                     flex-direction: column; justify-content: center; }
-            h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; }
-            h2 { font-size: 2.2rem; font-weight: 600; color: #00d9c0;
-                 margin-bottom: 2rem; }
-            p, li { font-size: 1.3rem; line-height: 1.8; color: #a1a1aa; }
-            .highlight { color: #00d9c0; font-weight: 600; }
-            .metric { display: inline-block; text-align: center;
-                      padding: 2rem; margin: 1rem; }
-            .metric .number { font-size: 3rem; font-weight: 700;
-                              color: #00d9c0; }
-            .metric .label { font-size: 1rem; color: #a1a1aa;
-                             margin-top: 0.5rem; }
-            .grid { display: grid; grid-template-columns: 1fr 1fr;
-                    gap: 3rem; margin-top: 2rem; }
-            .card { background: #27272a; border-radius: 12px;
-                    padding: 2rem; border: 1px solid #3f3f46; }
-            .card h3 { color: #fafafa; margin-bottom: 1rem; }
-            .risk { border-left: 4px solid #f59e0b; }
-            .opportunity { border-left: 4px solid #00d9c0; }
-            nav { position: fixed; bottom: 2rem; right: 2rem;
-                  display: flex; gap: 0.5rem; }
-            nav a { background: #27272a; color: #fafafa; padding: 0.5rem 1rem;
-                    border-radius: 6px; text-decoration: none; border: 1px solid #3f3f46; }
-            nav a:hover { border-color: #00d9c0; }
-            .chart-container { background: #27272a; border-radius: 12px;
-                               padding: 2rem; margin-top: 2rem; }
-            .bar-group { display: flex; align-items: end; gap: 2rem;
-                         justify-content: center; padding: 2rem 0; }
-            .bar-set { text-align: center; }
-            .bar { width: 60px; border-radius: 6px 6px 0 0; margin: 0 4px;
-                   display: inline-block; }
-            .bar.revenue { background: #00d9c0; }
-            .bar.costs { background: #a1a1aa; }
-            .bar.ebitda { background: #f59e0b; }
-            .bar-label { margin-top: 0.5rem; color: #a1a1aa; }
-          </style>
-        </head>
-        <body>
-
-        <!-- Slide 1: Title -->
-        <div class="slide" id="title">
-          <p style="color:#00d9c0; font-size:1.1rem; text-transform:uppercase;
-             letter-spacing:3px; margin-bottom:1rem;">Strategic Recommendation</p>
-          <h1>European Market Expansion</h1>
-          <p style="font-size:1.5rem; margin-top:1rem;">
-            Board of Directors Presentation — 28 February 2026</p>
-          <p style="margin-top:3rem;">TechVenture Inc. | Strategic Planning Team</p>
-        </div>
-
-        <!-- Slide 2: The Opportunity -->
-        <div class="slide" id="opportunity">
-          <h2>The Opportunity</h2>
-          <div style="display:flex; justify-content:space-around; margin:2rem 0;">
-            <div class="metric">
-              <div class="number">EUR 3.2B</div>
-              <div class="label">German market size</div>
-            </div>
-            <div class="metric">
-              <div class="number">16.1%</div>
-              <div class="label">Annual growth (CAGR)</div>
-            </div>
-            <div class="metric">
-              <div class="number">180,000</div>
-              <div class="label">Target companies</div>
-            </div>
-            <div class="metric">
-              <div class="number">12-18mo</div>
-              <div class="label">AI lead window</div>
-            </div>
-          </div>
-          <p>Germany is the largest European B2B SaaS market. Our AI capabilities
-             give us a <span class="highlight">12-18 month differentiation window</span>
-             before Asana and Monday.com respond.</p>
-        </div>
-
-        <!-- Slide 3: Competitive Landscape -->
-        <div class="slide" id="competition">
-          <h2>Competitive Landscape</h2>
-          <div class="grid">
-            <div class="card opportunity">
-              <h3>Our Edge</h3>
-              <ul>
-                <li>AI-enhanced project management (unique)</li>
-                <li>Gartner Magic Quadrant recognition</li>
-                <li>Org-wide pricing beats per-seat</li>
-                <li>Enterprise features at mid-market price</li>
-              </ul>
-            </div>
-            <div class="card risk">
-              <h3>Barriers to Address</h3>
-              <ul>
-                <li>No EU data residency (yet)</li>
-                <li>No German localisation (yet)</li>
-                <li>Unknown brand in Germany</li>
-                <li>3-6 month sales cycles</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 4: Financial Case -->
-        <div class="slide" id="financials">
-          <h2>3-Year Financial Projection</h2>
-          <div class="chart-container">
-            <div class="bar-group">
-              <div class="bar-set">
-                <div style="display:flex; align-items:end; gap:4px;
-                            justify-content:center; height:200px;">
-                  <div class="bar revenue" style="height:17px;"></div>
-                  <div class="bar costs" style="height:13px;"></div>
-                  <div class="bar ebitda" style="height:7px; background:#ef4444;"></div>
-                </div>
-                <div class="bar-label">Year 1 (2026)<br>EUR 1.2M rev</div>
-              </div>
-              <div class="bar-set">
-                <div style="display:flex; align-items:end; gap:4px;
-                            justify-content:center; height:200px;">
-                  <div class="bar revenue" style="height:83px;"></div>
-                  <div class="bar costs" style="height:15px;"></div>
-                  <div class="bar ebitda" style="height:1px; background:#ef4444;"></div>
-                </div>
-                <div class="bar-label">Year 2 (2027)<br>EUR 6.0M rev</div>
-              </div>
-              <div class="bar-set">
-                <div style="display:flex; align-items:end; gap:4px;
-                            justify-content:center; height:200px;">
-                  <div class="bar revenue" style="height:200px;"></div>
-                  <div class="bar costs" style="height:19px;"></div>
-                  <div class="bar ebitda" style="height:39px;"></div>
-                </div>
-                <div class="bar-label">Year 3 (2028)<br>EUR 14.4M rev</div>
-              </div>
-            </div>
-            <div style="display:flex; justify-content:center; gap:2rem;
-                        margin-top:1rem;">
-              <span><span style="color:#00d9c0;">&#9632;</span> Revenue</span>
-              <span><span style="color:#a1a1aa;">&#9632;</span> Costs</span>
-              <span><span style="color:#f59e0b;">&#9632;</span> EBITDA</span>
-            </div>
-          </div>
-          <p style="margin-top:2rem;">
-            Investment: <span class="highlight">EUR 902K Year 1</span> |
-            Breakeven: <span class="highlight">Month 18</span> |
-            Year 3 EBITDA: <span class="highlight">EUR +2.8M</span></p>
-        </div>
-
-        <!-- Slide 5: The Ask -->
-        <div class="slide" id="ask">
-          <h2>The Ask</h2>
-          <div style="background:#27272a; border:2px solid #00d9c0;
-                      border-radius:12px; padding:3rem; margin:2rem 0;
-                      text-align:center;">
-            <p style="font-size:2rem; color:#fafafa; font-weight:600;">
-              Approve EUR 902K for Germany market entry</p>
-            <p style="font-size:1.3rem; margin-top:1rem;">
-              Launch Q2 2026 | 120 customers by year-end |
-              Prove model before expanding</p>
-          </div>
-          <div class="grid" style="margin-top:2rem;">
-            <div>
-              <h3 style="color:#00d9c0; margin-bottom:1rem;">If we move now</h3>
-              <p>12-18 month AI lead. First mover in German mid-market.
-                 EUR 14.4M ARR by Year 3.</p>
-            </div>
-            <div>
-              <h3 style="color:#f59e0b; margin-bottom:1rem;">If we wait</h3>
-              <p>Asana and Monday.com add AI. Window closes.
-                 We compete on price, not differentiation.</p>
-            </div>
-          </div>
-        </div>
-
-        <nav>
-          <a href="#title">1</a>
-          <a href="#opportunity">2</a>
-          <a href="#competition">3</a>
-          <a href="#financials">4</a>
-          <a href="#ask">5</a>
-        </nav>
-
-        </body>
-        </html>
-
-  - type: tool_result
-    tool: scratchpad_write
-    content: "Written to final/presentation/index.html (184 lines)"
-
-  - type: assistant
-    content: "Board presentation website created at final/presentation/index.html. Five slides:\n\n1. Title slide\n2. The Opportunity — key metrics (€3.2B market, 16.1% growth, 180K targets, 12-18mo AI window)\n3. Competitive Landscape — our edge vs barriers to address\n4. Financial Projection — 3-year chart with revenue, costs, EBITDA\n5. The Ask — €902K approval with urgency framing (move now vs wait)\n\nDark theme, clean typography, slide navigation. Open it in a browser and it's ready for the boardroom."
-
-  - type: note
-    text: "From a CEO's email to a live presentation website. Look at what's in the file explorer now:\n\n• context/ — your inputs\n• skills/ — reusable tools\n• research/ — market intelligence\n• drafts/ — working documents\n• final/ — the analysis, the chart, AND a complete presentation website\n• CLAUDE.md — saved workflow for next time\n\nEvery file built on the last. Outputs became inputs. This is the productive spiral at scale."
-
-  - type: note
-    text: "Every major technique from this course came together naturally:\n\n**CONTEXT (Module 3):** Rich context files. Data sensitivity check. Compaction to manage a long session.\n**PROMPTING (Module 4):** Outcome-focused instructions. 'What do you think?' for self-evaluation. Specific iteration feedback.\n**FILES (Module 5):** Separate files per research area. Plan first. Outputs became inputs. Folders for organisation.\n**WRITING (Module 6):** Sectional drafting — outline, expand, synthesise. Then transformed into a presentation.\n**ADVANCED (Module 7):** Subagents for parallel research. Skill with code for chart generation. Explicit tool invocation. Persistent memory saved to CLAUDE.md.\n**DELEGATION (Module 8):** You defined outcomes, AI figured out the process. Self-review caught gaps. Verification before delivery.\n**RISKS (Module 9):** Data awareness before uploading. Cross-referencing claims. Probability not truth — verification is non-negotiable.\n\nYou provided the strategy, the judgment, the direction. AI provided the execution — research, analysis, charts, a full website. Together: from a CEO's email to a boardroom presentation in the time it used to take to schedule the kickoff meeting."
-```
-```quiz
-id: next-steps-quick-wins
-type: multiple-choice
-question: "According to research, daily GenAI users save how much time per week compared to non-users?"
-options:
-  - "30-60 minutes per week"
-  - "1-2 hours per week"
-  - "4+ hours per week"
-answer: 2
-explanation: "Daily GenAI users save 4+ hours per week on average, and they report 92% productivity improvement, higher job security, and higher salaries. The key is consistent daily use focused on high-ROI tasks like the five quick wins, not occasional experimentation."
-```
-
-```quiz
-id: next-steps-mistakes
-type: multiple-choice
-question: "What's the most common mistake that causes poor AI output quality?"
-options:
-  - "Not providing enough examples of what good output looks like"
-  - "Being too vague in instructions and requirements"
-  - "Not iterating — accepting the first draft as final"
-answer: 1
-explanation: "Being too vague is the #1 mistake. Modern models follow instructions literally — vague prompts get vague results. Specify audience, tone, format, length, and purpose explicitly. The 'Colleague Test': if a colleague would be confused by your instruction, AI will be too. Examples help, and iteration matters, but clarity in the initial instruction is the foundation."
+    text: "In under 10 minutes, you've produced what would traditionally take a consulting team days or weeks of work:\n\n• Market research across five European countries\n• Competitive analysis of 6+ players\n• Regulatory requirements (GDPR, data residency, employment law)\n• Financial projections (3-year revenue, cost model, breakeven analysis)\n• Go-to-market strategy (team, channels, pricing, timeline)\n• Risk assessment with specific mitigation strategies\n• 312-line board-ready strategic analysis\n\nEvery technique you've learned in this course came together:\n\n**MODULE 3 — Context:** Rich context files grounded every decision\n**MODULE 4 — Prompting:** Simple outcome-focused instructions, then iteration when needed\n**MODULE 5 — Files:** Each research area became a separate file, outputs fed into next inputs\n**MODULE 6 — Writing:** Research → outline → drafts → final document (sectional approach)\n**MODULE 8 — Delegation:** You defined outcomes, AI figured out the process\n**MODULE 8 — Self-review:** AI checked for gaps before finalising\n\nThis is what AI-first work looks like. Not replacing your thinking — amplifying it. You provided the strategy, the judgment, the direction. AI provided the execution, the research, the synthesis. Together: a board-ready analysis in the time it used to take to schedule the kickoff meeting."
 ```

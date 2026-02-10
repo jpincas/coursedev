@@ -414,11 +414,10 @@ id: mcp-purpose
 type: multiple-choice
 question: "What does MCP (Model Context Protocol) enable?"
 options:
-  - "Faster AI processing speed"
-  - "Better language understanding"
   - "Direct AI connections to your tools and systems"
+  - "Faster AI processing speed"
   - "Lower AI costs"
-answer: 2
+answer: 0
 explanation: "MCP provides a standard way for AI to connect to external systems — files, databases, APIs, applications. This enables AI to read from and write to your systems directly, rather than requiring manual copy-paste."
 ```
 
@@ -427,10 +426,9 @@ id: mcp-security-risk
 type: multiple-choice
 question: "What was the Salesforce Agentforce vulnerability (CVSS 9.4) caused by?"
 options:
-  - "A bug in the MCP protocol implementation"
   - "Indirect prompt injection via external content containing hidden instructions"
+  - "A bug in the MCP protocol implementation"
   - "Weak password policies for AI agents"
-  - "Unencrypted data transmission"
-answer: 1
+answer: 0
 explanation: "The Agentforce vulnerability demonstrated how AI agents reading external content could be tricked into following malicious embedded instructions, leading to CRM data exfiltration. This is the 'toxic agent' risk — AI following instructions it shouldn't."
 ```

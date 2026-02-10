@@ -45,15 +45,36 @@ title: "The Fundamental Shift"
 content: "You're not operating a tool. You're managing a worker. This is a completely different relationship with the technology."
 ```
 
+## The New Bottleneck
+
+This shift changes everything about where work gets stuck.
+
+**What used to take hours now takes seconds.** AI can draft a report, analyse data, or generate a presentation in the time it takes you to make coffee.
+
+But here's the uncomfortable implication: **the bottleneck has shifted to you.**
+
+It's no longer "can we do this?" It's "can we specify this clearly enough?"
+
+AI execution is near-instant. But if your instructions are vague, your context is incomplete, or your verification is sloppy, the output will be garbage — fast garbage, but garbage nonetheless.
+
+**Your ability to delegate clearly, provide good context, and verify quality now determines output quality.**
+
+This is the mindset shift. You are no longer the doer. You are the director.
+
+```callout
+type: warning
+title: "You Are Now the Limiting Factor"
+content: "The speed and quality of AI work is gated by your ability to specify, contextualize, and verify. The human is the bottleneck."
+```
+
 ```quiz
 id: delegation-mindset
 type: multiple-choice
 question: "What's the key difference between using AI as a search engine vs as a worker?"
 options:
-  - "Search engine mode is faster"
   - "Worker mode produces better quality output"
   - "In worker mode, AI does the assembly; in search mode, you do"
   - "Worker mode requires more expensive AI models"
-answer: 2
+answer: 1
 explanation: "The fundamental difference is who assembles the final work. In search engine mode, you copy-paste and assemble. In worker mode, you delegate the outcome and AI delivers finished work."
 ```

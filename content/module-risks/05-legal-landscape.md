@@ -115,10 +115,9 @@ id: legal-copyright-ownership
 type: multiple-choice
 question: "According to the US Copyright Office ruling, when does AI-generated output receive copyright protection?"
 options:
-  - "Always, because the AI created original content"
-  - "Never, because AI cannot hold copyright"
+  - "Always, because the AI created original content that didn't previously exist"
+  - "Never, because AI cannot hold copyright and humans cannot claim authorship of AI work"
   - "Only when a human determined sufficient expressive elements through creative control"
-  - "Only when the AI's training data was all legally licensed"
 answer: 2
 explanation: "The Copyright Office ruled that AI output gets protection only where human authorship is demonstrated through determining sufficient expressive elements. This means meaningful human creative input and control, not just providing a prompt. The key is the human's creative contribution, not the AI's."
 ```

@@ -199,10 +199,9 @@ id: privacy-agent-risk
 type: multiple-choice
 question: "Why do agentic AI tools represent a different security risk compared to traditional chatbots?"
 options:
-  - "They store more conversation history on external servers"
+  - "They process data on external servers while chatbots work locally"
   - "They inherit your file permissions and can access all data you can access"
-  - "They are more likely to be hacked by external attackers"
-  - "They require internet connectivity while traditional chatbots don't"
+  - "They share data across multiple users to improve performance"
 answer: 1
 explanation: "Agentic AI tools inherit the user's file permissions and scan all accessible data to complete tasks. This means they can access sensitive files the user might not even know they have access to, creating exposure that traditional copy-paste chatbots don't have."
 ```

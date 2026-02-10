@@ -72,14 +72,13 @@ id: advanced-takeaway
 type: multiple-choice
 question: "What's the core principle behind all advanced AI patterns?"
 options:
-  - "Use more sophisticated prompts"
   - "Build infrastructure once that pays dividends on every future task"
+  - "Use more sophisticated prompts"
   - "Use the most expensive AI models"
-  - "Spend more time on each task"
-answer: 1
+answer: 0
 explanation: "The core principle is 'build once, reuse everywhere.' Skills, persistent memory, and tool connections are investments that make every future task easier and more consistent."
 ```
 
 ## Up Next
 
-Time to put it all together. In the **Synthesis** session, we'll review everything learned and discuss how to apply it in your actual work.
+You've built the advanced toolkit. Next: **Delegation** — moving from asking AI for help to giving AI autonomous tasks, designing agentic workflows, and developing the AI-first philosophy that ties everything together.

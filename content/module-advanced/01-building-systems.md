@@ -85,11 +85,10 @@ id: advanced-systems
 type: multiple-choice
 question: "What separates effective AI users from casual users?"
 options:
-  - "They use more expensive AI models"
-  - "They write longer prompts"
+  - "They write longer, more detailed prompts"
   - "They build reusable systems instead of one-off prompts"
-  - "They have more technical background"
-answer: 2
+  - "They use more expensive AI models"
+answer: 1
 explanation: "Effective AI users build infrastructure — skills, preferences, connections — that makes every future task easier. They invest in reusable systems rather than starting from scratch each time."
 ```
 
@@ -98,10 +97,9 @@ id: token-economics
 type: multiple-choice
 question: "Why do agentic workflows consume 100x more tokens than simple chat?"
 options:
-  - "Agents use more complex language models"
   - "The entire conversation history is resent with every message in stateless APIs"
-  - "Agents require more computational power"
+  - "Agents use more complex language models"
   - "Agents use multiple models simultaneously"
-answer: 1
+answer: 0
 explanation: "Stateless APIs mean the entire conversation history gets resent with every message. As conversations grow longer and agents take more actions, token consumption explodes — 100x higher than simple chat interactions."
 ```

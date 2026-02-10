@@ -8,6 +8,12 @@ tags: [context-decay, conversations, best-practices]
 
 Here's a common frustration: AI seems to get worse the longer you talk to it. This isn't your imagination. It's context decay.
 
+```callout
+type: warning
+title: "Frustration Is a Context Problem"
+content: "When AI starts acting frustratingly — giving wrong answers, forgetting what you told it, going in circles — it's almost always a context problem. The techniques in this module aren't just theory. They're the #1 way to avoid frustration when working with AI."
+```
+
 ## The Degradation Pattern
 
 ![Context Decay Over Conversation Turns](/content/module-context/images/context-decay.svg)

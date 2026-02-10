@@ -475,11 +475,10 @@ id: what-is-a-script
 type: multiple-choice
 question: "What distinguishes a script from a full application like Microsoft Word or a CRM system?"
 options:
-  - "Scripts are always written in Python; applications use other languages"
   - "Scripts are small, focused sets of instructions for specific tasks; applications are large, complex systems built by teams over months"
+  - "Scripts are always written in Python; applications use other languages"
   - "Scripts run faster than applications"
-  - "Scripts don't need a computer to run"
-answer: 1
+answer: 0
 explanation: "A script is a small, self-contained set of instructions — often just tens of lines — that solves a specific problem. Applications like Word or Salesforce are massive, complex systems with user interfaces, databases, and thousands of edge cases. The simplicity of scripts is exactly what makes them well-suited to AI generation."
 ```
 
@@ -488,11 +487,10 @@ id: json-api-pattern
 type: multiple-choice
 question: "When a script 'calls an API and processes the JSON response,' what is actually happening?"
 options:
-  - "The script is downloading a website and reading the HTML"
   - "The script is sending a structured request to another system's endpoint, receiving structured data (JSON) back, and extracting the fields it needs"
-  - "The script is converting a PDF to a spreadsheet"
+  - "The script is downloading a website and reading the HTML"
   - "The script is running a database query on your local machine"
-answer: 1
+answer: 0
 explanation: "An API is a structured interface that one piece of software uses to request data from another. The script sends a request to a specific endpoint (like /latest for exchange rates), receives a JSON response containing structured data, and then extracts and processes the fields it needs. This script → API → JSON pattern is the foundation of modern automation."
 ```
 
@@ -501,10 +499,9 @@ id: vibe-coding-scope
 type: multiple-choice
 question: "What's the realistic scope for AI-generated scripts?"
 options:
-  - "Full production applications for customers"
-  - "Enterprise-scale systems with complex security requirements"
   - "Personal automation, API integrations, data processing, and departmental tools with clear inputs and outputs"
+  - "Full production applications for customers"
   - "Any software project regardless of complexity"
-answer: 2
+answer: 0
 explanation: "AI-generated scripts work well for personal automation, connecting services via APIs, data processing, and departmental tools — tasks with clear inputs and outputs. They have real limitations for production software, customer-facing applications, and systems requiring security hardening at scale."
 ```

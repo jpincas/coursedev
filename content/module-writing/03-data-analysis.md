@@ -186,10 +186,9 @@ id: data-workflow-quiz
 type: multiple-choice
 question: "Why should you ask AI to 'describe the dataset' before asking analytical questions?"
 options:
-  - "It reduces token usage for subsequent questions"
+  - "It reduces token usage by loading the data into memory more efficiently"
   - "It confirms the AI correctly understands the data structure before analysis"
-  - "It automatically cleans the data"
-  - "It makes charts render faster"
+  - "It automatically cleans the data and removes outliers"
 answer: 1
 explanation: "Asking AI to describe the dataset first lets you verify it correctly understands column names, data types, and structure. This prevents analysis errors caused by misinterpreting the data."
 ```

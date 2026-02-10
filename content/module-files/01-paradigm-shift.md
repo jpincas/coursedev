@@ -92,13 +92,19 @@ script:
     text: "First, the chat approach. No files. Just typing a request and getting text back that you'd have to copy-paste into a document."
 
   - type: user
-    content: "I have a team meeting in 30 minutes. Engineering shipped auth v2 and started an API refactor with 2 P1 bugs. Design finished mobile mockups, user testing next week. Marketing campaign got 12K impressions day 1 but target was 15K. Sales closed 3 enterprise deals for $180K total with $420K pipeline. Support tickets up 22% and response time is 4.2 hours vs 3 hour target. Can you help me prepare?"
+    content: "I have a team meeting in 30 minutes and need talking points. Can you summarise what's happening across all departments?"
+
+  - type: assistant
+    content: "I can help, but I'd need to know what's happening in each department. Could you share your team updates?"
+
+  - type: user
+    content: "Engineering shipped auth v2 and started an API refactor with 2 P1 bugs. Design finished mobile mockups, user testing next week. Marketing campaign got 12K impressions day 1 but target was 15K. Sales closed 3 enterprise deals for $180K total with $420K pipeline. Support tickets up 22% and response time is 4.2 hours vs 3 hour target."
 
   - type: assistant
     content: "Here's a summary for your meeting:\n\n**Engineering:** Auth v2 shipped. API refactor started. Note: 2 P1 bugs need attention.\n\n**Design:** Mobile redesign mockups complete. User testing scheduled for next week.\n\n**Marketing:** Campaign live since Monday. 12K impressions on day 1 — below the 15K target. May need adjustment.\n\n**Sales:** Strong quarter. 3 enterprise deals closed ($180K). Pipeline healthy at $420K.\n\n**Support:** Volume up 22%. Response time 4.2hrs vs 3hr target — this needs discussion.\n\nWould you like me to format this differently?"
 
   - type: note
-    text: "You had to type out all the data manually. The AI gave you text in a chat window. Now you'd need to copy it, paste it into a document, format it, maybe add a title, adjust the layout. That's the chat workflow. Now watch the file approach."
+    text: "You had to type out all the data manually in chat. The AI gave you text in a chat window. Now you'd need to copy it, paste it into a document, format it, maybe add a title, adjust the layout. That's the chat workflow. Now watch the file approach."
 
   - type: clear
     reset_scratchpad: false
@@ -176,10 +182,9 @@ id: files-paradigm
 type: multiple-choice
 question: "What's the key difference between chat-based and file-based AI workflows?"
 options:
-  - "File-based workflows are slower but higher quality"
-  - "Chat workflows produce text; file workflows produce usable deliverables"
-  - "File workflows only work with certain AI models"
-  - "Chat is better for complex tasks"
-answer: 1
-explanation: "The fundamental shift is from receiving chat text (that you then copy-paste and format) to receiving actual files (documents, spreadsheets, presentations) that are ready to use or edit directly."
+  - "Chat workflows produce text you copy-paste; file workflows produce usable deliverables ready to open in their native applications"
+  - "File-based workflows only work with certain AI models that support file creation"
+  - "Chat is better for complex tasks because you can iterate in the conversation"
+answer: 0
+explanation: "The fundamental shift is from receiving chat text (that you then copy-paste and format) to receiving actual files (documents, spreadsheets, presentations) that are ready to use or edit directly. This eliminates the formatting and assembly work."
 ```

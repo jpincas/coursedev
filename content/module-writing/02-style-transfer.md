@@ -320,10 +320,9 @@ id: style-transfer-quiz
 type: multiple-choice
 question: "What is the EchoWriting technique?"
 options:
-  - "Asking AI to repeat your exact words back to you"
+  - "Writing complete drafts yourself and having AI convert them into different formats"
   - "Feeding AI 15-20 samples of your writing to analyse patterns, then creating a persistent style prompt"
-  - "Using echo commands in a terminal to generate writing"
-  - "Writing drafts, then asking AI to echo the same content in different formats"
+  - "Asking AI to repeat your exact words back to you to verify comprehension"
 answer: 1
 explanation: "EchoWriting involves giving AI many samples of your writing, having it analyse your style patterns, then creating a reusable style prompt that makes AI write like you across all future sessions."
 ```

@@ -39,20 +39,13 @@ Now you understand the boundaries:
 - Exercise creative control to establish legal authorship
 - Build verification into workflows rather than assuming accuracy
 
-## The Advanced Patterns Ahead
-
-With realistic expectations and risk awareness in place, you're ready for the advanced module.
-
-You'll learn:
-- How to build reusable skills and persistent memory systems
-- Multi-agent workflows and task decomposition
-- The Model Context Protocol and tool integration
-- Meta-tooling: using AI to build custom AI tools
-- How to design AI-first workflows that deliver measurable results
+## Putting It All Together
 
 The risks you've learned here aren't reasons to avoid AI. They're the operating manual for using it effectively.
 
 The organisations succeeding with AI aren't the ones with the best technology. They're the ones with the best discipline.
+
+Next up: the **Synthesis** module, where we'll review everything you've learned across the full day and discuss how to apply it in your actual work starting Monday.
 
 ```quiz
 id: risks-module-synthesis

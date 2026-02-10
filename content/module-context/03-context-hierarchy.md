@@ -52,6 +52,25 @@ title: "The Power Law of Instructions"
 content: "One well-crafted persistent instruction file is worth hundreds of per-conversation prompts. It compounds across every session."
 ```
 
+## Tools: Extending What AI Can Do
+
+Modern AI assistants don't just generate text — they can **use tools** to interact with the world. You've seen this in action in earlier demos, and you'll see it throughout this course.
+
+Tools allow AI to:
+- **Search the web** for current information
+- **Read and write files** in your project
+- **Run code** and execute commands
+- **Browse websites** and extract information
+- **Connect to external services** via APIs
+
+When you see an AI reading files, running searches, or creating documents in demos, that's tool use in action. The AI decides which tools to use based on the task, executes them, and incorporates the results into its response.
+
+```callout
+type: info
+title: "Tools in This Course"
+content: "Throughout the demos you'll see tool calls happening — file reads, web searches, code execution. We'll cover the mechanics of how tools work in Module 7 (Advanced Patterns). For now, just know that tools extend AI capabilities far beyond text generation."
+```
+
 ## 3. Your Immediate Instructions
 
 Your explicit instructions in the current message carry significant weight. This is why clear, direct instructions matter so much.

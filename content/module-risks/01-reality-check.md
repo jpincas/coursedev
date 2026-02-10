@@ -65,10 +65,9 @@ id: reality-check-bias
 type: multiple-choice
 question: "In the METR study, why did developers using AI tools believe they were faster when they were actually slower?"
 options:
-  - "They didn't understand the tools properly"
-  - "The AI gave them incorrect information"
+  - "They measured completion time incorrectly due to tracking errors"
+  - "The AI gave them incorrect code that looked correct initially"
   - "The work felt easier, creating a false sense of productivity"
-  - "They were inexperienced developers"
 answer: 2
 explanation: "The work feeling easier created a cognitive bias where developers overestimated AI's contribution. This highlights the gap between perceived and actual productivity with AI tools."
 ```

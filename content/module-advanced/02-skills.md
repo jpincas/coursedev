@@ -98,6 +98,30 @@ title: "Building Your Skill Library"
 content: "Start with tasks you do repeatedly. Each time you explain something to AI, ask: should this be a skill? If you'll do it again, the answer is probably yes."
 ```
 
+## When to Be Explicit About Skills and Tools
+
+Sometimes AI automatically uses the right skill or tool without being asked. You say "generate the weekly report" and it just knows to use the skill. Other times, you need to be explicit: "use the /review skill" or "search the web for..."
+
+**Why this inconsistency?** AI decides based on context whether a skill or tool is relevant. Sometimes that decision is obvious. Sometimes it's not.
+
+Knowing when to be explicit is itself a skill you develop with practice.
+
+**Rule of thumb:** If the AI isn't doing what you expect, try being explicit about which tool or skill to use.
+
+Instead of: "Find information about this company"
+Try: "Search the web for recent news about this company"
+
+Instead of: "Check this code"
+Try: "Use the /review skill to check this code"
+
+The more specific you are about the mechanism, the less AI has to infer about your intent.
+
+```callout
+type: tip
+title: "Default to Implicit, Escalate to Explicit"
+content: "Start with natural language. If AI doesn't pick the right tool or skill, make your next instruction explicit about which one to use. This pattern — implicit first, explicit on retry — is faster than being overly prescriptive from the start."
+```
+
 ## Good Candidates for Skills
 
 - Regular reports (weekly, monthly, quarterly)
@@ -402,10 +426,9 @@ id: skills-purpose
 type: multiple-choice
 question: "What's the main benefit of creating a skill for a recurring task?"
 options:
-  - "Skills make AI faster at processing"
   - "Document the procedure once; AI follows it automatically on every future task"
-  - "Skills are required for complex tasks"
+  - "Skills make AI faster at processing"
   - "Skills reduce the cost of AI usage"
-answer: 1
+answer: 0
 explanation: "Skills capture your procedures so you document them once and AI follows them automatically every time. No re-explaining, consistent results, institutional knowledge preserved."
 ```

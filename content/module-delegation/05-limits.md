@@ -182,9 +182,8 @@ type: multiple-choice
 question: "Why can't AI take accountability for decisions?"
 options:
   - "AI isn't smart enough yet"
-  - "AI is too expensive for high-stakes decisions"
   - "Tools don't take responsibility; only people can be accountable"
   - "AI would always make the same decisions"
-answer: 2
+answer: 1
 explanation: "Accountability requires someone who can be held responsible for consequences. AI is a tool — it can inform and assist, but it cannot take responsibility. That remains with the humans who use it."
 ```

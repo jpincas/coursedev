@@ -121,19 +121,19 @@ sidebar:
 
 script:
   - type: note
-    text: "Watch how the same request produces completely different outputs depending on what context the model has seen. This is prediction in action."
+    text: "Watch how the same request produces completely different outputs depending on what context the model has seen. First, we'll ask for a summary without providing any information — to show what pure prediction looks like."
 
   - type: user
     content: "Write a one-paragraph summary of Meridian Technologies."
 
   - type: assistant
-    content: "Meridian Technologies is a technology company that provides innovative solutions for businesses. The company focuses on delivering cutting-edge products and services to help organizations achieve their goals. With a commitment to quality and customer satisfaction, Meridian Technologies continues to grow its presence in the technology sector."
+    content: "I don't have any information about Meridian Technologies in my training data or files. I'd need you to provide context — perhaps a company overview document or annual report — before I could write an accurate summary."
 
   - type: note
-    text: "Generic, vague, almost meaningless. The model had no context — so it predicted what a generic company description looks like. Now watch what happens when we give it actual information."
+    text: "The model correctly indicated it lacks context. But watch what happens if we simulate a common mistake: asking without checking whether the company exists in training data. Let's reset and show the contrast by providing the context properly."
 
   - type: user
-    content: "Actually, let me give you our company overview first. Read the file, then write that summary."
+    content: "Let me start again. I have our company overview in a file. Read company-overview.txt and then write a one-paragraph summary."
 
   - type: tool_call
     tool: scratchpad_read
@@ -174,7 +174,7 @@ question: "An LLM writes a factually incorrect but perfectly formatted legal bri
 options:
   - "The model has seen millions of legal briefs and predicts plausible legal text, regardless of factual accuracy"
   - "The model's legal training data was outdated, causing it to reference superseded case law"
-  - "The model lacks a specialised legal reasoning module that would catch errors"
+  - "The legal domain requires fact-checking capabilities that weren't included in the training process"
 answer: 0
 explanation: "LLMs are prediction engines. They predict what text looks like based on patterns, not what is true. A model that has seen millions of legal briefs will produce perfectly formatted legal text -- but it has no mechanism for verifying whether the cited cases or facts are real."
 ```

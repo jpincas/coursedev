@@ -10,6 +10,12 @@ The most powerful AI interactions are rarely one-shot. They're conversations whe
 
 This is the "conversation as refinement" pattern. It's how experts get 10x better results than beginners.
 
+```callout
+type: warning
+title: "The Single Biggest Source of Frustration"
+content: "When AI gives you disappointing output, it's almost never because the AI is stupid. It's because you didn't iterate. Expecting perfect output on the first try is like expecting a colleague to read your mind. The frustration comes from unrealistic expectations, not AI limitations."
+```
+
 ## The Core Pattern and Common Mistakes
 
 ![Vague vs Specific Feedback](/content/module-prompting/images/feedback-comparison.svg)

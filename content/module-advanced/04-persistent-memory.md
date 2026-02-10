@@ -166,11 +166,10 @@ id: persistent-memory-benefit
 type: multiple-choice
 question: "What problem does persistent memory solve?"
 options:
-  - "AI running out of context window space"
   - "Having to re-explain who you are and your preferences in every conversation"
+  - "AI running out of context window space"
   - "AI forgetting what it said earlier in the same conversation"
-  - "Slow AI response times"
-answer: 1
+answer: 0
 explanation: "Persistent memory solves the problem of starting every conversation fresh. Your context, preferences, and standing instructions load automatically, so you don't re-explain them every time."
 ```
 
@@ -179,11 +178,10 @@ id: persistent-memory-adoption
 type: multiple-choice
 question: "Why are persistent instructions the highest-leverage place to invest in prompt quality?"
 options:
-  - "They make AI run faster"
   - "They override per-conversation prompts and shape every interaction"
   - "They require less maintenance than regular prompts"
   - "They work with all AI models"
-answer: 1
+answer: 0
 explanation: "Persistent instructions override per-conversation prompts, meaning they affect every single interaction. This makes them far more valuable than crafting individual prompts — the investment compounds."
 ```
 

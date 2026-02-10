@@ -14,6 +14,9 @@
 - Remember, you the human are actually the bottleneck now, rather than the enabler
 - A lot of the tips in this course are directly aimed at avoiding FRUSTRATION.  When you forget about context and prompts and skills and whatnot, the AI starts to act in frustrating ways.
 - The failure of the AI is your failure, not the AIs failure
+- Sometimes you have to be explicit about telling the AI to use tools/skills/agents, sometimes it just does it
+- Plan first, write the plan to a file, follow the plan - we really need to stress this and provide a good demo.
+- Is my "what do you think?" tip in there?
 
 ## Check All Demos
 
@@ -32,7 +35,9 @@ I want to make sure quiz questions are genuinely challenging instead of generica
 - Three questions
 - Genuinely difficult to choose between
 
+## The final demo
 
+The final demo has to be an absolute belter.  A 5-minute plus run through of EVERY concept covered.  It will be the last thing everyone sees and should be absolutely stunning! People should leave totally inspired.  I don't need to go through everything that should be in it - all you need to do is reread the whole course.
 
 
 

@@ -218,10 +218,9 @@ id: hallucination-rates
 type: multiple-choice
 question: "Why do current AI training methods lead models to guess rather than acknowledge uncertainty?"
 options:
-  - "Models aren't trained on enough data to know when they're uncertain"
+  - "Models aren't trained on enough data to develop uncertainty detection capabilities"
   - "Training rewards guessing over admitting 'I don't know'"
-  - "The models lack the capability to assess their own confidence"
-  - "Developers deliberately design them to always provide answers"
+  - "Users prefer confident answers even if wrong, so models are optimized for confidence"
 answer: 1
 explanation: "Training methods penalise models for saying 'I don't know', similar to a multiple-choice test where blank answers guarantee zero marks. This creates an incentive structure that rewards guessing even when uncertainty would be the honest response."
 ```

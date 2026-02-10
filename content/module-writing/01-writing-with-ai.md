@@ -605,10 +605,9 @@ id: sectional-drafting-quiz
 type: multiple-choice
 question: "What is the biggest benefit of starting with a deep research step before writing a document?"
 options:
-  - "It makes the AI generate more words"
+  - "It makes the AI generate more words to meet length requirements"
   - "It gives every subsequent step — outline, drafting, revision — a foundation of specific evidence instead of generic knowledge"
-  - "It uses less of the AI's context window"
-  - "It means you don't need to review the output"
+  - "It eliminates the need to review AI output since the research validates everything"
 answer: 1
 explanation: "The research step grounds everything that follows. The outline has an evidence base. The section drafts draw on specific findings. Without research, AI fills the gaps with plausible-sounding but generic text. With research, every paragraph is anchored in something specific."
 ```
