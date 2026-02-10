@@ -9,5 +9,9 @@ node_modules/
 .parcel-cache/
 static/js/main.js.map
 
+# Deploy
+coursedev-linux
+deploy/coursedev.service
+
 # OS
 .DS_Store
