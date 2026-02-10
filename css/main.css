@@ -78,6 +78,21 @@
     font-weight: 400;
   }
 
+  /* Thin dark scrollbar for dark panels (file explorer, etc.) */
+  .scrollbar-dark::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-dark::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background: rgb(63 63 70);
+    border-radius: 3px;
+  }
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background: rgb(82 82 91);
+  }
+
   /* Agent chat bubble markdown (Goldmark output) */
   .agent-chat-md p {
     margin: 0.3em 0;

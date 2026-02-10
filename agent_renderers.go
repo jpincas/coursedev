@@ -915,11 +915,11 @@ func renderAgentFileExplorer(state *AgentState) h.Element {
 		)
 	}
 
-	return h.Div(a.Attrs(a.Class("shrink-0 border-b border-zinc-800")),
-		h.Div(a.Attrs(a.Class("px-4 py-2 text-[11px] text-zinc-500 font-semibold uppercase tracking-widest")),
+	return h.Div(a.Attrs(a.Class("shrink-0 border-b border-zinc-800 max-h-[50vh] flex flex-col")),
+		h.Div(a.Attrs(a.Class("px-4 py-2 text-[11px] text-zinc-500 font-semibold uppercase tracking-widest shrink-0")),
 			h.Text(fmt.Sprintf("Explorer \u00B7 %d files", len(state.Scratchpad))),
 		),
-		h.Div(a.Attrs(a.Class("pb-2")),
+		h.Div(a.Attrs(a.Class("pb-2 overflow-y-auto scrollbar-dark")),
 			items...,
 		),
 	)
