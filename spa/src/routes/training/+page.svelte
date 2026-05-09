@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { course } from '$lib/stores/course.js';
 	import { progress } from '$lib/stores/progress.js';
+	import { language } from '$lib/stores/language.js';
 	import { getPageSlug } from '$lib/content/loader.js';
 	import { isModuleComplete, isModuleUnlocked, getModuleStats } from '$lib/stores/completion.js';
+
+	let currentLocale = $derived($language);
 </script>
 
 <div class="mx-auto max-w-3xl px-8 py-12">
@@ -43,7 +46,8 @@
 				{@const unlocked = isModuleUnlocked(moduleName, $course.config.modules, $course.moduleMeta, $course.manifest, $progress, $course.quizIdsByModule)}
 				{@const completed = meta && isModuleComplete(moduleName, meta, $course.manifest, $progress, $course.quizIdsByModule)}
 				{@const stats = getModuleStats(moduleName, $course.manifest, $progress)}
-				{@const firstPage = $course.manifest.modules[moduleName]?.pages[0]}
+				{@const pages = manifest.locales[currentLocale]?.modules[moduleName]?.pages || []}
+				{@const firstPage = pages[0]}
 				{@const firstSlug = firstPage ? getPageSlug(firstPage) : ''}
 
 				<div class="group rounded-xl border transition-all

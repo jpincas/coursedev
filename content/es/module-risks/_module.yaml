@@ -1,0 +1,10 @@
+title: "Riesgos, Responsabilidad y Expectativas Realistas"
+description: "La evaluación honesta de las limitaciones de la IA — tasas de alucinación, atrofia de habilidades, riesgos de privacidad y el panorama legal. Lo que cada profesional debe saber."
+prerequisites:
+  - module-delegation
+difficulty: intermediate
+estimated_duration: "45m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

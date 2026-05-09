@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { CourseProgress, ModuleProgress } from '$lib/content/types.js';
+import type { CourseProgress, ModuleProgress, Locale } from '$lib/content/types.js';
 
 const STORAGE_KEY = 'ai-training-progress';
 

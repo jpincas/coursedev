@@ -4,7 +4,8 @@
 	import { get } from 'svelte/store';
 	import { course } from '$lib/stores/course.js';
 	import { progress } from '$lib/stores/progress.js';
-	import { getPageMarkdown, getPagePath } from '$lib/content/loader.js';
+	import { language } from '$lib/stores/language.js';
+	import { getPageMarkdown, getPagePath, getLocale } from '$lib/content/loader.js';
 	import { parsePage } from '$lib/content/parser.js';
 	import { isModuleUnlocked } from '$lib/stores/completion.js';
 	import type { ParsedPage } from '$lib/content/types.js';
@@ -21,6 +22,15 @@
 	let pageSlug = $derived($page.params.page ?? '');
 
 	$effect(() => {
+		if (moduleName && pageSlug) {
+			loadPage(moduleName, pageSlug);
+		}
+	});
+
+	// Reload when language changes
+	$effect(() => {
+		// Access $language to trigger re-run on language change
+		void $language;
 		if (moduleName && pageSlug) {
 			loadPage(moduleName, pageSlug);
 		}
@@ -52,7 +62,7 @@
 				}
 			}
 
-			const pagePath = getPagePath(mod, pg);
+			const pagePath = getPagePath(mod, pg, getLocale());
 			if (!pagePath) {
 				error = `Page not found: ${mod}/${pg}`;
 				loading = false;

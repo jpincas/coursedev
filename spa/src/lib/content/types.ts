@@ -1,5 +1,10 @@
 // Course structure
 export interface CourseManifest {
+	locales: Record<string, LocaleManifest>;
+	defaultLocale: string;
+}
+
+export interface LocaleManifest {
 	modules: Record<string, ModuleManifest>;
 }
 
@@ -135,7 +140,7 @@ export interface ScriptEvent {
 	note?: string;
 }
 
-// Progress tracking
+// Progress tracking (per locale)
 export interface CourseProgress {
 	modules: Record<string, ModuleProgress>;
 	lastPosition: { module: string; page: string };
@@ -148,3 +153,6 @@ export interface ModuleProgress {
 	quizScores: Record<string, { correct: boolean; attempts: number }>;
 	completedAt: string | null;
 }
+
+// Language/locale
+export type Locale = 'en' | 'es';

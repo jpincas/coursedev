@@ -1,0 +1,10 @@
+title: "Delegación y la Filosofía AI-First"
+description: "Tratar a la IA como un trabajador capaz, no como un motor de búsqueda. Resultados sobre procesos."
+prerequisites:
+  - module-advanced
+difficulty: intermediate
+estimated_duration: "60m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

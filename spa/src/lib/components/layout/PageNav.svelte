@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { course } from '$lib/stores/course.js';
+	import { language } from '$lib/stores/language.js';
 	import { getPageSlug } from '$lib/content/loader.js';
 
 	let { moduleName, pageSlug }: { moduleName: string; pageSlug: string } = $props();
@@ -11,20 +12,22 @@
 		moduleTitle?: string;
 	}
 
+	let currentLocale = $derived($language);
+
 	let prev = $derived.by((): NavTarget | null => {
 		const c = $course;
 		if (!c.config || !c.manifest) return null;
 		const modules = c.config.modules;
 		const moduleIndex = modules.indexOf(moduleName);
-		const pages = c.manifest.modules[moduleName]?.pages || [];
-		const pageIndex = pages.findIndex((p) => getPageSlug(p) === pageSlug);
+		const pages = c.manifest.locales[currentLocale]?.modules[moduleName]?.pages || [];
+		const pageIndex = pages.findIndex((p: string) => getPageSlug(p) === pageSlug);
 
 		if (pageIndex > 0) {
 			return { module: moduleName, page: getPageSlug(pages[pageIndex - 1]), label: 'Previous' };
 		}
 		if (moduleIndex > 0) {
 			const prevModule = modules[moduleIndex - 1];
-			const prevPages = c.manifest.modules[prevModule]?.pages || [];
+			const prevPages = c.manifest.locales[currentLocale]?.modules[prevModule]?.pages || [];
 			if (prevPages.length > 0) {
 				return { module: prevModule, page: getPageSlug(prevPages[prevPages.length - 1]), label: 'Previous Module', moduleTitle: c.moduleMeta[prevModule]?.title };
 			}
@@ -37,15 +40,15 @@
 		if (!c.config || !c.manifest) return null;
 		const modules = c.config.modules;
 		const moduleIndex = modules.indexOf(moduleName);
-		const pages = c.manifest.modules[moduleName]?.pages || [];
-		const pageIndex = pages.findIndex((p) => getPageSlug(p) === pageSlug);
+		const pages = c.manifest.locales[currentLocale]?.modules[moduleName]?.pages || [];
+		const pageIndex = pages.findIndex((p: string) => getPageSlug(p) === pageSlug);
 
 		if (pageIndex < pages.length - 1) {
 			return { module: moduleName, page: getPageSlug(pages[pageIndex + 1]), label: 'Next' };
 		}
 		if (moduleIndex < modules.length - 1) {
 			const nextModule = modules[moduleIndex + 1];
-			const nextPages = c.manifest.modules[nextModule]?.pages || [];
+			const nextPages = c.manifest.locales[currentLocale]?.modules[nextModule]?.pages || [];
 			if (nextPages.length > 0) {
 				return { module: nextModule, page: getPageSlug(nextPages[0]), label: 'Next Module', moduleTitle: c.moduleMeta[nextModule]?.title };
 			}

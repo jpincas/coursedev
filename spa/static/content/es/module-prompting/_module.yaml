@@ -1,0 +1,10 @@
+title: "El Arte del Prompting"
+description: "De hacer preguntas a especificar resultados. Técnicas, frameworks y patrones de iteración que entregan resultados."
+prerequisites:
+  - module-context
+difficulty: intermediate
+estimated_duration: "85m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

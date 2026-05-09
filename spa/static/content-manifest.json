@@ -1,243 +1,379 @@
 {
-  "modules": {
-    "module-opening": {
-      "moduleYaml": "content/module-opening/_module.yaml",
-      "pages": [
-        "content/module-opening/01-welcome.md",
-        "content/module-opening/02-what-youll-learn.md",
-        "content/module-opening/03-demo.md"
-      ],
-      "images": [
-        "content/module-opening/images/50x-reframe.excalidraw",
-        "content/module-opening/images/50x-reframe.svg",
-        "content/module-opening/images/ai-timeline.mmd",
-        "content/module-opening/images/ai-timeline.svg",
-        "content/module-opening/images/workflow-comparison.mmd",
-        "content/module-opening/images/workflow-comparison.svg"
-      ],
-      "externalYaml": []
+  "locales": {
+    "en": {
+      "modules": {
+        "module-opening": {
+          "moduleYaml": "content/en/module-opening/_module.yaml",
+          "pages": [
+            "content/en/module-opening/01-welcome.md",
+            "content/en/module-opening/02-what-youll-learn.md",
+            "content/en/module-opening/03-demo.md"
+          ],
+          "images": [
+            "content/en/module-opening/images/50x-reframe.excalidraw",
+            "content/en/module-opening/images/50x-reframe.svg",
+            "content/en/module-opening/images/ai-timeline.mmd",
+            "content/en/module-opening/images/ai-timeline.svg",
+            "content/en/module-opening/images/workflow-comparison.mmd",
+            "content/en/module-opening/images/workflow-comparison.svg"
+          ],
+          "externalYaml": []
+        },
+        "module-llms": {
+          "moduleYaml": "content/en/module-llms/_module.yaml",
+          "pages": [
+            "content/en/module-llms/01-prediction-engines.md",
+            "content/en/module-llms/02-training-process.md",
+            "content/en/module-llms/03-hallucinations.md",
+            "content/en/module-llms/04-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-llms/images/hallucination-rates.excalidraw",
+            "content/en/module-llms/images/hallucination-rates.svg",
+            "content/en/module-llms/images/key-takeaways.mmd",
+            "content/en/module-llms/images/key-takeaways.svg",
+            "content/en/module-llms/images/model-timeline.mmd",
+            "content/en/module-llms/images/model-timeline.svg",
+            "content/en/module-llms/images/token-prediction-chain.excalidraw",
+            "content/en/module-llms/images/token-prediction-chain.svg",
+            "content/en/module-llms/images/training-process.mmd",
+            "content/en/module-llms/images/training-process.svg"
+          ],
+          "externalYaml": []
+        },
+        "module-context": {
+          "moduleYaml": "content/en/module-context/_module.yaml",
+          "pages": [
+            "content/en/module-context/01-everything-is-context.md",
+            "content/en/module-context/02-context-window.md",
+            "content/en/module-context/03-context-hierarchy.md",
+            "content/en/module-context/04-context-decay.md",
+            "content/en/module-context/05-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-context/images/context-decay.mmd",
+            "content/en/module-context/images/context-decay.svg",
+            "content/en/module-context/images/context-hierarchy.mmd",
+            "content/en/module-context/images/context-hierarchy.svg",
+            "content/en/module-context/images/context-window.mmd",
+            "content/en/module-context/images/context-window.svg",
+            "content/en/module-context/images/everything-is-context.excalidraw",
+            "content/en/module-context/images/everything-is-context.svg"
+          ],
+          "externalYaml": []
+        },
+        "module-prompting": {
+          "moduleYaml": "content/en/module-prompting/_module.yaml",
+          "pages": [
+            "content/en/module-prompting/01-evolution.md",
+            "content/en/module-prompting/02-basic-framework.md",
+            "content/en/module-prompting/03-techniques.md",
+            "content/en/module-prompting/04-three-questions.md",
+            "content/en/module-prompting/05-meta-prompting.md",
+            "content/en/module-prompting/06-iteration.md",
+            "content/en/module-prompting/07-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-prompting/images/feedback-comparison.excalidraw",
+            "content/en/module-prompting/images/feedback-comparison.svg",
+            "content/en/module-prompting/images/framework-components.excalidraw",
+            "content/en/module-prompting/images/framework-components.svg",
+            "content/en/module-prompting/images/prompting-evolution.mmd",
+            "content/en/module-prompting/images/prompting-evolution.svg",
+            "content/en/module-prompting/images/techniques-hierarchy.mmd",
+            "content/en/module-prompting/images/techniques-hierarchy.svg",
+            "content/en/module-prompting/images/three-questions.excalidraw",
+            "content/en/module-prompting/images/three-questions.svg"
+          ],
+          "externalYaml": [
+            "content/en/module-prompting/agent-iteration-demo.yaml"
+          ]
+        },
+        "module-files": {
+          "moduleYaml": "content/en/module-files/_module.yaml",
+          "pages": [
+            "content/en/module-files/01-paradigm-shift.md",
+            "content/en/module-files/02-file-types.md",
+            "content/en/module-files/03-input-files.md",
+            "content/en/module-files/04-output-files.md",
+            "content/en/module-files/05-productive-spiral.md",
+            "content/en/module-files/06-organisation.md",
+            "content/en/module-files/07-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-files/images/GENERATE-grounding-concept.txt",
+            "content/en/module-files/images/file-workflow.mmd",
+            "content/en/module-files/images/file-workflow.svg",
+            "content/en/module-files/images/files-benefits.excalidraw",
+            "content/en/module-files/images/files-benefits.svg",
+            "content/en/module-files/images/grounding-concept.png",
+            "content/en/module-files/images/input-file-types.mmd",
+            "content/en/module-files/images/input-file-types.svg",
+            "content/en/module-files/images/output-file-types.excalidraw",
+            "content/en/module-files/images/output-file-types.svg",
+            "content/en/module-files/images/productive-spiral.mmd",
+            "content/en/module-files/images/productive-spiral.svg"
+          ],
+          "externalYaml": [
+            "content/en/module-files/agent-desktop-cleanup.yaml"
+          ]
+        },
+        "module-writing": {
+          "moduleYaml": "content/en/module-writing/_module.yaml",
+          "pages": [
+            "content/en/module-writing/01-writing-with-ai.md",
+            "content/en/module-writing/02-style-transfer.md",
+            "content/en/module-writing/03-data-analysis.md",
+            "content/en/module-writing/04-code-as-analysis.md",
+            "content/en/module-writing/05-websites.md",
+            "content/en/module-writing/06-verification-traps.md",
+            "content/en/module-writing/07-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-writing/images/data-analysis-tiers.mmd",
+            "content/en/module-writing/images/data-analysis-tiers.svg",
+            "content/en/module-writing/images/data-workflow.excalidraw",
+            "content/en/module-writing/images/data-workflow.svg",
+            "content/en/module-writing/images/echowriting-process.excalidraw",
+            "content/en/module-writing/images/echowriting-process.svg",
+            "content/en/module-writing/images/verification-checklist.excalidraw",
+            "content/en/module-writing/images/verification-checklist.svg",
+            "content/en/module-writing/images/writing-workflow.mmd",
+            "content/en/module-writing/images/writing-workflow.svg"
+          ],
+          "externalYaml": []
+        },
+        "module-advanced": {
+          "moduleYaml": "content/en/module-advanced/_module.yaml",
+          "pages": [
+            "content/en/module-advanced/01-building-systems.md",
+            "content/en/module-advanced/02-skills.md",
+            "content/en/module-advanced/03-subagents.md",
+            "content/en/module-advanced/04-persistent-memory.md",
+            "content/en/module-advanced/05-auto-memory.md",
+            "content/en/module-advanced/06-code-generation.md",
+            "content/en/module-advanced/07-mcp.md",
+            "content/en/module-advanced/08-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-advanced/images/mcp-connections.mmd",
+            "content/en/module-advanced/images/mcp-connections.svg",
+            "content/en/module-advanced/images/meta-hierarchy.mmd",
+            "content/en/module-advanced/images/meta-hierarchy.svg",
+            "content/en/module-advanced/images/subagents.mmd",
+            "content/en/module-advanced/images/subagents.svg",
+            "content/en/module-advanced/images/three-pillars.mmd",
+            "content/en/module-advanced/images/three-pillars.svg"
+          ],
+          "externalYaml": []
+        },
+        "module-delegation": {
+          "moduleYaml": "content/en/module-delegation/_module.yaml",
+          "pages": [
+            "content/en/module-delegation/01-mindset-shift.md",
+            "content/en/module-delegation/02-delegation-skill.md",
+            "content/en/module-delegation/03-preparation-value.md",
+            "content/en/module-delegation/04-quality-verification.md",
+            "content/en/module-delegation/05-limits.md",
+            "content/en/module-delegation/06-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-delegation/images/mental-model-shift.excalidraw",
+            "content/en/module-delegation/images/mental-model-shift.svg",
+            "content/en/module-delegation/images/micromanaging-vs-delegating.excalidraw",
+            "content/en/module-delegation/images/micromanaging-vs-delegating.svg",
+            "content/en/module-delegation/images/mindset-shift.mmd",
+            "content/en/module-delegation/images/mindset-shift.svg",
+            "content/en/module-delegation/images/preparation-cycle.png",
+            "content/en/module-delegation/images/three-boundaries.excalidraw",
+            "content/en/module-delegation/images/three-boundaries.svg",
+            "content/en/module-delegation/images/value-shift.mmd",
+            "content/en/module-delegation/images/value-shift.svg",
+            "content/en/module-delegation/images/verification-framework.excalidraw",
+            "content/en/module-delegation/images/verification-framework.svg"
+          ],
+          "externalYaml": []
+        },
+        "module-risks": {
+          "moduleYaml": "content/en/module-risks/_module.yaml",
+          "pages": [
+            "content/en/module-risks/01-reality-check.md",
+            "content/en/module-risks/02-hallucination-depth.md",
+            "content/en/module-risks/03-skill-atrophy.md",
+            "content/en/module-risks/04-privacy-security.md",
+            "content/en/module-risks/05-legal-landscape.md",
+            "content/en/module-risks/06-key-takeaways.md"
+          ],
+          "images": [
+            "content/en/module-risks/images/digital-insider.excalidraw",
+            "content/en/module-risks/images/digital-insider.svg",
+            "content/en/module-risks/images/five-realities.mmd",
+            "content/en/module-risks/images/five-realities.svg",
+            "content/en/module-risks/images/hallucination-rates.excalidraw",
+            "content/en/module-risks/images/hallucination-rates.svg",
+            "content/en/module-risks/images/legal-landscape.mmd",
+            "content/en/module-risks/images/legal-landscape.svg",
+            "content/en/module-risks/images/reality-calibration.excalidraw",
+            "content/en/module-risks/images/reality-calibration.svg",
+            "content/en/module-risks/images/skill-atrophy-cycle.mmd",
+            "content/en/module-risks/images/skill-atrophy-cycle.svg"
+          ],
+          "externalYaml": [
+            "content/en/module-risks/agent-demo-verification.yaml"
+          ]
+        },
+        "module-synthesis": {
+          "moduleYaml": "content/en/module-synthesis/_module.yaml",
+          "pages": [
+            "content/en/module-synthesis/01-workflow.md",
+            "content/en/module-synthesis/02-five-themes.md",
+            "content/en/module-synthesis/03-next-steps.md",
+            "content/en/module-synthesis/04-reference.md"
+          ],
+          "images": [
+            "content/en/module-synthesis/images/core-cycle.mmd",
+            "content/en/module-synthesis/images/core-cycle.svg",
+            "content/en/module-synthesis/images/five-themes.png",
+            "content/en/module-synthesis/images/transformation.png",
+            "content/en/module-synthesis/images/workflow-cycle.png",
+            "content/en/module-synthesis/images/workflow-detailed.excalidraw",
+            "content/en/module-synthesis/images/workflow-detailed.svg"
+          ],
+          "externalYaml": []
+        }
+      }
     },
-    "module-llms": {
-      "moduleYaml": "content/module-llms/_module.yaml",
-      "pages": [
-        "content/module-llms/01-prediction-engines.md",
-        "content/module-llms/02-training-process.md",
-        "content/module-llms/03-hallucinations.md",
-        "content/module-llms/04-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-llms/images/hallucination-rates.excalidraw",
-        "content/module-llms/images/hallucination-rates.svg",
-        "content/module-llms/images/key-takeaways.mmd",
-        "content/module-llms/images/key-takeaways.svg",
-        "content/module-llms/images/model-timeline.mmd",
-        "content/module-llms/images/model-timeline.svg",
-        "content/module-llms/images/token-prediction-chain.excalidraw",
-        "content/module-llms/images/token-prediction-chain.svg",
-        "content/module-llms/images/training-process.mmd",
-        "content/module-llms/images/training-process.svg"
-      ],
-      "externalYaml": []
-    },
-    "module-context": {
-      "moduleYaml": "content/module-context/_module.yaml",
-      "pages": [
-        "content/module-context/01-everything-is-context.md",
-        "content/module-context/02-context-window.md",
-        "content/module-context/03-context-hierarchy.md",
-        "content/module-context/04-context-decay.md",
-        "content/module-context/05-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-context/images/context-decay.mmd",
-        "content/module-context/images/context-decay.svg",
-        "content/module-context/images/context-hierarchy.mmd",
-        "content/module-context/images/context-hierarchy.svg",
-        "content/module-context/images/context-window.mmd",
-        "content/module-context/images/context-window.svg",
-        "content/module-context/images/everything-is-context.excalidraw",
-        "content/module-context/images/everything-is-context.svg"
-      ],
-      "externalYaml": []
-    },
-    "module-prompting": {
-      "moduleYaml": "content/module-prompting/_module.yaml",
-      "pages": [
-        "content/module-prompting/01-evolution.md",
-        "content/module-prompting/02-basic-framework.md",
-        "content/module-prompting/03-techniques.md",
-        "content/module-prompting/04-three-questions.md",
-        "content/module-prompting/05-meta-prompting.md",
-        "content/module-prompting/06-iteration.md",
-        "content/module-prompting/07-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-prompting/images/feedback-comparison.excalidraw",
-        "content/module-prompting/images/feedback-comparison.svg",
-        "content/module-prompting/images/framework-components.excalidraw",
-        "content/module-prompting/images/framework-components.svg",
-        "content/module-prompting/images/prompting-evolution.mmd",
-        "content/module-prompting/images/prompting-evolution.svg",
-        "content/module-prompting/images/techniques-hierarchy.mmd",
-        "content/module-prompting/images/techniques-hierarchy.svg",
-        "content/module-prompting/images/three-questions.excalidraw",
-        "content/module-prompting/images/three-questions.svg"
-      ],
-      "externalYaml": [
-        "content/module-prompting/agent-iteration-demo.yaml"
-      ]
-    },
-    "module-files": {
-      "moduleYaml": "content/module-files/_module.yaml",
-      "pages": [
-        "content/module-files/01-paradigm-shift.md",
-        "content/module-files/02-file-types.md",
-        "content/module-files/03-input-files.md",
-        "content/module-files/04-output-files.md",
-        "content/module-files/05-productive-spiral.md",
-        "content/module-files/06-organisation.md",
-        "content/module-files/07-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-files/images/GENERATE-grounding-concept.txt",
-        "content/module-files/images/file-workflow.mmd",
-        "content/module-files/images/file-workflow.svg",
-        "content/module-files/images/files-benefits.excalidraw",
-        "content/module-files/images/files-benefits.svg",
-        "content/module-files/images/grounding-concept.png",
-        "content/module-files/images/input-file-types.mmd",
-        "content/module-files/images/input-file-types.svg",
-        "content/module-files/images/output-file-types.excalidraw",
-        "content/module-files/images/output-file-types.svg",
-        "content/module-files/images/productive-spiral.mmd",
-        "content/module-files/images/productive-spiral.svg"
-      ],
-      "externalYaml": [
-        "content/module-files/agent-desktop-cleanup.yaml"
-      ]
-    },
-    "module-writing": {
-      "moduleYaml": "content/module-writing/_module.yaml",
-      "pages": [
-        "content/module-writing/01-writing-with-ai.md",
-        "content/module-writing/02-style-transfer.md",
-        "content/module-writing/03-data-analysis.md",
-        "content/module-writing/04-code-as-analysis.md",
-        "content/module-writing/05-websites.md",
-        "content/module-writing/06-verification-traps.md",
-        "content/module-writing/07-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-writing/images/data-analysis-tiers.mmd",
-        "content/module-writing/images/data-analysis-tiers.svg",
-        "content/module-writing/images/data-workflow.excalidraw",
-        "content/module-writing/images/data-workflow.svg",
-        "content/module-writing/images/echowriting-process.excalidraw",
-        "content/module-writing/images/echowriting-process.svg",
-        "content/module-writing/images/verification-checklist.excalidraw",
-        "content/module-writing/images/verification-checklist.svg",
-        "content/module-writing/images/writing-workflow.mmd",
-        "content/module-writing/images/writing-workflow.svg"
-      ],
-      "externalYaml": []
-    },
-    "module-advanced": {
-      "moduleYaml": "content/module-advanced/_module.yaml",
-      "pages": [
-        "content/module-advanced/01-building-systems.md",
-        "content/module-advanced/02-skills.md",
-        "content/module-advanced/03-subagents.md",
-        "content/module-advanced/04-persistent-memory.md",
-        "content/module-advanced/05-auto-memory.md",
-        "content/module-advanced/06-code-generation.md",
-        "content/module-advanced/07-mcp.md",
-        "content/module-advanced/08-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-advanced/images/mcp-connections.mmd",
-        "content/module-advanced/images/mcp-connections.svg",
-        "content/module-advanced/images/meta-hierarchy.mmd",
-        "content/module-advanced/images/meta-hierarchy.svg",
-        "content/module-advanced/images/subagents.mmd",
-        "content/module-advanced/images/subagents.svg",
-        "content/module-advanced/images/three-pillars.mmd",
-        "content/module-advanced/images/three-pillars.svg"
-      ],
-      "externalYaml": []
-    },
-    "module-delegation": {
-      "moduleYaml": "content/module-delegation/_module.yaml",
-      "pages": [
-        "content/module-delegation/01-mindset-shift.md",
-        "content/module-delegation/02-delegation-skill.md",
-        "content/module-delegation/03-preparation-value.md",
-        "content/module-delegation/04-quality-verification.md",
-        "content/module-delegation/05-limits.md",
-        "content/module-delegation/06-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-delegation/images/mental-model-shift.excalidraw",
-        "content/module-delegation/images/mental-model-shift.svg",
-        "content/module-delegation/images/micromanaging-vs-delegating.excalidraw",
-        "content/module-delegation/images/micromanaging-vs-delegating.svg",
-        "content/module-delegation/images/mindset-shift.mmd",
-        "content/module-delegation/images/mindset-shift.svg",
-        "content/module-delegation/images/preparation-cycle.png",
-        "content/module-delegation/images/three-boundaries.excalidraw",
-        "content/module-delegation/images/three-boundaries.svg",
-        "content/module-delegation/images/value-shift.mmd",
-        "content/module-delegation/images/value-shift.svg",
-        "content/module-delegation/images/verification-framework.excalidraw",
-        "content/module-delegation/images/verification-framework.svg"
-      ],
-      "externalYaml": []
-    },
-    "module-risks": {
-      "moduleYaml": "content/module-risks/_module.yaml",
-      "pages": [
-        "content/module-risks/01-reality-check.md",
-        "content/module-risks/02-hallucination-depth.md",
-        "content/module-risks/03-skill-atrophy.md",
-        "content/module-risks/04-privacy-security.md",
-        "content/module-risks/05-legal-landscape.md",
-        "content/module-risks/06-key-takeaways.md"
-      ],
-      "images": [
-        "content/module-risks/images/digital-insider.excalidraw",
-        "content/module-risks/images/digital-insider.svg",
-        "content/module-risks/images/five-realities.mmd",
-        "content/module-risks/images/five-realities.svg",
-        "content/module-risks/images/hallucination-rates.excalidraw",
-        "content/module-risks/images/hallucination-rates.svg",
-        "content/module-risks/images/legal-landscape.mmd",
-        "content/module-risks/images/legal-landscape.svg",
-        "content/module-risks/images/reality-calibration.excalidraw",
-        "content/module-risks/images/reality-calibration.svg",
-        "content/module-risks/images/skill-atrophy-cycle.mmd",
-        "content/module-risks/images/skill-atrophy-cycle.svg"
-      ],
-      "externalYaml": [
-        "content/module-risks/agent-demo-verification.yaml"
-      ]
-    },
-    "module-synthesis": {
-      "moduleYaml": "content/module-synthesis/_module.yaml",
-      "pages": [
-        "content/module-synthesis/01-workflow.md",
-        "content/module-synthesis/02-five-themes.md",
-        "content/module-synthesis/03-next-steps.md",
-        "content/module-synthesis/04-reference.md"
-      ],
-      "images": [
-        "content/module-synthesis/images/core-cycle.mmd",
-        "content/module-synthesis/images/core-cycle.svg",
-        "content/module-synthesis/images/five-themes.png",
-        "content/module-synthesis/images/transformation.png",
-        "content/module-synthesis/images/workflow-cycle.png",
-        "content/module-synthesis/images/workflow-detailed.excalidraw",
-        "content/module-synthesis/images/workflow-detailed.svg"
-      ],
-      "externalYaml": []
+    "es": {
+      "modules": {
+        "module-opening": {
+          "moduleYaml": "content/es/module-opening/_module.yaml",
+          "pages": [
+            "content/es/module-opening/01-welcome.md",
+            "content/es/module-opening/02-what-youll-learn.md",
+            "content/es/module-opening/03-demo.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-llms": {
+          "moduleYaml": "content/es/module-llms/_module.yaml",
+          "pages": [
+            "content/es/module-llms/01-prediction-engines.md",
+            "content/es/module-llms/02-training-process.md",
+            "content/es/module-llms/03-hallucinations.md",
+            "content/es/module-llms/04-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-context": {
+          "moduleYaml": "content/es/module-context/_module.yaml",
+          "pages": [
+            "content/es/module-context/01-everything-is-context.md",
+            "content/es/module-context/02-context-window.md",
+            "content/es/module-context/03-context-hierarchy.md",
+            "content/es/module-context/04-context-decay.md",
+            "content/es/module-context/05-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-prompting": {
+          "moduleYaml": "content/es/module-prompting/_module.yaml",
+          "pages": [
+            "content/es/module-prompting/01-evolution.md",
+            "content/es/module-prompting/02-basic-framework.md",
+            "content/es/module-prompting/03-techniques.md",
+            "content/es/module-prompting/04-three-questions.md",
+            "content/es/module-prompting/05-meta-prompting.md",
+            "content/es/module-prompting/06-iteration.md",
+            "content/es/module-prompting/07-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-files": {
+          "moduleYaml": "content/es/module-files/_module.yaml",
+          "pages": [
+            "content/es/module-files/01-paradigm-shift.md",
+            "content/es/module-files/02-file-types.md",
+            "content/es/module-files/03-input-files.md",
+            "content/es/module-files/04-output-files.md",
+            "content/es/module-files/05-productive-spiral.md",
+            "content/es/module-files/06-organisation.md",
+            "content/es/module-files/07-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-writing": {
+          "moduleYaml": "content/es/module-writing/_module.yaml",
+          "pages": [
+            "content/es/module-writing/01-writing-with-ai.md",
+            "content/es/module-writing/02-style-transfer.md",
+            "content/es/module-writing/03-data-analysis.md",
+            "content/es/module-writing/04-code-as-analysis.md",
+            "content/es/module-writing/05-websites.md",
+            "content/es/module-writing/06-verification-traps.md",
+            "content/es/module-writing/07-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-advanced": {
+          "moduleYaml": "content/es/module-advanced/_module.yaml",
+          "pages": [
+            "content/es/module-advanced/01-building-systems.md",
+            "content/es/module-advanced/02-skills.md",
+            "content/es/module-advanced/03-subagents.md",
+            "content/es/module-advanced/04-persistent-memory.md",
+            "content/es/module-advanced/05-auto-memory.md",
+            "content/es/module-advanced/06-code-generation.md",
+            "content/es/module-advanced/07-mcp.md",
+            "content/es/module-advanced/08-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-delegation": {
+          "moduleYaml": "content/es/module-delegation/_module.yaml",
+          "pages": [
+            "content/es/module-delegation/01-mindset-shift.md",
+            "content/es/module-delegation/02-delegation-skill.md",
+            "content/es/module-delegation/03-preparation-value.md",
+            "content/es/module-delegation/04-quality-verification.md",
+            "content/es/module-delegation/05-limits.md",
+            "content/es/module-delegation/06-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-risks": {
+          "moduleYaml": "content/es/module-risks/_module.yaml",
+          "pages": [
+            "content/es/module-risks/01-reality-check.md",
+            "content/es/module-risks/02-hallucination-depth.md",
+            "content/es/module-risks/03-skill-atrophy.md",
+            "content/es/module-risks/04-privacy-security.md",
+            "content/es/module-risks/05-legal-landscape.md",
+            "content/es/module-risks/06-key-takeaways.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        },
+        "module-synthesis": {
+          "moduleYaml": "content/es/module-synthesis/_module.yaml",
+          "pages": [
+            "content/es/module-synthesis/01-workflow.md",
+            "content/es/module-synthesis/02-five-themes.md",
+            "content/es/module-synthesis/03-next-steps.md",
+            "content/es/module-synthesis/04-reference.md"
+          ],
+          "images": [],
+          "externalYaml": []
+        }
+      }
     }
-  }
+  },
+  "defaultLocale": "en"
 }

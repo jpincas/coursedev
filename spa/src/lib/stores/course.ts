@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
-import type { CourseConfig, CourseManifest, ModuleMeta } from '$lib/content/types.js';
-import { getCourseConfig, getManifest, getModuleMeta, getPageMarkdown } from '$lib/content/loader.js';
+import type { CourseConfig, CourseManifest, ModuleMeta, Locale } from '$lib/content/types.js';
+import { getCourseConfig, getManifest, getModuleMeta, getPageMarkdown, getLocale } from '$lib/content/loader.js';
 
 export interface CourseState {
 	loaded: boolean;
@@ -13,10 +13,12 @@ export interface CourseState {
 // Lightweight regex to extract quiz IDs without full parsing
 const QUIZ_ID_RE = /```quiz\n[\s\S]*?id:\s*([^\n]+)[\s\S]*?```/g;
 
-async function extractQuizIds(manifest: CourseManifest): Promise<Record<string, string[]>> {
+async function extractQuizIds(manifest: CourseManifest, locale: Locale): Promise<Record<string, string[]>> {
 	const result: Record<string, string[]> = {};
+	const modules = manifest.locales[locale]?.modules;
+	if (!modules) return result;
 
-	const entries = Object.entries(manifest.modules);
+	const entries = Object.entries(modules);
 	await Promise.all(
 		entries.map(async ([moduleName, mod]) => {
 			const ids: string[] = [];
@@ -49,12 +51,13 @@ function createCourseStore() {
 		subscribe,
 
 		async load() {
-			const [manifest, config] = await Promise.all([getManifest(), getCourseConfig()]);
+			const locale = getLocale();
+			const [manifest, config] = await Promise.all([getManifest(), getCourseConfig(locale)]);
 
 			// Load all module metadata in parallel
 			const metaEntries = await Promise.all(
 				config.modules.map(async (name) => {
-					const meta = await getModuleMeta(name);
+					const meta = await getModuleMeta(name, locale);
 					return [name, meta] as const;
 				})
 			);
@@ -62,7 +65,7 @@ function createCourseStore() {
 			const moduleMeta = Object.fromEntries(metaEntries);
 
 			// Extract quiz IDs from all pages
-			const quizIdsByModule = await extractQuizIds(manifest);
+			const quizIdsByModule = await extractQuizIds(manifest, locale);
 
 			set({
 				loaded: true,

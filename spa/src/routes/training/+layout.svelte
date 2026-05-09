@@ -1,14 +1,33 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { course } from '$lib/stores/course.js';
+	import { language } from '$lib/stores/language.js';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 
 	let { children } = $props();
 	let loaded = $state(false);
 
+	async function reload() {
+		await course.load();
+	}
+
 	onMount(async () => {
 		await course.load();
 		loaded = true;
+	});
+
+	let unsubscribe: (() => void) | null = null;
+	onMount(() => {
+		unsubscribe = language.subscribe(async () => {
+			// Language changed - reload course data
+			await course.load();
+			loaded = true;
+		});
+	});
+
+	onDestroy(() => {
+		unsubscribe?.();
 	});
 </script>
 

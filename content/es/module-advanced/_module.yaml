@@ -1,0 +1,10 @@
+title: "Patrones Avanzados"
+description: "Skills, Subagents, Claude.md y MCP. Cómo trabajan los usuarios más efectivos."
+prerequisites:
+  - module-writing
+difficulty: advanced
+estimated_duration: "60m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

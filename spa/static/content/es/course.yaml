@@ -1,0 +1,13 @@
+title: "Entrenamiento en IA: De Novato a Experto en un Día"
+description: "Un entrenamiento integral de un día completo sobre trabajo efectivo con IA, desde entender LLMs hasta construir flujos de trabajo impulsados por IA."
+modules:
+  - module-opening
+  - module-llms
+  - module-context
+  - module-prompting
+  - module-files
+  - module-writing
+  - module-advanced
+  - module-delegation
+  - module-risks
+  - module-synthesis

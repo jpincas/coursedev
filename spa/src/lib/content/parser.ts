@@ -172,7 +172,14 @@ export async function parsePage(markdown: string): Promise<ParsedPage> {
 	const blocks = await resolveBlocks(rawBlocks);
 	const narrativeHTML = await marked.parse(markdownWithPlaceholders);
 
-	return { meta, narrativeHTML, blocks };
+	// Fix image paths: convert /content/{module}/images/{file} → /content/en/{module}/images/{file}
+	// Images are locale-neutral (same diagrams for all languages) and only exist under en/
+	const localizedHTML = narrativeHTML.replace(
+		/\/content\/(module-\w+)\/images\/([\w.-]+)/gi,
+		`/content/en/$1/images/$2`
+	);
+
+	return { meta, narrativeHTML: localizedHTML, blocks };
 }
 
 export function parseAgentYaml(yamlContent: string): Block {

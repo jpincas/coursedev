@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import { page } from '$app/stores';
 	import { course } from '$lib/stores/course.js';
 	import { progress } from '$lib/stores/progress.js';
-	import { getPageSlug } from '$lib/content/loader.js';
+	import { language, setLanguage } from '$lib/stores/language.js';
+	import { getPageSlug, getPagePath, getPageMarkdown } from '$lib/content/loader.js';
 	import { isModuleComplete, isModuleUnlocked, getModuleStats } from '$lib/stores/completion.js';
 
 	let currentModule = $derived($page.params.module || '');
@@ -10,24 +12,87 @@
 	let expandedModule = $state('');
 	let isOverviewPage = $derived($page.url.pathname === '/training');
 
+	// Cache for page titles: { locale: { module: { slug: title } } }
+	let pageTitleCache: Record<string, Record<string, Record<string, string>>> = {};
+
 	$effect(() => {
 		if (currentModule) {
 			expandedModule = currentModule;
 		}
 	});
+
+	// Fetch frontmatter titles for a module's pages
+	async function fetchPageTitles(moduleName: string, locale: string) {
+		const cacheKey = `${locale}:${moduleName}`;
+		if (pageTitleCache[locale]?.[moduleName]) return pageTitleCache[locale][moduleName];
+
+		const mod = get(course)?.manifest?.locales[locale]?.modules[moduleName];
+		if (!mod) return {};
+
+		const titles: Record<string, string> = {};
+		const promises = mod.pages.map(async (pagePath: string) => {
+			const slug = getPageSlug(pagePath);
+			try {
+				const markdown = await getPageMarkdown(pagePath);
+				const match = markdown.match(/^---\n([\s\S]*?)\n---\n/);
+				if (match) {
+					const fm = match[1];
+					const titleMatch = fm.match(/^title:\s*["']?(.+?)["']?$/m);
+					if (titleMatch) {
+						titles[slug] = titleMatch[1].trim();
+						return;
+					}
+				}
+			} catch {
+				// ignore
+			}
+			// Fallback to slug
+			titles[slug] = slug.replace(/^\d+-/, '').replace(/-/g, ' ');
+		});
+		await Promise.all(promises);
+		pageTitleCache[locale] = pageTitleCache[locale] || {};
+		pageTitleCache[locale][moduleName] = titles;
+		return titles;
+	}
 </script>
 
 <aside class="w-72 flex-shrink-0 bg-slate-950 border-r border-slate-800/50 overflow-y-auto h-full flex flex-col scrollbar-dark">
 	<!-- Logo -->
 	<div class="p-5 border-b border-slate-800/50">
-		<a href="/" class="flex items-center gap-2.5 group">
+		<a href="/training" class="flex items-center gap-2.5 group">
 			<img src="/images/jon.png" alt="Jon" class="w-7 h-7 rounded-full object-cover ring-2 ring-accent/30 transition-transform group-hover:scale-105" />
 			<span class="text-sm font-bold text-white tracking-tight">Learn AI with Jon</span>
 		</a>
 	</div>
 
+	<!-- Language switcher -->
+	<div class="px-3 py-2">
+		<div class="flex items-center gap-1.5 bg-white/5 rounded-lg p-1">
+			<button
+				onclick={() => setLanguage('en')}
+				class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all
+					{$language === 'en'
+						? 'bg-white/10 text-white shadow-sm'
+						: 'text-slate-400 hover:text-white hover:bg-white/5'}"
+				title="English"
+			>
+				<span class="text-base leading-none">🇬🇧</span>
+			</button>
+			<button
+				onclick={() => setLanguage('es')}
+				class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all
+					{$language === 'es'
+						? 'bg-white/10 text-white shadow-sm'
+						: 'text-slate-400 hover:text-white hover:bg-white/5'}"
+				title="Español"
+			>
+				<span class="text-base leading-none">🇪🇸</span>
+			</button>
+		</div>
+	</div>
+
 	<!-- Course overview link -->
-	<div class="px-3 pt-3 pb-1">
+	<div class="px-3 pt-1 pb-1">
 		<a
 			href="/training"
 			class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all
@@ -47,7 +112,7 @@
 				{@const meta = $course.moduleMeta[moduleName]}
 				{@const isExpanded = expandedModule === moduleName}
 				{@const isCurrent = currentModule === moduleName}
-				{@const pages = $course.manifest.modules[moduleName]?.pages || []}
+				{@const pages = $course.manifest.locales[$language]?.modules[moduleName]?.pages || []}
 				{@const moduleProgress = $progress.modules[moduleName]}
 				{@const unlocked = isModuleUnlocked(moduleName, $course.config.modules, $course.moduleMeta, $course.manifest, $progress, $course.quizIdsByModule)}
 				{@const completed = meta && isModuleComplete(moduleName, meta, $course.manifest, $progress, $course.quizIdsByModule)}
@@ -56,7 +121,7 @@
 				<div class="mb-0.5">
 					{#if unlocked}
 						<button
-							onclick={() => expandedModule = isExpanded ? '' : moduleName}
+							onclick={() => { expandedModule = isExpanded ? '' : moduleName; fetchPageTitles(moduleName, $language); }}
 							class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-medium transition-all flex items-center gap-2
 								{isCurrent
 									? 'bg-white/10 text-white'
@@ -92,29 +157,32 @@
 					<!-- Page list -->
 					{#if isExpanded && unlocked}
 						<div class="ml-4 mt-0.5 mb-1 border-l border-slate-800/80 pl-3 space-y-px">
-							{#each pages as pagePath}
-								{@const slug = getPageSlug(pagePath)}
-								{@const isCurrentPage = isCurrent && currentPage === slug}
-								{@const viewed = moduleProgress?.pagesViewed?.includes(slug)}
-								<a
-									href="/training/{moduleName}/{slug}"
-									class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[13px] transition-all truncate
-										{isCurrentPage
-											? 'bg-accent/15 text-accent font-medium'
-											: viewed
-												? 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
-												: 'text-slate-400 hover:text-white hover:bg-white/5'}"
-								>
-									{#if viewed && !isCurrentPage}
-										<svg width="10" height="10" viewBox="0 0 16 16" fill="none" class="shrink-0 text-slate-600"><path d="M3 8.5l3.5 3.5L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-									{:else if isCurrentPage}
-										<span class="w-1.5 h-1.5 rounded-full bg-accent shrink-0"></span>
-									{:else}
-										<span class="w-1.5 h-1.5 rounded-full bg-slate-700 shrink-0"></span>
-									{/if}
-									<span class="truncate">{slug.replace(/^\d+-/, '').replace(/-/g, ' ')}</span>
-								</a>
-							{/each}
+							{#await fetchPageTitles(moduleName, $language) then titles}
+								{#each pages as pagePath}
+									{@const slug = getPageSlug(pagePath)}
+									{@const pageTitle = titles?.[slug] || slug.replace(/^\d+-/, '').replace(/-/g, ' ')}
+									{@const isCurrentPage = isCurrent && currentPage === slug}
+									{@const viewed = moduleProgress?.pagesViewed?.includes(slug)}
+									<a
+										href="/training/{moduleName}/{slug}"
+										class="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[13px] transition-all truncate
+											{isCurrentPage
+												? 'bg-accent/15 text-accent font-medium'
+												: viewed
+													? 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+													: 'text-slate-400 hover:text-white hover:bg-white/5'}"
+									>
+										{#if viewed && !isCurrentPage}
+											<svg width="10" height="10" viewBox="0 0 16 16" fill="none" class="shrink-0 text-slate-600"><path d="M3 8.5l3.5 3.5L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+										{:else if isCurrentPage}
+											<span class="w-1.5 h-1.5 rounded-full bg-accent shrink-0"></span>
+										{:else}
+											<span class="w-1.5 h-1.5 rounded-full bg-slate-700 shrink-0"></span>
+										{/if}
+										<span class="truncate">{pageTitle}</span>
+									</a>
+								{/each}
+							{/await}
 						</div>
 					{/if}
 				</div>

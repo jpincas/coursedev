@@ -1,0 +1,10 @@
+title: "Archivos — La Unidad de Trabajo"
+description: "De mensajes de chat a entregables. El cambio de paradigma hacia el trabajo con IA basado en archivos."
+prerequisites:
+  - module-prompting
+difficulty: intermediate
+estimated_duration: "75m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

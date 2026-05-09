@@ -1,0 +1,10 @@
+title: "Creación de Documentos y Análisis de Datos"
+description: "Las técnicas específicas para crear documentos de alta calidad y analizar datos con IA — desde redacción por secciones hasta transferencia de estilo hasta flujos de trabajo de cargar-y-analizar."
+prerequisites:
+  - module-files
+difficulty: intermediate
+estimated_duration: "75m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

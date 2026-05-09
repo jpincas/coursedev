@@ -1,0 +1,10 @@
+title: "Poniendo Todo Juntos"
+description: "Tu flujo de trabajo AI-first. Los cinco temas, qué hacer después y recursos."
+prerequisites:
+  - module-risks
+difficulty: intermediate
+estimated_duration: "45m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.7

@@ -1,5 +1,5 @@
-import type { CourseProgress, ModuleMeta, CourseManifest } from '$lib/content/types.js';
-import { getPageSlug } from '$lib/content/loader.js';
+import type { CourseProgress, ModuleMeta, CourseManifest, Locale } from '$lib/content/types.js';
+import { getPageSlug, getLocale } from '$lib/content/loader.js';
 
 /**
  * Check if a module is complete based on its completion criteria.
@@ -14,11 +14,12 @@ export function isModuleComplete(
 	progress: CourseProgress,
 	quizIdsByModule: Record<string, string[]>
 ): boolean {
+	const locale = getLocale();
+	const modManifest = manifest.locales[locale]?.modules[moduleName];
+	if (!modManifest) return false;
+
 	const modProgress = progress.modules[moduleName];
 	if (!modProgress) return false;
-
-	const modManifest = manifest.modules[moduleName];
-	if (!modManifest) return false;
 
 	// Check all pages viewed
 	if (meta.completion?.require_all_pages) {
@@ -74,7 +75,8 @@ export function getModuleStats(
 	manifest: CourseManifest,
 	progress: CourseProgress
 ): { pagesViewed: number; totalPages: number; percent: number } {
-	const modManifest = manifest.modules[moduleName];
+	const locale = getLocale();
+	const modManifest = manifest.locales[locale]?.modules[moduleName];
 	if (!modManifest) return { pagesViewed: 0, totalPages: 0, percent: 0 };
 
 	const totalPages = modManifest.pages.length;
