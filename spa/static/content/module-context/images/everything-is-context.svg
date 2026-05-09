@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560"
+     style="max-width: 800px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .label { fill: #fafafa; font-size: 15px; text-anchor: middle; }
+    .accent-label { fill: #00d9c0; font-size: 18px; font-weight: 600; text-anchor: middle; }
+    .box { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .box-accent { fill: #27272a; stroke: #00d9c0; stroke-width: 2; }
+    .connector { stroke: #a1a1aa; stroke-width: 2; fill: none; }
+    .connector-accent { stroke: #00d9c0; stroke-width: 2; fill: none; }
+    .arrow { fill: #a1a1aa; }
+    .arrow-accent { fill: #00d9c0; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+    <marker id="arrowhead-accent" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow-accent" />
+    </marker>
+  </defs>
+
+  <!-- System prompts (top) -->
+  <rect x="300" y="40" width="200" height="60" rx="8" ry="8" class="box" />
+  <text x="400" y="65" class="label">System</text>
+  <text x="400" y="85" class="label">Prompts</text>
+
+  <!-- Persistent instructions (left top) -->
+  <rect x="50" y="140" width="180" height="70" rx="8" ry="8" class="box" />
+  <text x="140" y="165" class="label" style="font-size: 14px;">Persistent</text>
+  <text x="140" y="183" class="label" style="font-size: 14px;">Instructions</text>
+  <text x="140" y="201" class="label" style="font-size: 13px; fill: #a1a1aa;">(CLAUDE.md)</text>
+
+  <!-- Conversation history (right top) -->
+  <rect x="570" y="140" width="180" height="70" rx="8" ry="8" class="box" />
+  <text x="660" y="172" class="label" style="font-size: 14px;">Conversation</text>
+  <text x="660" y="190" class="label" style="font-size: 14px;">History</text>
+
+  <!-- Files & documents (left bottom) -->
+  <rect x="50" y="340" width="180" height="70" rx="8" ry="8" class="box" />
+  <text x="140" y="372" class="label" style="font-size: 14px;">Files &</text>
+  <text x="140" y="390" class="label" style="font-size: 14px;">Documents</text>
+
+  <!-- Tools & capabilities (right bottom) -->
+  <rect x="570" y="340" width="180" height="70" rx="8" ry="8" class="box" />
+  <text x="660" y="372" class="label" style="font-size: 14px;">Tools &</text>
+  <text x="660" y="390" class="label" style="font-size: 14px;">Capabilities</text>
+
+  <!-- Current message (bottom center, accent) -->
+  <rect x="280" y="450" width="240" height="70" rx="8" ry="8" class="box-accent" />
+  <text x="400" y="492" class="accent-label">Current Message</text>
+
+  <!-- Central AI Model (accent ellipse) -->
+  <ellipse cx="400" cy="270" rx="90" ry="50"
+           fill="#1a1a1e" stroke="#00d9c0" stroke-width="3" />
+  <text x="400" y="278" class="accent-label">AI Model</text>
+
+  <!-- Arrows from all sources to model -->
+  <!-- System prompt -> Model (straight down) -->
+  <line x1="400" y1="105" x2="400" y2="217"
+        class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Persistent -> Model (diagonal) -->
+  <line x1="235" y1="175" x2="315" y2="240"
+        class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- History -> Model (diagonal) -->
+  <line x1="565" y1="175" x2="485" y2="240"
+        class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Files -> Model (diagonal) -->
+  <line x1="235" y1="375" x2="315" y2="300"
+        class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Tools -> Model (diagonal) -->
+  <line x1="565" y1="375" x2="485" y2="300"
+        class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Current message -> Model (accent, straight up) -->
+  <line x1="400" y1="445" x2="400" y2="323"
+        class="connector-accent" marker-end="url(#arrowhead-accent)" />
+</svg>

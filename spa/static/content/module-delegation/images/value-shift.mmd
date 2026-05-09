@@ -1,0 +1,19 @@
+flowchart LR
+    subgraph Before["Before AI"]
+        T1["Thinking<br/><small>Important</small>"]
+        P1["Planning<br/><small>Often skipped</small>"]
+        E1["Execution<br/><small>Main time sink</small>"]
+        R1["Review<br/><small>Quick pass</small>"]
+    end
+
+    subgraph After["After AI"]
+        T2["Thinking<br/><small>CRITICAL ↑</small>"]
+        P2["Planning<br/><small>ESSENTIAL ↑</small>"]
+        E2["Execution<br/><small>Near-instant ↓</small>"]
+        R2["Review<br/><small>Where you add value ↑</small>"]
+    end
+
+    T1 -.->|↑| T2
+    P1 -.->|↑| P2
+    E1 -.->|↓| E2
+    R1 -.->|↑| R2

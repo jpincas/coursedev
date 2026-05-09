@@ -1,0 +1,10 @@
+title: "Files — The Unit of Work"
+description: "From chat messages to deliverables. The paradigm shift to file-based AI work."
+prerequisites:
+  - module-prompting
+difficulty: intermediate
+estimated_duration: "75m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

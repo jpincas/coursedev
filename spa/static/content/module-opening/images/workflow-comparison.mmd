@@ -1,0 +1,20 @@
+flowchart LR
+    subgraph old["OLD WAY: Chat-Based"]
+        direction TB
+        O1["User asks question"] --> O2["AI responds"]
+        O2 --> O3["User copies answer"]
+        O3 --> O4["User pastes somewhere"]
+        O4 --> O5["User asks follow-up"]
+        O5 --> O6["AI responds again"]
+        O6 --> O7["User copies again"]
+        O7 --> O8["User pastes again"]
+        O8 --> O9["Repeat cycle..."]
+    end
+
+    subgraph new["NEW WAY: Agentic"]
+        direction TB
+        N1["User delegates task"] --> N2["AI plans + executes + delivers"]
+        N2 --> N3["User receives finished file"]
+    end
+
+    old ~~~ new

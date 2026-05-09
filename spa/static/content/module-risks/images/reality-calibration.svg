@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420"
+     style="max-width: 1000px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title { font-size: 28px; font-weight: 700; fill: #fafafa; }
+    .zone-title { font-size: 18px; font-weight: 600; }
+    .item { font-size: 14px; }
+    .hype-zone { fill: #7f1d1d; stroke: #dc2626; stroke-width: 2; }
+    .gap-zone { fill: #713f12; stroke: #facc15; stroke-width: 2; }
+    .works-zone { fill: #134e4a; stroke: #00d9c0; stroke-width: 2; }
+    .hype-text { fill: #fca5a5; }
+    .gap-text { fill: #fde047; }
+    .works-text { fill: #5eead4; }
+    .hype-title { fill: #dc2626; }
+    .gap-title { fill: #facc15; }
+    .works-title { fill: #00d9c0; }
+  </style>
+
+  <!-- Main title -->
+  <text x="500" y="75" text-anchor="middle" class="title">AI Expectations vs Reality</text>
+
+  <!-- Zone labels -->
+  <text x="200" y="155" text-anchor="middle" class="zone-title hype-title">THE HYPE</text>
+  <text x="490" y="155" text-anchor="middle" class="zone-title gap-title">THE GAP</text>
+  <text x="790" y="155" text-anchor="middle" class="zone-title works-title">WHAT WORKS</text>
+
+  <!-- Thermometer zones -->
+  <rect x="60" y="180" width="280" height="60" rx="8" ry="8" class="hype-zone" />
+  <rect x="340" y="180" width="300" height="60" rx="8" ry="8" class="gap-zone" />
+  <rect x="640" y="180" width="300" height="60" rx="8" ry="8" class="works-zone" />
+
+  <!-- Hype items -->
+  <text x="80" y="270" class="item hype-text">AI will replace jobs</text>
+  <text x="80" y="295" class="item hype-text">Automatic productivity</text>
+  <text x="80" y="320" class="item hype-text">Perfect accuracy</text>
+
+  <!-- Gap items -->
+  <text x="360" y="270" class="item gap-text">67% projects fail in 6 months</text>
+  <text x="360" y="295" class="item gap-text">19% slower (feel 20% faster)</text>
+  <text x="360" y="320" class="item gap-text">No business difference (avg)</text>
+
+  <!-- Works items -->
+  <text x="660" y="270" class="item works-text">Small, high-frequency tasks</text>
+  <text x="660" y="295" class="item works-text">Relentless iteration</text>
+  <text x="660" y="320" class="item works-text">Verify everything critical</text>
+  <text x="660" y="345" class="item works-text">Maintain human skills</text>
+  <text x="660" y="370" class="item works-text">Redesign workflows for AI</text>
+</svg>

@@ -1,0 +1,161 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@source "../src/**/*.svelte";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --color-accent: #14b8a6;
+  --color-accent-hover: #0d9488;
+  --color-accent-dim: rgba(20, 184, 166, 0.08);
+  --color-accent-glow: rgba(20, 184, 166, 0.15);
+  --color-surface: #ffffff;
+  --color-surface-raised: #f8fafc;
+  --color-surface-dark: #0f172a;
+  --color-surface-darker: #020617;
+}
+
+/* Font size preferences */
+@utility font-small { font-size: 14px; }
+@utility font-medium { font-size: 16px; }
+@utility font-large { font-size: 18px; }
+
+/* Pulse animation for live indicators */
+@utility animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Agent chat message staggered entrance animation */
+@keyframes agentFadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Gradient text utility */
+@utility text-gradient {
+  background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero grid pattern */
+@utility hero-grid {
+  background-image:
+    linear-gradient(rgba(20, 184, 166, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 184, 166, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Prose overrides for markdown-rendered narrative HTML */
+@layer components {
+  .content-prose code:not(pre code) {
+    color: #0d9488;
+    background: rgb(240 253 250);
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.375rem;
+    border: 1px solid rgb(204 251 241);
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+  .content-prose code::before,
+  .content-prose code::after {
+    content: none !important;
+  }
+  .content-prose a {
+    color: #0d9488;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(13, 148, 136, 0.3);
+    transition: border-color 0.15s;
+  }
+  .content-prose a:hover {
+    border-bottom-color: #0d9488;
+  }
+  .content-prose pre {
+    background: #0f172a;
+    border: 1px solid rgba(30, 41, 59, 0.8);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  .content-prose pre code {
+    color: #e2e8f0;
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-weight: 400;
+  }
+  .content-prose h2 {
+    padding-top: 0.5em;
+    border-top: 1px solid #e2e8f0;
+  }
+  .content-prose h2:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+  .content-prose blockquote {
+    border-left-color: #14b8a6;
+    background: rgb(240 253 250 / 0.5);
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  .content-prose img {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Thin dark scrollbar for dark panels */
+  .scrollbar-dark::-webkit-scrollbar { width: 6px; }
+  .scrollbar-dark::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-dark::-webkit-scrollbar-thumb { background: rgb(63 63 70); border-radius: 3px; }
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover { background: rgb(82 82 91); }
+
+  /* Thin light scrollbar */
+  .scrollbar-light::-webkit-scrollbar { width: 6px; }
+  .scrollbar-light::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-light::-webkit-scrollbar-thumb { background: rgb(203 213 225); border-radius: 3px; }
+  .scrollbar-light::-webkit-scrollbar-thumb:hover { background: rgb(148 163 184); }
+
+  /* Agent chat bubble markdown */
+  .agent-chat-md p { margin: 0.3em 0; }
+  .agent-chat-md p:first-child { margin-top: 0; }
+  .agent-chat-md p:last-child { margin-bottom: 0; }
+  .agent-chat-md strong { font-weight: 600; }
+  .agent-chat-md ul, .agent-chat-md ol { margin: 0.3em 0; padding-left: 1.25em; }
+  .agent-chat-md li { margin: 0.15em 0; }
+  .agent-chat-md code {
+    font-size: 0.85em;
+    background: rgba(0, 0, 0, 0.06);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+  }
+  .agent-chat-md pre {
+    margin: 0.3em 0;
+    padding: 0.5em 0.75em;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 6px;
+    font-size: 0.85em;
+    overflow-x: auto;
+  }
+  .agent-chat-md pre code { background: transparent; padding: 0; }
+  .agent-chat-md hr { margin: 0.5em 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1); }
+}

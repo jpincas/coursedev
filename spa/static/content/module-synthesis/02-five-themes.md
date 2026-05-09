@@ -1,0 +1,93 @@
+---
+title: "The Five Themes"
+duration: "10m"
+tags: [themes, principles, summary]
+---
+
+# The Five Themes
+
+These five ideas tie everything together. They should guide how you approach any AI task.
+
+![The Five Core Themes of AI-First Work](/content/module-synthesis/images/five-themes.png)
+
+## 1. Outcomes Over Process
+
+**Always define what "done" looks like. Let AI figure out the how.**
+
+Don't describe steps. Describe the destination. You're defining work, not doing work.
+
+When you catch yourself writing "first... then... then..." — stop. Describe the end state instead.
+
+## 2. Context Is Everything
+
+**Rich input produces rich output. Quality is bounded by context.**
+
+The model only knows what's in its context window. If it's not there, it doesn't exist for AI.
+
+When output is poor, the first question is always: What was the context?
+
+## 3. AI-First, Human-Verified
+
+**Let AI draft. You review and refine. You own the result.**
+
+Default to delegating. Default to letting AI produce the first version. Then verify, iterate, and approve.
+
+**Verification techniques that matter:**
+- Spot-check 3-5 specific facts (don't check everything, sample strategically)
+- Cross-reference with source documents (did AI accurately use provided context?)
+- Test logical coherence (does the argument hold together internally?)
+- Multi-model validation (run critical outputs through a second AI for comparison)
+
+Don't do work AI could do. But **always** verify work AI has done.
+
+```callout
+type: warning
+title: "Verification Is Non-Negotiable"
+content: "As we've seen throughout this course, knowledge workers invest significant time in verification — and 47% of enterprise AI users have made at least one major business decision based on hallucinated content. You own the output, regardless of who produced it."
+```
+
+## 4. Preparation Is the New Execution
+
+**Thinking is your job. Doing is cheap.**
+
+When execution takes 5 minutes instead of 5 hours, the bottleneck shifts. Your value is in planning, specifying, thinking.
+
+Invest in preparation. Don't skip it because execution is fast.
+
+## 5. Files, Not Chat
+
+**Work in deliverables, not conversations.**
+
+The file is the point. Chat is just coordination. If you're copy-pasting from chat, you're doing it wrong.
+
+Provide files, receive files, use files.
+
+```callout
+type: info
+title: "Memorise These"
+content: "These five themes are the principles that make AI work useful. When you're stuck, ask: Am I following these principles? Which one am I violating?"
+```
+
+## Using the Themes
+
+**Before a task:** Check that you're defining outcomes, not process.
+
+**When output is poor:** Check the context. What was missing?
+
+**When considering doing work yourself:** Ask if AI could draft it instead.
+
+**When execution is fast:** Don't skip preparation because you can iterate quickly.
+
+**When working in chat:** Ask if this should be a file instead.
+
+```quiz
+id: five-themes
+type: multiple-choice
+question: "If AI output is poor quality, which theme should you check first?"
+options:
+  - "Outcomes over process — check if you specified the outcome clearly"
+  - "Context is everything — check what context AI had to work with"
+  - "AI-first, human-verified — check if you verified the output properly"
+answer: 1
+explanation: "When output is poor, the first question is always: What was the context? Theme 2 — Context is everything — tells us that quality is bounded by input. AI can only work with what's in its context window. Check what information, examples, and instructions AI actually had access to."
+```

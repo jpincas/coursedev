@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400"
+     style="max-width: 960px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .token-label { fill: #fafafa; font-size: 18px; font-weight: 500; }
+    .token-label-dim { fill: #71717a; font-size: 16px; }
+    .prob-high { fill: #00d9c0; font-size: 14px; font-weight: 600; }
+    .prob-low { fill: #71717a; font-size: 14px; }
+    .title { fill: #fafafa; font-size: 22px; font-weight: 600; }
+    .legend { font-size: 16px; }
+    .legend-high { fill: #00d9c0; }
+    .legend-low { fill: #71717a; }
+    .shape-high { fill: #27272a; stroke: #00d9c0; stroke-width: 2; }
+    .shape-low { fill: #27272a; stroke: #3f3f46; stroke-width: 1; }
+    .arrow-high { stroke: #00d9c0; stroke-width: 3; fill: none; }
+    .arrow-low { stroke: #52525b; stroke-width: 1; fill: none; }
+    .arrowhead-high { fill: #00d9c0; }
+    .arrowhead-low { fill: #52525b; }
+  </style>
+  <defs>
+    <marker id="arrowhead-high" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-high" />
+    </marker>
+    <marker id="arrowhead-low" markerWidth="8" markerHeight="6"
+            refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" class="arrowhead-low" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="480" y="45" text-anchor="middle" class="title">Next-Token Prediction: Building a Response One Token at a Time</text>
+
+  <!-- Legend -->
+  <text x="40" y="105" class="legend legend-high">━━━  Highest probability (selected)</text>
+  <text x="40" y="135" class="legend legend-low">──  Lower probability (not selected)</text>
+
+  <!-- Token: The -->
+  <rect x="40" y="180" width="80" height="60" rx="6" ry="6" class="shape-high" />
+  <text x="80" y="215" text-anchor="middle" class="token-label">The</text>
+
+  <!-- Arrows from The -->
+  <line x1="125" y1="205" x2="215" y2="205" class="arrow-high" marker-end="url(#arrowhead-high)" />
+  <text x="170" y="195" text-anchor="middle" class="prob-high">95%</text>
+
+  <line x1="125" y1="215" x2="215" y2="285" class="arrow-low" marker-end="url(#arrowhead-low)" />
+  <text x="170" y="260" text-anchor="middle" class="prob-low">3%</text>
+
+  <!-- Token: capital (high) -->
+  <rect x="220" y="180" width="80" height="60" rx="6" ry="6" class="shape-high" />
+  <text x="260" y="215" text-anchor="middle" class="token-label">capital</text>
+
+  <!-- Token: weather (low) -->
+  <rect x="220" y="270" width="90" height="60" rx="6" ry="6" class="shape-low" />
+  <text x="265" y="305" text-anchor="middle" class="token-label-dim">weather</text>
+
+  <!-- Arrows from capital -->
+  <line x1="305" y1="205" x2="380" y2="205" class="arrow-high" marker-end="url(#arrowhead-high)" />
+  <text x="342" y="195" text-anchor="middle" class="prob-high">99%</text>
+
+  <!-- Token: of -->
+  <rect x="385" y="180" width="60" height="60" rx="6" ry="6" class="shape-high" />
+  <text x="415" y="215" text-anchor="middle" class="token-label">of</text>
+
+  <!-- Arrows from of -->
+  <line x1="450" y1="205" x2="525" y2="205" class="arrow-high" marker-end="url(#arrowhead-high)" />
+  <text x="487" y="195" text-anchor="middle" class="prob-high">85%</text>
+
+  <line x1="450" y1="215" x2="525" y2="265" class="arrow-low" marker-end="url(#arrowhead-low)" />
+  <text x="487" y="245" text-anchor="middle" class="prob-low">10%</text>
+
+  <line x1="450" y1="220" x2="525" y2="325" class="arrow-low" marker-end="url(#arrowhead-low)" />
+  <text x="487" y="285" text-anchor="middle" class="prob-low">3%</text>
+
+  <!-- Token: France (high) -->
+  <rect x="530" y="175" width="80" height="60" rx="6" ry="6" class="shape-high" />
+  <text x="570" y="210" text-anchor="middle" class="token-label">France</text>
+
+  <!-- Token: the (low) -->
+  <rect x="530" y="250" width="60" height="50" rx="6" ry="6" class="shape-low" />
+  <text x="560" y="280" text-anchor="middle" class="token-label-dim">the</text>
+
+  <!-- Token: Germany (low) -->
+  <rect x="530" y="310" width="90" height="50" rx="6" ry="6" class="shape-low" />
+  <text x="575" y="340" text-anchor="middle" class="token-label-dim">Germany</text>
+
+  <!-- Arrows from France -->
+  <line x1="615" y1="205" x2="690" y2="205" class="arrow-high" marker-end="url(#arrowhead-high)" />
+  <text x="652" y="195" text-anchor="middle" class="prob-high">98%</text>
+
+  <!-- Token: is -->
+  <rect x="695" y="180" width="60" height="60" rx="6" ry="6" class="shape-high" />
+  <text x="725" y="215" text-anchor="middle" class="token-label">is</text>
+
+  <!-- Arrows from is -->
+  <line x1="760" y1="205" x2="835" y2="205" class="arrow-high" marker-end="url(#arrowhead-high)" />
+  <text x="797" y="195" text-anchor="middle" class="prob-high">97%</text>
+
+  <line x1="760" y1="220" x2="835" y2="285" class="arrow-low" marker-end="url(#arrowhead-low)" />
+  <text x="797" y="265" text-anchor="middle" class="prob-low">1%</text>
+
+  <!-- Token: Paris (high) -->
+  <rect x="840" y="180" width="80" height="60" rx="6" ry="6" class="shape-high" />
+  <text x="880" y="215" text-anchor="middle" class="token-label">Paris</text>
+
+  <!-- Token: Lyon (low) -->
+  <rect x="840" y="270" width="70" height="50" rx="6" ry="6" class="shape-low" />
+  <text x="875" y="300" text-anchor="middle" class="token-label-dim">Lyon</text>
+</svg>

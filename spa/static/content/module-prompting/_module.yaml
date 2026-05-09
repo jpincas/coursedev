@@ -1,0 +1,10 @@
+title: "The Art of Prompting"
+description: "From asking questions to specifying outcomes. Techniques, frameworks, and iteration patterns that deliver results."
+prerequisites:
+  - module-context
+difficulty: intermediate
+estimated_duration: "85m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

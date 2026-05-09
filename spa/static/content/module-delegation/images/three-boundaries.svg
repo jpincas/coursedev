@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380"
+     style="max-width: 800px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title { font-size: 20px; font-weight: 600; fill: #a1a1aa; }
+    .item { font-size: 14px; fill: #71717a; }
+    .zone { fill: #27272a; stroke: #52525b; stroke-width: 2; }
+    .icon { stroke: #71717a; stroke-width: 2; fill: none; }
+  </style>
+
+  <!-- Zone 1: Judgment -->
+  <rect x="40" y="60" width="220" height="280" rx="8" class="zone" />
+
+  <!-- Scales icon -->
+  <line x1="120" y1="100" x2="180" y2="100" class="icon" stroke-width="3" />
+  <line x1="120" y1="100" x2="150" y2="130" class="icon" />
+  <line x1="180" y1="100" x2="150" y2="130" class="icon" />
+
+  <text x="150" y="175" text-anchor="middle" class="title">Judgment</text>
+  <text x="150" y="220" text-anchor="middle" class="item">Ethical decisions</text>
+  <text x="150" y="250" text-anchor="middle" class="item">Value tradeoffs</text>
+  <text x="150" y="280" text-anchor="middle" class="item">"Should we?"</text>
+
+  <!-- Zone 2: Relationships -->
+  <rect x="290" y="60" width="220" height="280" rx="8" class="zone" />
+
+  <!-- People icon -->
+  <circle cx="380" cy="105" r="10" class="icon" />
+  <circle cx="420" cy="105" r="10" class="icon" />
+  <line x1="390" y1="125" x2="390" y2="140" class="icon" />
+
+  <text x="400" y="175" text-anchor="middle" class="title">Relationships</text>
+  <text x="400" y="220" text-anchor="middle" class="item">Sensitive conversations</text>
+  <text x="400" y="250" text-anchor="middle" class="item">Trust-building</text>
+  <text x="400" y="280" text-anchor="middle" class="item">Human connection</text>
+
+  <!-- Zone 3: Accountability -->
+  <rect x="540" y="60" width="220" height="280" rx="8" class="zone" />
+
+  <!-- Document/signature icon -->
+  <rect x="620" y="95" width="60" height="40" rx="4" class="icon" />
+  <line x1="630" y1="125" x2="670" y2="125" class="icon" />
+
+  <text x="650" y="175" text-anchor="middle" class="title">Accountability</text>
+  <text x="650" y="220" text-anchor="middle" class="item">Final approval</text>
+  <text x="650" y="250" text-anchor="middle" class="item">Sign-off</text>
+  <text x="650" y="280" text-anchor="middle" class="item">The buck stops here</text>
+</svg>

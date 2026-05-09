@@ -1,0 +1,10 @@
+title: "Risks, Responsibility, and Realistic Expectations"
+description: "The honest assessment of AI's limitations — hallucination rates, skill atrophy, privacy risks, and the legal landscape. What every professional must know."
+prerequisites:
+  - module-delegation
+difficulty: intermediate
+estimated_duration: "45m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

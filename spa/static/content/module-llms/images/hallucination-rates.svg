@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440"
+     style="max-width: 800px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .title { fill: #fafafa; font-size: 24px; font-weight: 600; }
+    .label { fill: #fafafa; font-size: 18px; }
+    .percent-best { fill: #00d9c0; font-size: 20px; font-weight: 700; }
+    .percent { fill: #a1a1aa; font-size: 20px; font-weight: 600; }
+    .note { fill: #a1a1aa; font-size: 15px; }
+    .bar-best { fill: #00d9c0; }
+    .bar { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .baseline { stroke: #52525b; stroke-width: 2; }
+  </style>
+
+  <!-- Title -->
+  <text x="400" y="50" text-anchor="middle" class="title">Hallucination Rates Vary by Model and Domain</text>
+
+  <!-- Baseline -->
+  <line x1="60" y1="340" x2="740" y2="340" class="baseline" />
+
+  <!-- Bar 1: Gemini 2.0 (best - accent color, very short) -->
+  <rect x="80" y="330" width="160" height="10" rx="4" ry="4" class="bar-best" />
+  <text x="80" y="365" class="label">Gemini 2.0</text>
+  <text x="250" y="335" class="percent-best">0.7%</text>
+
+  <!-- Bar 2: OpenAI o3 (medium height) -->
+  <rect x="320" y="190" width="160" height="150" rx="4" ry="4" class="bar" />
+  <text x="320" y="365" class="label">OpenAI o3</text>
+  <text x="490" y="170" class="percent">33%</text>
+
+  <!-- Bar 3: Legal Queries (tallest) -->
+  <rect x="560" y="110" width="160" height="230" rx="4" ry="4" class="bar" />
+  <text x="560" y="365" class="label">Legal Queries</text>
+  <text x="730" y="90" class="percent">58-82%</text>
+
+  <!-- Note -->
+  <text x="80" y="405" class="note">Lower is better. Rates vary dramatically by model capability and domain complexity.</text>
+</svg>

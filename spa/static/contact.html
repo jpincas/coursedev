@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Contact — Learn AI with Jon</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+	<style>
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+		body {
+			font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+			background: #020617;
+			color: #fff;
+			-webkit-font-smoothing: antialiased;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+		a { color: inherit; text-decoration: none; }
+		nav {
+			border-bottom: 1px solid rgba(255,255,255,0.05);
+			padding: 1rem 1.5rem;
+		}
+		nav .inner {
+			max-width: 72rem;
+			margin: 0 auto;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		nav .brand {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			font-size: 0.875rem;
+			font-weight: 700;
+			letter-spacing: -0.01em;
+		}
+		nav .brand img {
+			width: 2rem;
+			height: 2rem;
+			border-radius: 9999px;
+			object-fit: cover;
+			box-shadow: 0 0 0 2px rgba(20,184,166,0.3);
+		}
+		nav .cta {
+			background: #14b8a6;
+			color: #fff;
+			padding: 0.5rem 1.25rem;
+			border-radius: 9999px;
+			font-size: 0.875rem;
+			font-weight: 600;
+			transition: background 0.15s;
+		}
+		nav .cta:hover { background: #0d9488; }
+		.page {
+			flex: 1;
+			max-width: 40rem;
+			margin: 0 auto;
+			padding: 5rem 1.5rem 4rem;
+			width: 100%;
+		}
+		.page h1 {
+			font-size: 2.25rem;
+			font-weight: 700;
+			letter-spacing: -0.02em;
+			text-align: center;
+		}
+		.page .subtitle {
+			text-align: center;
+			color: #94a3b8;
+			font-size: 1.125rem;
+			line-height: 1.7;
+			margin-top: 1rem;
+			margin-bottom: 3rem;
+		}
+		form { display: flex; flex-direction: column; gap: 1.25rem; }
+		.row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+		@media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+		label {
+			display: block;
+			font-size: 0.875rem;
+			font-weight: 500;
+			color: #cbd5e1;
+			margin-bottom: 0.5rem;
+		}
+		input, select, textarea {
+			width: 100%;
+			background: rgba(255,255,255,0.05);
+			border: 1px solid rgba(255,255,255,0.1);
+			border-radius: 0.75rem;
+			padding: 0.75rem 1rem;
+			color: #fff;
+			font-family: inherit;
+			font-size: 0.875rem;
+			outline: none;
+			transition: border-color 0.15s;
+		}
+		input:focus, select:focus, textarea:focus {
+			border-color: rgba(20,184,166,0.5);
+			box-shadow: 0 0 0 3px rgba(20,184,166,0.1);
+		}
+		input::placeholder, textarea::placeholder { color: #64748b; }
+		select { appearance: none; cursor: pointer; }
+		select option { background: #0f172a; }
+		textarea { resize: none; }
+		button[type="submit"] {
+			width: 100%;
+			background: #14b8a6;
+			color: #fff;
+			border: none;
+			border-radius: 0.75rem;
+			padding: 0.875rem;
+			font-family: inherit;
+			font-size: 0.875rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: background 0.15s, box-shadow 0.15s;
+		}
+		button[type="submit"]:hover {
+			background: #0d9488;
+			box-shadow: 0 8px 25px rgba(20,184,166,0.25);
+		}
+		.hp { display: none !important; }
+		footer {
+			border-top: 1px solid rgba(255,255,255,0.05);
+			padding: 2.5rem 1.5rem;
+		}
+		footer .inner {
+			max-width: 72rem;
+			margin: 0 auto;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 0.875rem;
+			color: #334155;
+		}
+		footer .brand {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+		}
+		footer .brand img {
+			width: 1.5rem;
+			height: 1.5rem;
+			border-radius: 9999px;
+			object-fit: cover;
+		}
+		footer .links { display: flex; gap: 1.5rem; }
+		footer .links a:hover { color: #94a3b8; }
+	</style>
+</head>
+<body>
+	<nav>
+		<div class="inner">
+			<a href="/" class="brand">
+				<img src="/images/jon.png" alt="Jon" />
+				<span>Learn AI with Jon</span>
+			</a>
+			<a href="/training" class="cta">Start Learning</a>
+		</div>
+	</nav>
+
+	<div class="page">
+		<h1>Get in touch</h1>
+		<p class="subtitle">
+			Interested in AI consulting, team training, or speaking engagements?<br />
+			I'd love to hear from you.
+		</p>
+
+		<form data-sitestakk="contact" data-success="/thanks" method="POST">
+			<div class="hp" aria-hidden="true">
+				<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+			</div>
+
+			<div class="row">
+				<div>
+					<label for="name">Name</label>
+					<input type="text" id="name" name="name" required placeholder="Your name" />
+				</div>
+				<div>
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email" required placeholder="you@company.com" />
+				</div>
+			</div>
+
+			<div>
+				<label for="subject">What are you interested in?</label>
+				<select id="subject" name="subject">
+					<option value="consulting">AI Consulting</option>
+					<option value="training">Team Training / Workshops</option>
+					<option value="speaking">Speaking Engagement</option>
+					<option value="collaboration">Collaboration / Partnership</option>
+					<option value="other">Something Else</option>
+				</select>
+			</div>
+
+			<div>
+				<label for="message">Message</label>
+				<textarea id="message" name="message" rows="5" required placeholder="Tell me about your project, team, or what you're looking for..."></textarea>
+			</div>
+
+			<button type="submit">Send Message</button>
+		</form>
+	</div>
+
+	<footer>
+		<div class="inner">
+			<div class="brand">
+				<img src="/images/jon.png" alt="Jon" />
+				<span>Learn AI with Jon</span>
+			</div>
+			<div class="links">
+				<a href="/">Home</a>
+				<a href="/training">Training</a>
+			</div>
+		</div>
+	</footer>
+</body>
+</html>

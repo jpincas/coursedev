@@ -1,0 +1,10 @@
+title: "Document Creation and Data Analysis"
+description: "The specific techniques for creating high-quality documents and analysing data with AI — from sectional drafting to style transfer to upload-and-analyse workflows."
+prerequisites:
+  - module-files
+difficulty: intermediate
+estimated_duration: "75m"
+completion:
+  require_all_pages: true
+  require_quizzes: true
+  min_quiz_score: 0.6

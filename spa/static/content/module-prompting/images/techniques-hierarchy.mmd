@@ -1,0 +1,17 @@
+flowchart TB
+    A["1. Be Specific and Direct<br/><small>Highest leverage - always applicable</small>"]
+    B["2. Use Examples (Multishot)<br/><small>When format or style matters</small>"]
+    C["3. Enable Thinking<br/><small>For hard reasoning tasks</small>"]
+    D["4. Structure with XML<br/><small>For complex multi-part prompts</small>"]
+    E["5. Chain Prompts<br/><small>Most specialized - multi-stage workflows</small>"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+
+    style A fill:#27272a,stroke:#00d9c0,stroke-width:3px,color:#fafafa
+    style B fill:#27272a,stroke:#3f3f46,stroke-width:2px,color:#fafafa
+    style C fill:#27272a,stroke:#3f3f46,stroke-width:2px,color:#fafafa
+    style D fill:#27272a,stroke:#3f3f46,stroke-width:2px,color:#fafafa
+    style E fill:#27272a,stroke:#3f3f46,stroke-width:2px,color:#fafafa

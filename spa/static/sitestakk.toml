@@ -1,0 +1,7 @@
+name = "learn-ai-with-jon"
+domain = "learnai.jonathanpincas.com"
+
+[images]
+optimize = false
+
+[forms.contact]

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 590" style="max-width: 680px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .ai-label { fill: #00d9c0; font-size: 28px; font-weight: 700; }
+    .output-title { fill: #fafafa; font-size: 18px; font-weight: 600; }
+    .output-desc { fill: #a1a1aa; font-size: 14px; }
+    .ai-box { fill: #27272a; stroke: #00d9c0; stroke-width: 3; }
+    .output-box { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .arrow { stroke: #00d9c0; stroke-width: 2; fill: none; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead-accent" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00d9c0" />
+    </marker>
+  </defs>
+
+  <!-- AI Box (center) -->
+  <rect x="100" y="220" width="180" height="120" rx="8" ry="8" class="ai-box" />
+  <text x="190" y="290" text-anchor="middle" class="ai-label">AI</text>
+
+  <!-- Output 1: Documents -->
+  <rect x="400" y="50" width="240" height="80" rx="8" ry="8" class="output-box" />
+  <text x="520" y="80" text-anchor="middle" class="output-title">Documents</text>
+  <text x="520" y="105" text-anchor="middle" class="output-desc">Reports, Letters</text>
+  <path d="M 280 260 L 395 85" class="arrow" marker-end="url(#arrowhead-accent)" />
+
+  <!-- Output 2: Spreadsheets -->
+  <rect x="400" y="155" width="240" height="80" rx="8" ry="8" class="output-box" />
+  <text x="520" y="185" text-anchor="middle" class="output-title">Spreadsheets</text>
+  <text x="520" y="210" text-anchor="middle" class="output-desc">Analysis, Budgets</text>
+  <path d="M 280 270 L 395 200" class="arrow" marker-end="url(#arrowhead-accent)" />
+
+  <!-- Output 3: Presentations -->
+  <rect x="400" y="260" width="240" height="80" rx="8" ry="8" class="output-box" />
+  <text x="520" y="290" text-anchor="middle" class="output-title">Presentations</text>
+  <text x="520" y="315" text-anchor="middle" class="output-desc">Slide decks</text>
+  <line x1="280" y1="280" x2="395" y2="300" class="arrow" marker-end="url(#arrowhead-accent)" />
+
+  <!-- Output 4: Code -->
+  <rect x="400" y="365" width="240" height="80" rx="8" ry="8" class="output-box" />
+  <text x="520" y="395" text-anchor="middle" class="output-title">Code</text>
+  <text x="520" y="420" text-anchor="middle" class="output-desc">Scripts, Programs</text>
+  <path d="M 280 290 L 395 400" class="arrow" marker-end="url(#arrowhead-accent)" />
+
+  <!-- Output 5: Visualizations -->
+  <rect x="400" y="470" width="240" height="80" rx="8" ry="8" class="output-box" />
+  <text x="520" y="500" text-anchor="middle" class="output-title">Visualizations</text>
+  <text x="520" y="525" text-anchor="middle" class="output-desc">Charts, Diagrams</text>
+  <path d="M 280 300 L 395 515" class="arrow" marker-end="url(#arrowhead-accent)" />
+</svg>

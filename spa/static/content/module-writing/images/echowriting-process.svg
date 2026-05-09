@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 600" style="max-width: 850px; background-color: transparent;">
+  <style>
+    text { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .label { fill: #fafafa; font-size: 17px; font-weight: 600; }
+    .label-small { fill: #a1a1aa; font-size: 16px; }
+    .item { fill: #a1a1aa; font-size: 13px; }
+    .ai-text { fill: #fafafa; font-size: 18px; font-weight: 600; }
+    .card-title { fill: #fafafa; font-size: 20px; font-weight: 600; }
+    .card-item { fill: #00d9c0; font-size: 15px; }
+    .future-text { fill: #fafafa; font-size: 17px; }
+    .shape { fill: #27272a; stroke: #3f3f46; stroke-width: 2; }
+    .shape-accent { fill: #27272a; stroke: #00d9c0; stroke-width: 3; }
+    .connector { stroke: #00d9c0; stroke-width: 2; fill: none; }
+    .connector-dim { stroke: #a1a1aa; stroke-width: 2; fill: none; }
+    .arrow { fill: #00d9c0; }
+    .arrow-dim { fill: #a1a1aa; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+    <marker id="arrowhead-dim" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow-dim" />
+    </marker>
+  </defs>
+
+  <!-- Label: Your Samples -->
+  <text x="50" y="35" class="label-small">Your Samples</text>
+
+  <!-- Document 1 -->
+  <rect x="40" y="60" width="100" height="120" rx="6" class="shape" />
+  <text x="90" y="82" text-anchor="middle" class="item">Sample 1</text>
+  <text x="90" y="105" text-anchor="middle" class="item">Your</text>
+  <text x="90" y="125" text-anchor="middle" class="item">writing</text>
+  <text x="90" y="145" text-anchor="middle" class="item">style</text>
+
+  <!-- Document 2 -->
+  <rect x="40" y="200" width="100" height="120" rx="6" class="shape" />
+  <text x="90" y="222" text-anchor="middle" class="item">Sample 2</text>
+  <text x="90" y="245" text-anchor="middle" class="item">Your</text>
+  <text x="90" y="265" text-anchor="middle" class="item">writing</text>
+  <text x="90" y="285" text-anchor="middle" class="item">style</text>
+
+  <!-- Document 3 -->
+  <rect x="40" y="340" width="100" height="120" rx="6" class="shape" />
+  <text x="90" y="362" text-anchor="middle" class="item">Sample 3</text>
+  <text x="90" y="385" text-anchor="middle" class="item">Your</text>
+  <text x="90" y="405" text-anchor="middle" class="item">writing</text>
+  <text x="90" y="425" text-anchor="middle" class="item">style</text>
+
+  <!-- Arrows from documents to AI brain -->
+  <line x1="150" y1="120" x2="290" y2="210" class="connector" marker-end="url(#arrowhead)" />
+  <line x1="150" y1="260" x2="290" y2="260" class="connector" marker-end="url(#arrowhead)" />
+  <line x1="150" y1="400" x2="290" y2="310" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- AI Brain (ellipse) -->
+  <ellipse cx="360" cy="260" rx="80" ry="80" class="shape-accent" />
+  <text x="360" y="255" text-anchor="middle" class="ai-text">AI</text>
+  <text x="360" y="277" text-anchor="middle" class="ai-text">Analysis</text>
+
+  <!-- Arrow from AI to Style Card -->
+  <line x1="450" y1="260" x2="570" y2="260" class="connector" marker-end="url(#arrowhead)" />
+
+  <!-- Style Card -->
+  <rect x="580" y="140" width="200" height="240" rx="8" class="shape-accent" />
+  <text x="680" y="170" text-anchor="middle" class="card-title">Style Card</text>
+  <text x="600" y="210" class="card-item">✓ Direct tone</text>
+  <text x="600" y="240" class="card-item">✓ Short sentences</text>
+  <text x="600" y="270" class="card-item">✓ British English</text>
+  <text x="600" y="300" class="card-item">✓ No jargon</text>
+  <text x="600" y="330" class="card-item">✓ Active voice</text>
+
+  <!-- Arrow from Style Card to Future Output -->
+  <line x1="680" y1="390" x2="680" y2="470" class="connector-dim" marker-end="url(#arrowhead-dim)" />
+
+  <!-- Future Output Box -->
+  <rect x="530" y="480" width="300" height="80" rx="6" class="shape" />
+  <text x="680" y="510" text-anchor="middle" class="future-text">All future AI writing</text>
+  <text x="680" y="535" text-anchor="middle" class="future-text">matches your style</text>
+</svg>

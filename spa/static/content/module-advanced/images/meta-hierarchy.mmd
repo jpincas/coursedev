@@ -1,0 +1,23 @@
+flowchart TD
+    User["User<br/><small>Delegates course creation</small>"]
+
+    CD["course-director<br/><small>Analyses research, plans modules</small>"]
+
+    MB1["module-builder 1<br/><small>Opening module</small>"]
+    MB2["module-builder 2<br/><small>Context module</small>"]
+    MB3["module-builder 3<br/><small>Prompting module</small>"]
+    More["...<br/><small>More builders</small>"]
+
+    S1["Skills<br/><small>/quiz · /mermaid · /agent-demo</small>"]
+    S2["Skills<br/><small>/quiz · /excalidraw</small>"]
+    S3["Skills<br/><small>/mermaid · /image-generator</small>"]
+
+    User --> CD
+    CD --> MB1
+    CD --> MB2
+    CD --> MB3
+    CD --> More
+
+    MB1 --> S1
+    MB2 --> S2
+    MB3 --> S3
