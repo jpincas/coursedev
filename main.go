@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/google/uuid"
 	gt "github.com/jpincas/go-tea"
@@ -218,6 +219,51 @@ func convertAgentBlock(b *parsing.AgentBlock) *AgentBlock {
 	}
 }
 
+// ============================================================================
+// Admin session persistence (survives WebSocket reconnects, not server restarts)
+// ============================================================================
+
+// AdminSessionInfo tracks an admin's last-known position so they can
+// reconnect without re-entering the admin key.
+type AdminSessionInfo struct {
+	Module string
+	Page   int
+	Slide  int
+}
+
+var adminSessions = struct {
+	sync.RWMutex
+	sessions map[uuid.UUID]*AdminSessionInfo
+}{sessions: make(map[uuid.UUID]*AdminSessionInfo)}
+
+func RegisterAdminSession(sid uuid.UUID) {
+	adminSessions.Lock()
+	adminSessions.sessions[sid] = &AdminSessionInfo{}
+	adminSessions.Unlock()
+}
+
+func SaveAdminPosition(sid uuid.UUID, module string, page, slide int) {
+	adminSessions.Lock()
+	if info, ok := adminSessions.sessions[sid]; ok {
+		info.Module = module
+		info.Page = page
+		info.Slide = slide
+	}
+	adminSessions.Unlock()
+}
+
+func GetAdminSession(sid uuid.UUID) *AdminSessionInfo {
+	adminSessions.RLock()
+	defer adminSessions.RUnlock()
+	return adminSessions.sessions[sid]
+}
+
+func UnregisterAdminSession(sid uuid.UUID) {
+	adminSessions.Lock()
+	delete(adminSessions.sessions, sid)
+	adminSessions.Unlock()
+}
+
 // model is a helper for type assertion in handlers
 func model(s gt.State) *Model {
 	return s.(*Model)
@@ -259,6 +305,20 @@ func (m *Model) Init(sid uuid.UUID) gt.State {
 			_ = DeleteSessionMapping(sid)
 			newModel.AuthStage = AuthStageError
 			newModel.AuthError = "Your cohort has expired. Please contact your training manager."
+		}
+	} else if adminInfo := GetAdminSession(sid); adminInfo != nil {
+		// Returning admin session — restore owner state without re-entering admin key
+		log.Printf("Restoring admin session for %s (module: %s, page: %d)", sid, adminInfo.Module, adminInfo.Page)
+		newModel.IsOwner = true
+		newModel.AuthStage = AuthStageNone
+		newModel.StudentName = "Admin"
+		if adminInfo.Module != "" {
+			newModel.CurrentModule = adminInfo.Module
+			newModel.CurrentPage = adminInfo.Page
+			newModel.CurrentSlide = adminInfo.Slide
+		} else if len(globalCourse.ModuleOrder) > 0 {
+			newModel.CurrentModule = globalCourse.ModuleOrder[0]
+			newModel.CurrentPage = 0
 		}
 	}
 

@@ -47,6 +47,9 @@ func (m *Model) handleSubmitCohortCode(msg gt.Message, s gt.State) gt.Response {
 			mdl.CurrentPage = 0
 		}
 
+		// Register admin session so it survives WebSocket reconnects
+		RegisterAdminSession(mdl.SessionID)
+
 		return gt.Respond()
 	}
 
@@ -164,6 +167,11 @@ func (m *Model) handleLogout(msg gt.Message, s gt.State) gt.Response {
 	// Clear session mapping
 	if mdl.StudentID != nil {
 		_ = DeleteSessionMapping(mdl.SessionID)
+	}
+
+	// Unregister admin session on explicit logout
+	if mdl.IsOwner {
+		UnregisterAdminSession(mdl.SessionID)
 	}
 
 	// Reset auth state
@@ -575,10 +583,17 @@ func (m *Model) handleStartPresenting(msg gt.Message, s gt.State) gt.Response {
 		return gt.Respond()
 	}
 
-	// Create a new live session for this cohort
+	// Create a new live session for this cohort.
+	// If one already exists (orphaned from a previous disconnect), take it over.
 	_, err = CreateLiveSessionForCohort(cohortID, mdl.SessionID, mdl.CurrentModule, mdl.CurrentPage, mdl.CurrentSlide)
 	if err != nil {
-		return gt.Respond() // Cohort already has a session
+		log.Printf("Live session already exists for cohort %s — taking over (likely orphaned)", cohortID)
+		DeleteLiveSessionForCohort(cohortID)
+		_, err = CreateLiveSessionForCohort(cohortID, mdl.SessionID, mdl.CurrentModule, mdl.CurrentPage, mdl.CurrentSlide)
+		if err != nil {
+			log.Printf("Failed to create live session after takeover: %v", err)
+			return gt.Respond()
+		}
 	}
 
 	mdl.IsPresenting = true

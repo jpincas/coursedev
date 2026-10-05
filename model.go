@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -153,6 +154,29 @@ func (m *Model) SyncToLiveSession() {
 	}
 	session.UpdateNavigation(m.CurrentModule, m.CurrentPage, m.CurrentSlide)
 	app.Broadcast()
+}
+
+// OnDisconnect is called by Gotea when the WebSocket session disconnects.
+// It saves admin position and cleans up live sessions if this user was presenting.
+func (m *Model) OnDisconnect() {
+	// Save admin position so they can reconnect seamlessly
+	if m.IsOwner {
+		SaveAdminPosition(m.SessionID, m.CurrentModule, m.CurrentPage, m.CurrentSlide)
+	}
+
+	// Clean up live session if this user was presenting
+	if m.IsPresenting && m.PresentingCohortID != nil {
+		// Only delete if the session's presenter is still us (guards against race with takeover)
+		session := GetLiveSessionForCohort(*m.PresentingCohortID)
+		if session != nil && session.PresenterSID == m.SessionID {
+			log.Printf("Presenter disconnected — cleaning up live session for cohort %s", m.PresentingCohortID)
+			DeleteLiveSessionForCohort(*m.PresentingCohortID)
+			m.IsPresenting = false
+			m.PresentingCohortID = nil
+			// Broadcast in goroutine so followers learn the session ended
+			go app.Broadcast()
+		}
+	}
 }
 
 // syncFromLiveSession syncs this student's position from the live session.
